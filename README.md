@@ -10,4 +10,4 @@ Climbing competitions are usually an in-person activity, done in local gyms or o
 The service will allow competition hosts to set special routes on the board and invite competitors. Competitors will have a time period to film their attempts on the routes and submit them. Submissions can be validated using manual review or even AI assessment.
 
 ### MVP: 
-A platform to create climbing leagues with designated competition climbs on the Kilterboard and leaderboard.
+A platform to create climbing leagues with designated competition climbs on the Kilterboard with leaderboard feature.
