@@ -8,3 +8,52 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+:root {
+	--cc-bg-start: #f7fbf5;
+	--cc-bg-end: #ecf4fb;
+	--cc-primary: #1e4f64;
+	--cc-accent: #2f7f75;
+	--cc-surface: #ffffff;
+}
+
+body.app-shell {
+	min-height: 100vh;
+	background: linear-gradient(145deg, var(--cc-bg-start), var(--cc-bg-end));
+	color: #1f2d2f;
+}
+
+.app-navbar {
+	background-color: rgba(255, 255, 255, 0.88);
+	backdrop-filter: blur(8px);
+	border-bottom: 1px solid rgba(30, 79, 100, 0.14);
+}
+
+.app-navbar .navbar-brand {
+	color: var(--cc-primary);
+}
+
+.app-navbar .nav-link {
+	color: #375767;
+}
+
+.app-navbar .nav-link:hover {
+	color: var(--cc-accent);
+}
+
+.page-header {
+	margin-bottom: 1.25rem;
+}
+
+.competition-card {
+	background-color: var(--cc-surface);
+	border: 1px solid rgba(30, 79, 100, 0.14);
+	box-shadow: 0 10px 24px rgba(30, 79, 100, 0.08);
+}
+
+.detail-panel {
+	background-color: var(--cc-surface);
+	border: 1px solid rgba(30, 79, 100, 0.14);
+	border-radius: 0.75rem;
+	box-shadow: 0 10px 24px rgba(30, 79, 100, 0.08);
+}

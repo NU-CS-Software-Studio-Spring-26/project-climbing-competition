@@ -1,9 +1,8 @@
 <%= form_with(model: competition) do |form| %>
   <% if competition.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(competition.errors.count, "error") %> prohibited this competition from being saved:</h2>
-
-      <ul>
+    <div class="alert alert-danger" role="alert">
+      <h2 class="h6"><%= pluralize(competition.errors.count, "error") %> prevented this competition from being saved:</h2>
+      <ul class="mb-0">
         <% competition.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,17 +10,17 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", placeholder: "Example: Regional Boulder Jam" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :date, class: "form-label" %>
+    <%= form.date_field :date, class: "form-control" %>
   </div>
 
   <div>
-    <%= form.label :date, style: "display: block" %>
-    <%= form.date_field :date %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+    <%= form.submit "Save Competition", class: "btn btn-success" %>
   </div>
 <% end %>

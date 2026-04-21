@@ -1,10 +1,16 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Competition Details" %>
 
-<%= render @competition %>
+<section class="page-header">
+  <h1 class="mb-1">Competition Details</h1>
+  <p class="text-muted mb-0">View information for this specific competition.</p>
+</section>
 
-<div>
-  <%= link_to "Edit this competition", edit_competition_path(@competition) %> |
-  <%= link_to "Back to competitions", competitions_path %>
+<div class="detail-panel p-4 mb-3">
+  <h2 class="h4 mb-3"><%= @competition.name %></h2>
+  <p class="mb-0"><strong>Date:</strong> <%= @competition.date %></p>
+</div>
 
-  <%= button_to "Destroy this competition", @competition, method: :delete %>
+<div class="d-flex gap-2 flex-wrap">
+  <%= link_to "Home", competitions_path, class: "btn btn-outline-secondary" %>
+  <%= link_to "View a Climb", competition_climb_path(@competition, 1), class: "btn btn-outline-primary" %>
 </div>
