@@ -8,3 +8,16 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+20.times do |i|
+  Competition.create!(
+    name: "Comp #{i + 1}",
+    date: "2026-04-#{(i % 30) + 1}"
+  )
+end
+
+20.times do |i|
+  User.create!(
+    name: "User #{i + 1}",
+    username: "username#{i + 1}"
+  )
+end
