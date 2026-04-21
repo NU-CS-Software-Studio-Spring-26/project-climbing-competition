@@ -8,7 +8,7 @@ Our project focuses on the Kilter Board (but can be expanded to include any boar
 ## Miro Design Board
 https://miro.com/app/board/uXjVGgc4nUM=/
 
-## Figma design
+## Figma Design
 https://www.figma.com/design/trFY1naoSyUb4O78BvCvzv/Untitled?node-id=0-1&t=7Cg2bF8m4n8F7xYd-1
 
 ## Features to Add
