@@ -1,0 +1,26 @@
+<% content_for :title, "Home - Competitions" %>
+
+<section class="page-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+  <div>
+    <h1 class="mb-1">All Competitions</h1>
+    <p class="text-muted mb-0">Browse upcoming climbing events and open one to see details.</p>
+  </div>
+  <%= link_to "Create Competition", new_competition_path, class: "btn btn-primary" %>
+</section>
+
+<div class="row g-3">
+  <% @competitions.each do |competition| %>
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card competition-card h-100">
+        <div class="card-body d-flex flex-column">
+          <h2 class="h5 card-title"><%= competition.name %></h2>
+          <p class="card-text text-muted mb-4">Date: <%= competition.date %></p>
+          <div class="mt-auto d-flex gap-2 flex-wrap">
+            <%= link_to "Competition Details", competition_path(competition), class: "btn btn-outline-primary btn-sm" %>
+            <%= link_to "Sample Climb", competition_climb_path(competition, 1), class: "btn btn-outline-secondary btn-sm" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
