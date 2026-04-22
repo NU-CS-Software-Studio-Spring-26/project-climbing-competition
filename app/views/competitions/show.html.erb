@@ -5,9 +5,27 @@
   <p class="text-muted mb-0">View information for this specific competition.</p>
 </section>
 
-<div class="detail-panel p-4 mb-3">
-  <h2 class="h4 mb-3"><%= @competition.name %></h2>
-  <p class="mb-0"><strong>Date:</strong> <%= @competition.date %></p>
+<div class="detail-panel p-4 mb-4">
+  <div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+      <h2 class="h4 mb-2"><%= @competition.name %></h2>
+      <p class="text-muted mb-0"><strong>Date:</strong> <%= @competition.date %></p>
+    </div>
+    <div class="d-flex gap-2">
+      <%= link_to "Edit", edit_competition_path(@competition), class: "btn btn-sm btn-outline-primary" %>
+      <%= button_to "Delete", @competition, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
+    </div>
+  </div>
+
+  <p class="mb-1"><strong>Owner:</strong> <%= @competition.owner&.username || "—" %></p>
+
+  <% if @competition.description.present? %>
+    <hr class="my-3">
+    <div class="bg-light p-3 rounded">
+      <strong>Description</strong>
+      <p class="mb-0 mt-2 text-break"><%= simple_format(@competition.description) %></p>
+    </div>
+  <% end %>
 </div>
 
 <div class="d-flex gap-2 flex-wrap">
