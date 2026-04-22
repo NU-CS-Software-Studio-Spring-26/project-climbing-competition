@@ -21,6 +21,11 @@
   </div>
 
   <div class="mb-3">
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, class: "form-control", placeholder: "Describe this competition...", rows: 4 %>
+  </div>
+
+  <div class="mb-3">
     <%= form.label :owner_id, "Owner", class: "form-label" %>
     <%= form.select :owner_id,
           User.order(:username).map { |u| [u.username, u.id] },
@@ -29,6 +34,6 @@
   </div>
 
   <div>
-    <%= form.submit "Save Competition", class: "btn btn-success" %>
+    <%= form.submit "Save Competition", class: "btn btn-success w-100" %>
   </div>
 <% end %>
