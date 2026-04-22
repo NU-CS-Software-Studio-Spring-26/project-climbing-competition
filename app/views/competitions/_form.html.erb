@@ -20,6 +20,14 @@
     <%= form.date_field :date, class: "form-control" %>
   </div>
 
+  <div class="mb-3">
+    <%= form.label :owner_id, "Owner", class: "form-label" %>
+    <%= form.select :owner_id,
+          User.order(:username).map { |u| [u.username, u.id] },
+          { include_blank: "— None —" },
+          class: "form-select" %>
+  </div>
+
   <div>
     <%= form.submit "Save Competition", class: "btn btn-success" %>
   </div>

@@ -7,7 +7,8 @@
 
 <div class="detail-panel p-4 mb-3">
   <h2 class="h4 mb-3"><%= @competition.name %></h2>
-  <p class="mb-0"><strong>Date:</strong> <%= @competition.date %></p>
+  <p class="mb-1"><strong>Date:</strong> <%= @competition.date %></p>
+  <p class="mb-0"><strong>Owner:</strong> <%= @competition.owner&.username || "—" %></p>
 </div>
 
 <div class="d-flex gap-2 flex-wrap">

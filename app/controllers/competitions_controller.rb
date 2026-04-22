@@ -65,6 +65,6 @@ class CompetitionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def competition_params
-      params.expect(competition: [ :name, :date ])
+      params.expect(competition: [ :name, :date, :owner_id ])
     end
 end
