@@ -9,5 +9,8 @@ Climbing competitions are usually an in-person activity, done in local gyms or o
 
 The service will allow competition hosts to set special routes on the board and invite competitors. Competitors will have a time period to film their attempts on the routes and submit them. Submissions can be validated using manual review or even AI assessment.
 
+## Communication:
+Meeting scheduling is done via when2meet, with reoccuring meetings happeing every Sunday in Mudd Library. Communication will be done via Slack and Zoom meetings. Decision-making is done by vote if it has major implications for direction of project, otherwise will be up to personal discretion to increase efficiency. 
+
 ### MVP: 
-A platform to create climbing leagues with designated competition climbs on the Kilterboard with leaderboard feature.
+A platform to create climbing leagues with designated competition climbs on the Kilterboard with leaderboard feature. See Heroku deployment here: https://climb-league-c5d605affe21.herokuapp.com/

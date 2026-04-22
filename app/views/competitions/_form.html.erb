@@ -20,6 +20,16 @@
     <%= form.date_field :date, class: "form-control" %>
   </div>
 
+  <div class="mb-3">
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, class: "form-control", placeholder: "Describe this competition...", rows: 4 %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :owner_id, "Owner", class: "form-label" %>
+    <%= form.select :owner_id, User.order(:username).map { |u| [u.username, u.id] }, { include_blank: "— None —" }, class: "form-select" %>
+  </div>
+
   <div class="action-row d-flex gap-2 flex-wrap">
     <%= form.submit "Save Competition", class: "btn btn-board-primary" %>
     <%= link_to "Cancel", competitions_path, class: "btn btn-board-secondary" %>
