@@ -1,0 +1,13 @@
+<% content_for :title, "board base" %>
+
+<section class="home-hero" aria-label="Board Base Hero">
+  <div class="home-copy">
+    <h1 class="home-title">board base</h1>
+    <p class="home-subtitle">a virtual space for competitive climbing</p>
+    <%= link_to "FIND EVENTS", competitions_path, class: "home-events-link" %>
+  </div>
+
+  <div class="home-kilter-wrap" aria-hidden="true">
+    <%= image_tag "/kilter.svg", alt: "" %>
+  </div>
+</section>

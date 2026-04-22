@@ -1,4 +1,4 @@
-<%= form_with(model: competition) do |form| %>
+<%= form_with(model: competition, html: { class: "board-form" }) do |form| %>
   <% if competition.errors.any? %>
     <div class="alert alert-danger" role="alert">
       <h2 class="h6"><%= pluralize(competition.errors.count, "error") %> prevented this competition from being saved:</h2>
@@ -27,13 +27,11 @@
 
   <div class="mb-3">
     <%= form.label :owner_id, "Owner", class: "form-label" %>
-    <%= form.select :owner_id,
-          User.order(:username).map { |u| [u.username, u.id] },
-          { include_blank: "— None —" },
-          class: "form-select" %>
+    <%= form.select :owner_id, User.order(:username).map { |u| [u.username, u.id] }, { include_blank: "— None —" }, class: "form-select" %>
   </div>
 
-  <div>
-    <%= form.submit "Save Competition", class: "btn btn-success w-100" %>
+  <div class="action-row d-flex gap-2 flex-wrap">
+    <%= form.submit "Save Competition", class: "btn btn-board-primary" %>
+    <%= link_to "Cancel", competitions_path, class: "btn btn-board-secondary" %>
   </div>
 <% end %>
