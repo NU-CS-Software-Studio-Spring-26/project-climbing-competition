@@ -1,59 +1,478 @@
 /*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
+ * Application stylesheet.
  */
 
 :root {
-	--cc-bg-start: #f7fbf5;
-	--cc-bg-end: #ecf4fb;
-	--cc-primary: #1e4f64;
-	--cc-accent: #2f7f75;
-	--cc-surface: #ffffff;
+  --bg: #1a1a1c;
+  --text: #f5f2e6;
+  --card-bg: rgba(245, 242, 230, 0.79);
+  --card-top: #f5f2e6;
+  --card-text: #1a1a1c;
 }
 
 body.app-shell {
-	min-height: 100vh;
-	background: linear-gradient(145deg, var(--cc-bg-start), var(--cc-bg-end));
-	color: #1f2d2f;
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  line-height: 1.4;
 }
 
-.app-navbar {
-	background-color: rgba(255, 255, 255, 0.88);
-	backdrop-filter: blur(8px);
-	border-bottom: 1px solid rgba(30, 79, 100, 0.14);
+body.app-shell.home-shell {
+  background: #e7e5dc;
+  color: #111111;
 }
 
-.app-navbar .navbar-brand {
-	color: var(--cc-primary);
+.home-main {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2.2rem 1rem 0;
 }
 
-.app-navbar .nav-link {
-	color: #375767;
+.home-hero {
+  width: 100%;
+  max-width: 66rem;
+  min-height: calc(100vh - 2.2rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  text-align: center;
+  color: #090909;
 }
 
-.app-navbar .nav-link:hover {
-	color: var(--cc-accent);
+.home-copy {
+  width: 100%;
+  max-width: 52rem;
+  margin: 0 auto clamp(0.9rem, 2.6vh, 1.8rem);
+}
+
+.home-title {
+  font-size: clamp(3.6rem, 9vw, 6.3rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  margin: 0;
+  text-transform: lowercase;
+}
+
+.home-subtitle {
+  font-size: clamp(1.05rem, 2.2vw, 2rem);
+  font-weight: 700;
+  margin: clamp(0.7rem, 1.9vh, 1.15rem) 0 0;
+}
+
+.home-events-link {
+  display: inline-block;
+  margin-top: clamp(1rem, 2.8vh, 2.2rem);
+  font-size: clamp(1rem, 2vw, 1.85rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #111111;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.home-events-link:hover {
+  color: #000000;
+}
+
+.home-kilter-wrap {
+  width: min(88vw, 48.5rem);
+  margin: 0 auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-kilter-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: 14.5rem minmax(0, 1fr);
+  gap: 2.35rem;
+  min-height: 100vh;
+  padding: 0 1.6rem 0 1.95rem;
+}
+
+.app-sidebar {
+  padding-top: 2.2rem;
+  padding-left: 0.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.35rem;
+}
+
+.app-brand {
+  text-decoration: none;
+  color: var(--text);
+  font-size: 2.6rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.8rem;
+  margin-top: 1rem;
+}
+
+.app-nav-link {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: lowercase;
+}
+
+.app-nav-link.is-active,
+.app-nav-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.app-main {
+  padding: 2.1rem 0.15rem 2.2rem 0;
+  min-width: 0;
+}
+
+.alert {
+  max-width: 22rem;
+  margin-bottom: 1.2rem;
+  background: rgba(245, 242, 230, 0.18);
+  border: 1px solid rgba(245, 242, 230, 0.26);
+  color: var(--text);
 }
 
 .page-header {
-	margin-bottom: 1.25rem;
+  margin-bottom: 1.55rem;
+}
+
+.page-title {
+  font-size: 3rem;
+  font-weight: 500;
+  margin: 0;
+  text-transform: lowercase;
+}
+
+.page-title-left {
+  font-size: 2.2rem;
+  margin-bottom: 0.35rem;
+}
+
+.back-arrow-link {
+  color: #f5f2e6;
+  text-decoration: none;
+  font-size: 1.9rem;
+  line-height: 1;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.18rem 0.22rem;
+  border-radius: 0.35rem;
+  transition: background-color 160ms ease;
+}
+
+.back-arrow-link:hover {
+  background: rgba(245, 242, 230, 0.14);
+  color: #f5f2e6;
+}
+
+.back-arrow-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #f5f2e6;
+  text-decoration: none;
+  font-size: 0.92rem;
+  text-transform: lowercase;
+  font-weight: 500;
+}
+
+.back-arrow-text-link:hover {
+  color: #f5f2e6;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.climb-card-link {
+  display: block;
+  width: min(30rem, 100%);
+  background: var(--card-bg);
+  border: 1px solid rgba(245, 242, 230, 0.58);
+  border-radius: 0.55rem;
+  padding: 1rem 1rem 1.05rem;
+  text-decoration: none;
+  color: var(--card-text);
+  box-shadow:
+    0 14px 20px rgba(0, 0, 0, 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -2px 0 rgba(0, 0, 0, 0.18) inset;
+  transition: transform 170ms ease, box-shadow 170ms ease;
+}
+
+.climb-card-link:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 24px rgba(0, 0, 0, 0.32),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -2px 0 rgba(0, 0, 0, 0.2) inset;
+  color: var(--card-text);
+}
+
+.climb-card-title {
+  display: block;
+  font-size: 1.08rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.climb-card-subtitle {
+  display: block;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.competitions-grid {
+  max-width: 1110px;
+  margin: 0 auto;
 }
 
 .competition-card {
-	background-color: var(--cc-surface);
-	border: 1px solid rgba(30, 79, 100, 0.14);
-	box-shadow: 0 10px 24px rgba(30, 79, 100, 0.08);
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid rgba(245, 242, 230, 0.58);
+  border-radius: 0.52rem;
+  overflow: hidden;
+  box-shadow:
+    0 14px 20px rgba(0, 0, 0, 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -2px 0 rgba(0, 0, 0, 0.18) inset;
+  transition: transform 170ms ease, box-shadow 170ms ease;
+  min-height: 15.8rem;
+}
+
+.competition-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 24px rgba(0, 0, 0, 0.32),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -2px 0 rgba(0, 0, 0, 0.2) inset;
+}
+
+.competition-top-border {
+  height: 0.5rem;
+  background: var(--card-top);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.competition-body {
+  padding: 1.05rem 0.95rem 1.05rem;
+  color: var(--card-text);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.05));
+}
+
+.competition-name {
+  font-size: 1.16rem;
+  font-weight: 600;
+  margin-bottom: 0.44rem;
+  line-height: 1.2;
+}
+
+.competition-date {
+  font-size: 0.86rem;
+  margin-bottom: 0.88rem;
+  text-transform: uppercase;
+  letter-spacing: 0.085em;
+  font-weight: 600;
+}
+
+.competition-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.66rem;
+}
+
+.competition-link {
+  color: var(--card-text);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.competition-link:hover {
+  color: #000000;
 }
 
 .detail-panel {
-	background-color: var(--cc-surface);
-	border: 1px solid rgba(30, 79, 100, 0.14);
-	border-radius: 0.75rem;
-	box-shadow: 0 10px 24px rgba(30, 79, 100, 0.08);
+  background: var(--card-bg);
+  border: 1px solid rgba(245, 242, 230, 0.58);
+  border-radius: 0.55rem;
+  color: var(--card-text);
+  box-shadow:
+    0 14px 20px rgba(0, 0, 0, 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -2px 0 rgba(0, 0, 0, 0.18) inset;
+}
+
+.detail-heading {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 0.65rem;
+}
+
+.detail-item {
+  font-size: 0.96rem;
+  margin: 0;
+}
+
+.detail-item span {
+  font-weight: 700;
+}
+
+.board-form .form-label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--card-text);
+}
+
+.board-form .form-control {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  color: #111;
+  border-radius: 0.45rem;
+}
+
+.board-form .form-control:focus {
+  border-color: rgba(26, 26, 28, 0.46);
+  box-shadow: 0 0 0 0.18rem rgba(26, 26, 28, 0.18);
+}
+
+.action-row {
+  margin-top: 0.2rem;
+}
+
+.btn-board-primary,
+.btn-board-secondary,
+.btn-create {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 0.56rem 0.78rem;
+  border-radius: 0.45rem;
+  text-transform: lowercase;
+  text-decoration: none;
+}
+
+.btn-board-primary,
+.btn-create {
+  background: #1a1a1c;
+  border: 1px solid #1a1a1c;
+  color: #f5f2e6;
+}
+
+.btn-board-primary:hover,
+.btn-create:hover {
+  background: #090909;
+  border-color: #090909;
+  color: #f5f2e6;
+}
+
+.btn-board-secondary {
+  background: transparent;
+  border: 1px solid rgba(26, 26, 28, 0.36);
+  color: #1a1a1c;
+}
+
+.btn-board-secondary:hover {
+  background: rgba(26, 26, 28, 0.08);
+  color: #0d0d0d;
+}
+
+@media (max-width: 991.98px) {
+  .app-grid {
+    grid-template-columns: 10.5rem minmax(0, 1fr);
+    gap: 1.2rem;
+  }
+
+  .app-brand {
+    font-size: 1.9rem;
+  }
+
+  .app-nav-link {
+    font-size: 1.35rem;
+  }
+
+  .page-title {
+    font-size: 2.2rem;
+  }
+
+  .competition-card {
+    min-height: 14.8rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .app-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0 0.85rem;
+  }
+
+  .app-sidebar {
+    padding: 1rem 0.2rem 0.5rem;
+    gap: 1rem;
+  }
+
+  .app-nav {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .app-nav-link {
+    font-size: 1.05rem;
+  }
+
+  .app-main {
+    padding: 0.6rem 0.15rem 1.5rem;
+  }
+
+  .page-title {
+    font-size: 1.95rem;
+  }
+
+  .home-main {
+    padding-top: 1rem;
+  }
+
+  .home-hero {
+    min-height: calc(100vh - 1rem);
+  }
+
+  .home-copy {
+    margin-bottom: clamp(0.65rem, 2vh, 1.15rem);
+  }
+
+  .home-events-link {
+    margin-top: 1rem;
+  }
+
+  .home-kilter-wrap {
+    margin-top: 0;
+  }
 }

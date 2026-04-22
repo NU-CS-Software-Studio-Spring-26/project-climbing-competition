@@ -1,16 +1,18 @@
 <% content_for :title, "Climb Details" %>
 
-<section class="page-header">
-  <h1 class="mb-1">Climb Details</h1>
-  <p class="text-muted mb-0">This page is reserved for a specific climb in the selected competition.</p>
+<section class="page-header text-center">
+  <h1 class="page-title">climb details</h1>
 </section>
 
-<div class="detail-panel p-4 mb-3">
-  <p class="mb-2"><strong>Competition:</strong> <%= @competition.name %></p>
-  <p class="mb-0"><strong>Climb ID:</strong> <%= @climb_id %></p>
+<div class="action-row mb-2 d-flex gap-2 flex-wrap align-items-center">
+  <%= link_to competition_path(@competition), class: "back-arrow-text-link" do %>
+    <span aria-hidden="true">←</span>
+    back to competition details
+  <% end %>
 </div>
 
-<div class="d-flex gap-2 flex-wrap">
-  <%= link_to "Home", competitions_path, class: "btn btn-outline-secondary" %>
-  <%= link_to "Competition Details", competition_path(@competition), class: "btn btn-outline-primary" %>
+<div class="detail-panel p-4 mb-3">
+  <p class="detail-item mb-2"><span>Competition:</span> <%= @competition.name %></p>
+  <p class="detail-item mb-0"><span>Climb ID:</span> <%= @climb_id %></p>
 </div>
+

@@ -1,14 +1,13 @@
 <% content_for :title, "Create Competition" %>
 
 <section class="page-header">
-  <h1 class="mb-1">Create Competition</h1>
-  <p class="text-muted mb-0">Add a new competition to the home page list.</p>
+  <h1 class="page-title page-title-left">create competition</h1>
 </section>
 
 <div class="detail-panel p-4 mb-3">
   <%= render "form", competition: @competition %>
 </div>
 
-<div class="d-flex gap-2 flex-wrap">
-  <%= link_to "Home", competitions_path, class: "btn btn-outline-secondary" %>
+<div class="action-row d-flex gap-2 flex-wrap">
+  <%= link_to "Home", competitions_path, class: "btn btn-board-secondary" %>
 </div>
