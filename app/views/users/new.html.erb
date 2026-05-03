@@ -1,11 +1,17 @@
-<% content_for :title, "New user" %>
+<% content_for :title, "Sign up" %>
 
-<h1>New user</h1>
+<section class="detail-panel auth-panel p-4">
+  <div class="d-flex flex-column gap-3">
+    <div>
+      <p class="eyebrow mb-1">join the board</p>
+      <h1 class="page-title page-title-left">create your profile</h1>
+      <p class="mb-0">Set up your climbing profile and sign in right away.</p>
+    </div>
 
-<%= render "form", user: @user %>
+    <%= render "form", user: @user %>
 
-<br>
-
-<div>
-  <%= link_to "Back to users", users_path %>
-</div>
+    <div class="action-row">
+      <%= link_to "Already have an account? Sign in", new_session_path, class: "back-arrow-text-link" %>
+    </div>
+  </div>
+</section>

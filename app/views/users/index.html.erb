@@ -1,16 +1,16 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Profiles" %>
 
-<% content_for :title, "Users" %>
-
-<h1>Users</h1>
+<section class="page-header">
+  <h1 class="page-title">profiles</h1>
+</section>
 
 <div id="users">
   <% @users.each do |user| %>
     <%= render user %>
     <p>
-      <%= link_to "Show this user", user %>
+      <%= link_to "View profile", user %>
     </p>
   <% end %>
 </div>
 
-<%= link_to "New user", new_user_path %>
+<%= link_to "Sign up", new_user_path, class: "btn btn-board-primary" %>

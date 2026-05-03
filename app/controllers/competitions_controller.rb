@@ -1,4 +1,5 @@
 class CompetitionsController < ApplicationController
+  before_action :require_authentication, only: %i[ new create ]
   before_action :set_competition, only: %i[ show edit update destroy ]
 
   # GET /competitions or /competitions.json
@@ -22,6 +23,7 @@ class CompetitionsController < ApplicationController
   # POST /competitions or /competitions.json
   def create
     @competition = Competition.new(competition_params)
+    @competition.owner = current_user
 
     respond_to do |format|
       if @competition.save
@@ -65,6 +67,6 @@ class CompetitionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def competition_params
-      params.expect(competition: [ :name, :date, :description, :owner_id ])
+      params.expect(competition: [ :name, :date, :description ])
     end
 end

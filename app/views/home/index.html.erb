@@ -5,6 +5,15 @@
     <h1 class="home-title">board base</h1>
     <p class="home-subtitle">a virtual space for competitive climbing</p>
     <%= link_to "FIND EVENTS", competitions_path, class: "home-events-link" %>
+    <div class="home-actions">
+      <% if authenticated? %>
+        <%= link_to "VIEW PROFILE", user_path(current_user), class: "home-action-link" %>
+        <%= link_to "SIGN OUT", session_path, data: { turbo_method: :delete }, class: "home-action-link" %>
+      <% else %>
+        <%= link_to "SIGN UP", new_user_path, class: "home-action-link" %>
+        <%= link_to "SIGN IN", new_session_path, class: "home-action-link" %>
+      <% end %>
+    </div>
   </div>
 
   <div class="home-kilter-wrap" aria-hidden="true">

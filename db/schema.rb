@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_21_234000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_03_000000) do
   create_table "competitions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date"
@@ -31,14 +31,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_21_234000) do
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "ip_address"
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.integer "user_id", null: false
+    t.index ["token"], name: "index_sessions_on_token", unique: true
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.text "bio"
+    t.datetime "created_at", null: false
+    t.string "email_address"
     t.string "name"
+    t.string "password_digest"
     t.datetime "updated_at", null: false
     t.string "username"
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "competitions", "users", column: "owner_id"
   add_foreign_key "enrollments", "competitions"
   add_foreign_key "enrollments", "users"
+  add_foreign_key "sessions", "users"
 end

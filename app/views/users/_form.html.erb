@@ -1,9 +1,9 @@
-<%= form_with(model: user) do |form| %>
+<%= form_with(model: user, class: "board-form") do |form| %>
   <% if user.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+    <div class="alert alert-danger" role="alert">
+      <h2 class="h6"><%= pluralize(user.errors.count, "error") %> prevented this profile from being saved:</h2>
 
-      <ul>
+      <ul class="mb-0">
         <% user.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,17 +11,37 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", placeholder: "Your full name" %>
   </div>
 
-  <div>
-    <%= form.label :username, style: "display: block" %>
-    <%= form.text_field :username %>
+  <div class="mb-3">
+    <%= form.label :username, class: "form-label" %>
+    <%= form.text_field :username, class: "form-control", placeholder: "your-handle" %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="mb-3">
+    <%= form.label :email_address, "Email address", class: "form-label" %>
+    <%= form.email_field :email_address, class: "form-control", autocomplete: "email", placeholder: "name@example.com" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :bio, class: "form-label" %>
+    <%= form.text_area :bio, class: "form-control", rows: 4, placeholder: "Share a quick intro or climbing style." %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :password, class: "form-label" %>
+    <%= form.password_field :password, class: "form-control", autocomplete: user.new_record? ? "new-password" : "current-password" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :password_confirmation, "Confirm password", class: "form-label" %>
+    <%= form.password_field :password_confirmation, class: "form-control", autocomplete: user.new_record? ? "new-password" : "current-password" %>
+  </div>
+
+  <div class="action-row d-flex gap-2 flex-wrap">
+    <%= form.submit user.new_record? ? "Create profile" : "Update profile", class: "btn btn-board-primary" %>
   </div>
 <% end %>

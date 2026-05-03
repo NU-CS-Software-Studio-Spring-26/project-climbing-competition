@@ -1,10 +1,21 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, @user.username %>
 
-<%= render @user %>
+<section class="detail-panel p-4">
+  <div class="d-flex flex-column gap-3">
+    <div>
+      <p class="eyebrow mb-1">profile</p>
+      <h1 class="page-title page-title-left"><%= @user.name %></h1>
+      <p class="mb-0"><%= "@#{@user.username}" %></p>
+    </div>
 
-<div>
-  <%= link_to "Edit this user", edit_user_path(@user) %> |
-  <%= link_to "Back to users", users_path %>
+    <div class="d-flex flex-column gap-2">
+      <p class="detail-item mb-0"><span>Email:</span> <%= @user.email_address %></p>
+      <p class="detail-item mb-0"><span>Bio:</span> <%= @user.bio.presence || "No bio added yet." %></p>
+    </div>
 
-  <%= button_to "Destroy this user", @user, method: :delete %>
-</div>
+    <div class="action-row d-flex gap-2 flex-wrap">
+      <%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-board-primary" %>
+      <%= link_to "Back to events", competitions_path, class: "btn btn-board-secondary" %>
+    </div>
+  </div>
+</section>

@@ -476,3 +476,56 @@ body.app-shell.home-shell {
     margin-top: 0;
   }
 }
+
+.home-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  margin-top: clamp(0.9rem, 2.2vh, 1.6rem);
+}
+
+.home-action-link {
+  color: #111111;
+  font-size: clamp(0.88rem, 1.4vw, 1.05rem);
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.home-action-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  color: #000000;
+}
+
+.home-stack {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app-flashes {
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+  width: 100%;
+}
+
+.app-flashes .alert {
+  margin: 0 auto 1.2rem;
+}
+
+.auth-panel {
+  width: min(100%, 38rem);
+  margin-inline: auto;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}

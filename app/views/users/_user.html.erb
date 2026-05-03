@@ -9,4 +9,14 @@
     <%= user.username %>
   </div>
 
+  <div>
+    <strong>Email:</strong>
+    <%= user.email_address %>
+  </div>
+
+  <div>
+    <strong>Bio:</strong>
+    <%= user.bio.presence || "No bio added yet." %>
+  </div>
+
 </div>
