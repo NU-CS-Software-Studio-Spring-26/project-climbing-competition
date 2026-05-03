@@ -16,7 +16,6 @@
           <p class="competition-date">Ends: <%= competition.date&.strftime("%-m/%-d/%Y") || competition.date %></p>
           <div class="competition-links">
             <%= link_to "View Details", competition_path(competition), class: "competition-link" %>
-            <%= link_to "Sample Climb", competition_climb_path(competition, 1), class: "competition-link" %>
           </div>
         </div>
         
