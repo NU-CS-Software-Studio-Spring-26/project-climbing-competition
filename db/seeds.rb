@@ -15,7 +15,7 @@ users_data = [
   { name: "Parker Davis", username: "parkersends", email: "parker@climbing.local", bio: "Route setter by day, climber by night" },
   { name: "Riley Kim", username: "rileybeta", email: "riley@climbing.local", bio: "Training for nationals" },
   { name: "Avery Johnson", username: "averyclimbs", email: "avery@climbing.local", bio: "Youth competitive climber" },
-  { name: "Taylor Brown", username: "taylorboulder", email: "taylor@climbing.local", bio: "Problem solver and crimper" },
+  { name: "Taylor Brown", username: "taylorboulder", email: "taylor@climbing.local", bio: "Problem solver and crimper" }
 ]
 
 users = users_data.map do |data|
@@ -111,7 +111,7 @@ competitions_data = [
       { name: "Getting Started", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
       { name: "Basic Moves", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
-  },
+  }
 ]
 
 competitions = []
@@ -121,7 +121,7 @@ competitions_data.each do |data|
   climbs.each_with_index do |climb, index|
     climbs_attributes[index.to_s] = climb
   end
-  
+
   comp = users[rand(0...users.length)].owned_competitions.create!(
     data.merge(climbs_attributes: climbs_attributes)
   )
