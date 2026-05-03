@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: The Crimper
+  url: https://kilterboard.com/climb/1
+  competition: one
+
+one_two:
+  name: The Jug
+  url: https://kilterboard.com/climb/2
+  competition: one
+
+two:
+  name: The Sloper
+  url: https://kilterboard.com/climb/3
+  competition: two
+
+two_two:
+  name: The Pocket
+  url: https://kilterboard.com/climb/4
+  competition: two

@@ -1,0 +1,20 @@
+<div class="climb-field mb-3 p-3 border rounded" data-climb-field>
+  <div class="d-flex justify-content-between align-items-start mb-2">
+    <h5 class="mb-0">Climb</h5>
+    <button type="button" class="btn btn-sm btn-outline-danger delete-climb-btn" data-climb-id="<%= form.object.id %>">
+      <span aria-hidden="true">×</span> Remove
+    </button>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :name, "Climb Name", class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", placeholder: "e.g., The Crimper" %>
+  </div>
+
+  <div class="mb-0">
+    <%= form.label :url, "Climb Link (URL)", class: "form-label" %>
+    <%= form.text_field :url, class: "form-control", placeholder: "https://..." %>
+  </div>
+
+  <%= form.hidden_field :_destroy, value: false %>
+</div>

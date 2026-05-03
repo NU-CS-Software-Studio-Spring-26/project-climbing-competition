@@ -1,9 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  date: 2026-04-21
+  name: Spring Boulder Bash
+  date: 2026-05-15
+  description: Spring climbing competition
 
 two:
-  name: MyString
-  date: 2026-04-21
+  name: Summer Send Series
+  date: 2026-06-20
+  description: Summer event

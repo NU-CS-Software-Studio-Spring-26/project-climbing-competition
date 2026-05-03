@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_03_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_03_111143) do
+  create_table "climbs", force: :cascade do |t|
+    t.integer "competition_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.index ["competition_id"], name: "index_climbs_on_competition_id"
+  end
+
   create_table "competitions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date"
@@ -54,6 +63,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_03_000000) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "climbs", "competitions"
   add_foreign_key "competitions", "users", column: "owner_id"
   add_foreign_key "enrollments", "competitions"
   add_foreign_key "enrollments", "users"

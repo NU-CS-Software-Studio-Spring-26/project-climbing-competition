@@ -35,13 +35,17 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
           date: @competition.date,
           name: "Spring Send Fest",
           description: "Open event",
-          owner_id: users(:two).id
+          climbs_attributes: {
+            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1" },
+            "1" => { name: "Climb 2", url: "https://kilterboard.com/climb/2" }
+          }
         }
       }
     end
 
     assert_redirected_to competition_url(Competition.last)
     assert_equal @user.id, Competition.last.owner_id
+    assert_equal 2, Competition.last.climbs.count
   end
 
   test "should redirect create when unauthenticated" do
@@ -63,7 +67,16 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update competition" do
-    patch competition_url(@competition), params: { competition: { date: @competition.date, name: @competition.name } }
+    patch competition_url(@competition), params: {
+      competition: {
+        date: @competition.date,
+        name: @competition.name,
+        climbs_attributes: {
+          @competition.climbs.first.id.to_s => { name: "Updated Climb", url: "https://kilterboard.com/climb/updated" },
+          @competition.climbs.last.id.to_s => { name: "Second Climb", url: "https://kilterboard.com/climb/second" }
+        }
+      }
+    }
     assert_redirected_to competition_url(@competition)
   end
 

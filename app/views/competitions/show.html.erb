@@ -13,12 +13,24 @@
 
 <div class="detail-panel p-4 mb-3">
   <h2 class="detail-heading"><%= @competition.name %></h2>
+  <p class="detail-item mb-0"><span>Created by:</span> <%= @competition.owner&.username %></p>
   <p class="detail-item mb-0"><span>Ends:</span> <%= @competition.date %></p>
-</div>
-
-<div class="action-row d-flex flex-column gap-3 align-items-start">
-  <%= link_to competition_climb_path(@competition, 1), class: "climb-card-link" do %>
-    <span class="climb-card-title">View a Climb</span>
-    <span class="climb-card-subtitle">Open climb preview for this event</span>
+  <% if @competition.description.present? %>
+    <p class="detail-item mb-0"><span>Description:</span> <%= @competition.description %></p>
   <% end %>
 </div>
+
+<% if @competition.climbs.any? %>
+  <div class="climbs-section mb-4">
+    <h3 class="mb-3">Climbs</h3>
+    <div class="action-row d-flex flex-column gap-3 align-items-start">
+      <% @competition.climbs.each do |climb| %>
+        <a href="<%= climb.url %>" target="_blank" class="climb-card-link">
+          <span class="climb-card-title"><%= climb.name %></span>
+          <span class="climb-card-subtitle">Open climb on Kilterboard</span>
+        </a>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+

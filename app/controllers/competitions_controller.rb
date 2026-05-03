@@ -14,10 +14,13 @@ class CompetitionsController < ApplicationController
   # GET /competitions/new
   def new
     @competition = Competition.new
+    3.times { @competition.climbs.build }
   end
 
   # GET /competitions/1/edit
   def edit
+    # Ensure at least one blank climb field for adding
+    @competition.climbs.build if @competition.climbs.empty?
   end
 
   # POST /competitions or /competitions.json
@@ -67,6 +70,6 @@ class CompetitionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def competition_params
-      params.expect(competition: [ :name, :date, :description ])
+      params.require(:competition).permit(:name, :date, :description, climbs_attributes: [:id, :name, :url, :_destroy])
     end
 end
