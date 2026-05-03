@@ -3,9 +3,11 @@
 one:
   name: Spring Boulder Bash
   date: 2026-05-15
+  level: beginner
   description: Spring climbing competition
 
 two:
   name: Summer Send Series
   date: 2026-06-20
+  level: advanced
   description: Summer event

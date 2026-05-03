@@ -4,7 +4,7 @@ class CompetitionsController < ApplicationController
 
   # GET /competitions or /competitions.json
   def index
-    @competitions = Competition.all
+    @competitions = Competition.includes(:owner, :users)
   end
 
   # GET /competitions/1 or /competitions/1.json
@@ -70,6 +70,6 @@ class CompetitionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def competition_params
-      params.require(:competition).permit(:name, :date, :description, climbs_attributes: [:id, :name, :url, :_destroy])
+      params.require(:competition).permit(:name, :date, :level, :description, climbs_attributes: [:id, :name, :url, :_destroy])
     end
 end

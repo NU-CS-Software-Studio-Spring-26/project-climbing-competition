@@ -13,6 +13,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get competitions_url
     assert_response :success
+    assert_match competitions(:one).level.titleize, response.body
   end
 
   test "should get new" do
@@ -33,6 +34,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
       post competitions_url, params: {
         competition: {
           date: @competition.date,
+          level: "intermediate",
           name: "Spring Send Fest",
           description: "Open event",
           climbs_attributes: {
@@ -45,6 +47,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to competition_url(Competition.last)
     assert_equal @user.id, Competition.last.owner_id
+    assert_equal "intermediate", Competition.last.level
     assert_equal 2, Competition.last.climbs.count
   end
 
@@ -59,6 +62,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
   test "should show competition" do
     get competition_url(@competition)
     assert_response :success
+    assert_match @competition.level.titleize, response.body
   end
 
   test "should get edit" do
@@ -70,6 +74,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     patch competition_url(@competition), params: {
       competition: {
         date: @competition.date,
+        level: @competition.level,
         name: @competition.name,
         climbs_attributes: {
           @competition.climbs.first.id.to_s => { name: "Updated Climb", url: "https://kilterboard.com/climb/updated" },

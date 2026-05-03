@@ -1,4 +1,6 @@
 class Competition < ApplicationRecord
+  LEVELS = %w[beginner intermediate advanced elite].freeze
+
   belongs_to :owner, class_name: "User", optional: true
 
   has_many :enrollments, dependent: :destroy
@@ -7,7 +9,8 @@ class Competition < ApplicationRecord
 
   accepts_nested_attributes_for :climbs, allow_destroy: true, reject_if: :all_blank
 
-  validates :name, :date, presence: true
+  validates :name, :date, :level, presence: true
+  validates :level, inclusion: { in: LEVELS }
   validate :minimum_climbs
 
   private
