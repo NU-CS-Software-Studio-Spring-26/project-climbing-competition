@@ -13,7 +13,15 @@
 
 <div class="detail-panel p-4 mb-3">
   <h2 class="detail-heading"><%= @competition.name %></h2>
-  <p class="detail-item mb-0"><span>Ends:</span> <%= @competition.date %></p>
+  <p class="detail-item mb-2"><span>Difficulty:</span> V<%= @competition.difficulty %></p>
+  <p class="detail-item mb-2"><span>Starts:</span> <%= @competition.competition_start&.strftime("%-m/%-d/%Y") %></p>
+  <p class="detail-item mb-2"><span>Ends:</span> <%= @competition.competition_end&.strftime("%-m/%-d/%Y") %></p>
+  <p class="detail-item mb-2"><span>Owner:</span> <%= @competition.owner&.username || "—" %></p>
+  <% if @competition.description.present? %>
+    <p class="detail-item mb-0"><span>Description:</span> <%= @competition.description %></p>
+  <% else %>
+    <p class="detail-item mb-0 text-muted"><span>Description:</span> —</p>
+  <% end %>
 </div>
 
 <div class="action-row d-flex flex-column gap-3 align-items-start">

@@ -2,8 +2,12 @@
 
 one:
   name: MyString
-  date: 2026-04-21
+  competition_start: 2026-04-21
+  competition_end: 2026-04-23
+  difficulty: 5
 
 two:
   name: MyString
-  date: 2026-04-21
+  competition_start: 2026-04-21
+  competition_end: 2026-04-25
+  difficulty: 10
