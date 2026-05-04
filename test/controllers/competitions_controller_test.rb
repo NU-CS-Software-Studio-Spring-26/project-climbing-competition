@@ -33,7 +33,8 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Competition.count") do
       post competitions_url, params: {
         competition: {
-          date: @competition.date,
+          starts_at: @competition.starts_at,
+          ends_at: @competition.ends_at,
           level: "intermediate",
           name: "Spring Send Fest",
           description: "Open event",
@@ -53,7 +54,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
 
   test "should redirect create when unauthenticated" do
     assert_no_difference("Competition.count") do
-      post competitions_url, params: { competition: { date: @competition.date, name: "Blocked Event" } }
+      post competitions_url, params: { competition: { starts_at: @competition.starts_at, ends_at: @competition.ends_at, name: "Blocked Event" } }
     end
 
     assert_redirected_to new_session_url
@@ -73,7 +74,8 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
   test "should update competition" do
     patch competition_url(@competition), params: {
       competition: {
-        date: @competition.date,
+        starts_at: @competition.starts_at,
+        ends_at: @competition.ends_at,
         level: @competition.level,
         name: @competition.name,
         climbs_attributes: {

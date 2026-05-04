@@ -13,7 +13,8 @@
           <h2 class="competition-name"><%= competition.name %></h2>
           <p class="competition-date">Level: <%= competition.level.to_s.titleize %></p>
           <p class="competition-date">Climbers: <%= competition.users.count %></p>
-          <p class="competition-date">Ends: <%= competition.date&.strftime("%-m/%-d/%Y") || competition.date %></p>
+          <p class="competition-date">Starts: <%= competition.starts_at&.strftime("%b %-d, %Y") %></p>
+          <p class="competition-date">Ends: <%= competition.ends_at&.strftime("%b %-d, %Y") %></p>
           <div class="competition-links">
             <%= link_to "View Details", competition_path(competition), class: "competition-link" %>
           </div>

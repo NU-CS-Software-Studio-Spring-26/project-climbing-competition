@@ -16,7 +16,8 @@
   <p class="detail-item mb-0"><span>Created by:</span> <%= @competition.owner&.username %></p>
   <p class="detail-item mb-0"><span>Level:</span> <%= @competition.level.to_s.titleize %></p>
   <p class="detail-item mb-0"><span>Climbers Joined:</span> <%= @competition.users.count %></p>
-  <p class="detail-item mb-0"><span>Ends:</span> <%= @competition.date %></p>
+  <p class="detail-item mb-0"><span>Starts:</span> <%= @competition.starts_at&.strftime("%B %-d, %Y at %l:%M %p") %></p>
+  <p class="detail-item mb-0"><span>Ends:</span> <%= @competition.ends_at&.strftime("%B %-d, %Y at %l:%M %p") %></p>
   <% if @competition.description.present? %>
     <p class="detail-item mb-0"><span>Description:</span> <%= @competition.description %></p>
   <% end %>

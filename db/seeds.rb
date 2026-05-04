@@ -35,7 +35,8 @@ competitions_data = [
   {
     name: "Spring Send Fest 2026",
     level: "beginner",
-    date: "2026-05-15",
+    starts_at: "2026-05-15 09:00:00",
+    ends_at: "2026-05-15 17:00:00",
     description: "Open to climbers new to competition. Great atmosphere and plenty of cheering!",
     climbs: [
       { name: "Slopers Warm-up", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
@@ -45,7 +46,8 @@ competitions_data = [
   {
     name: "Midwest Regional Championship",
     level: "intermediate",
-    date: "2026-06-02",
+    starts_at: "2026-06-02 08:00:00",
+    ends_at: "2026-06-02 18:00:00",
     description: "Qualifying round for nationals. All skill levels welcome.",
     climbs: [
       { name: "Crimpy Sequence", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
@@ -55,7 +57,8 @@ competitions_data = [
   {
     name: "Elite Nationals Qualifier",
     level: "elite",
-    date: "2026-07-20",
+    starts_at: "2026-07-20 10:00:00",
+    ends_at: "2026-07-20 20:00:00",
     description: "Invite-only competition for top climbers. Tough problems and fierce competition.",
     climbs: [
       { name: "One-Finger Pocket Nightmare", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
@@ -65,7 +68,8 @@ competitions_data = [
   {
     name: "Summer Boulder Bash",
     level: "beginner",
-    date: "2026-06-10",
+    starts_at: "2026-06-10 09:00:00",
+    ends_at: "2026-06-10 16:00:00",
     description: "Casual comp with fun prizes. Perfect for your first competition!",
     climbs: [
       { name: "Warm-up Jugs", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
@@ -75,7 +79,8 @@ competitions_data = [
   {
     name: "Advanced Youth Open",
     level: "advanced",
-    date: "2026-05-28",
+    starts_at: "2026-05-28 10:00:00",
+    ends_at: "2026-05-28 17:00:00",
     description: "For climbers aged 13-18 with solid climbing experience.",
     climbs: [
       { name: "Tiny Edges Test", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
@@ -85,7 +90,8 @@ competitions_data = [
   {
     name: "Local Gym Championship",
     level: "intermediate",
-    date: "2026-05-22",
+    starts_at: "2026-05-22 18:00:00",
+    ends_at: "2026-05-23 00:00:00",
     description: "Friendly competition at our home gym. Food trucks and live music!",
     climbs: [
       { name: "Mid-Grade Crimps", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
@@ -95,7 +101,8 @@ competitions_data = [
   {
     name: "Women's Boulder Invitational",
     level: "advanced",
-    date: "2026-06-15",
+    starts_at: "2026-06-15 09:00:00",
+    ends_at: "2026-06-15 18:00:00",
     description: "Celebrating women in climbing. Amazing prize purse and sponsorships.",
     climbs: [
       { name: "Powerful Pockets", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
@@ -105,7 +112,8 @@ competitions_data = [
   {
     name: "Beginner Basics Series - Round 1",
     level: "beginner",
-    date: "2026-05-10",
+    starts_at: "2026-05-10 10:00:00",
+    ends_at: "2026-05-10 15:00:00",
     description: "Learn comp format and climb with other beginners. No pressure, all fun!",
     climbs: [
       { name: "Getting Started", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },

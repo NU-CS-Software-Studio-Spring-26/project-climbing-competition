@@ -69,6 +69,6 @@ end
 
     # Only allow a list of trusted parameters through.
     def competition_params
-      params.require(:competition).permit(:name, :date, :level, :description, climbs_attributes: [ :id, :name, :url, :_destroy ])
+      params.require(:competition).permit(:name, :date, :starts_at, :ends_at, :level, :description, climbs_attributes: [ :id, :name, :url, :_destroy ])
     end
 end

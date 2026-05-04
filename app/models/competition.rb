@@ -9,7 +9,7 @@ class Competition < ApplicationRecord
 
   accepts_nested_attributes_for :climbs, allow_destroy: true, reject_if: :all_blank
 
-  validates :name, :date, :level, presence: true
+  validates :name, :starts_at, :ends_at, :level, presence: true
   validates :level, inclusion: { in: LEVELS }
   validate :minimum_climbs
 
