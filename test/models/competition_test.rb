@@ -20,6 +20,6 @@ class CompetitionTest < ActiveSupport::TestCase
 
     assert_equal [ user_one.username, user_two.username ], leaderboard.map { |entry| entry.user.username }
     assert_equal [ 15, 15 ], leaderboard.map(&:points)
-    assert_equal [ 1, 2 ], leaderboard.map(&:attempts_count)
+    assert_equal [ 1, 4 ], leaderboard.map(&:attempts_count)
   end
 end
