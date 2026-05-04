@@ -14,7 +14,7 @@
 <div class="detail-panel p-4 mb-3">
   <p class="detail-item mb-2"><span>Competition:</span> <%= @competition.name %></p>
   <p class="detail-item mb-2"><span>Climb:</span> <%= @climb.name %></p>
-  <p class="detail-item mb-0"><span>Open on Kilter:</span> <a href="<%= @climb.url %>" target="_blank"><%= @climb.url %></a></p>
+  <p class="detail-item mb-0"><span>Open on Kilter:</span> <a href="<%= @climb.url %>" target="_blank" rel="noopener noreferrer"><%= @climb.url %></a></p>
 </div>
 
 <% if authenticated? && current_user.competitions.include?(@competition) %>
