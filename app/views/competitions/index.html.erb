@@ -11,7 +11,10 @@
         <div class="competition-top-border" aria-hidden="true"></div>
         <div class="competition-body">
           <h2 class="competition-name"><%= competition.name %></h2>
-          <p class="competition-date">Ends: <%= competition.date&.strftime("%-m/%-d/%Y") || competition.date %></p>
+          <p class="competition-meta mb-1"><span>Difficulty:</span> V<%= competition.difficulty %></p>
+          <p class="competition-meta mb-1"><span>Starts:</span> <%= competition.competition_start&.strftime("%-m/%-d/%Y") %></p>
+          <p class="competition-date mb-1"><span>Ends:</span> <%= competition.competition_end&.strftime("%-m/%-d/%Y") %></p>
+          <p class="competition-meta mb-0"><span>Owner:</span> <%= competition.owner&.username || "—" %></p>
           <div class="competition-links">
             <%= link_to "View Details", competition_path(competition), class: "competition-link" %>
             <%= link_to "Sample Climb", competition_climb_path(competition, 1), class: "competition-link" %>
