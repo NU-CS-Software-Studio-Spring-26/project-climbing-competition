@@ -16,8 +16,18 @@
   </div>
 
   <div class="mb-3">
-    <%= form.label :date, class: "form-label" %>
-    <%= form.date_field :date, class: "form-control" %>
+    <%= form.label :competition_start, class: "form-label" %>
+    <%= form.date_field :competition_start, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :competition_end, class: "form-label" %>
+    <%= form.date_field :competition_end, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :difficulty, "Difficulty (V-scale)", class: "form-label" %>
+    <%= form.number_field :difficulty, class: "form-control", min: 0, max: 17, step: 1 %>
   </div>
 
   <div class="mb-3">
