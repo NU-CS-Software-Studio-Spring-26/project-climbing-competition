@@ -16,18 +16,29 @@
   </div>
 
   <div class="mb-3">
-    <%= form.label :date, class: "form-label" %>
-    <%= form.date_field :date, class: "form-control" %>
+    <div class="row">
+      <div class="col">
+        <%= form.label :starts_at, "Start Date", class: "form-label" %>
+        <%= form.date_field :starts_at, class: "form-control" %>
+      </div>
+      <div class="col">
+        <%= form.label :starts_at, "Start Time", class: "form-label" %>
+        <%= form.time_field :starts_at, class: "form-control" %>
+      </div>
+    </div>
   </div>
 
   <div class="mb-3">
-    <%= form.label :starts_at, "Start Date & Time", class: "form-label" %>
-    <%= form.datetime_local_field :starts_at, class: "form-control" %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :ends_at, "End Date & Time", class: "form-label" %>
-    <%= form.datetime_local_field :ends_at, class: "form-control" %>
+    <div class="row">
+      <div class="col">
+        <%= form.label :ends_at, "End Date", class: "form-label" %>
+        <%= form.date_field :ends_at, class: "form-control" %>
+      </div>
+      <div class="col">
+        <%= form.label :ends_at, "End Time", class: "form-label" %>
+        <%= form.time_field :ends_at, class: "form-control" %>
+      </div>
+    </div>
   </div>
 
   <div class="mb-3">

@@ -40,7 +40,8 @@ competitions_data = [
     description: "Open to climbers new to competition. Great atmosphere and plenty of cheering!",
     climbs: [
       { name: "Slopers Warm-up", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Jug Ladder", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Jug Ladder", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Topout Finish", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -51,7 +52,8 @@ competitions_data = [
     description: "Qualifying round for nationals. All skill levels welcome.",
     climbs: [
       { name: "Crimpy Sequence", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Dyno to Sloper", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Dyno to Sloper", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Compression Cave", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -62,7 +64,8 @@ competitions_data = [
     description: "Invite-only competition for top climbers. Tough problems and fierce competition.",
     climbs: [
       { name: "One-Finger Pocket Nightmare", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Volume to Dyno Sprint", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Volume to Dyno Sprint", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Final Hold Gauntlet", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -73,7 +76,8 @@ competitions_data = [
     description: "Casual comp with fun prizes. Perfect for your first competition!",
     climbs: [
       { name: "Warm-up Jugs", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Easy Slopers", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Easy Slopers", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Confidence Builder", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -84,7 +88,8 @@ competitions_data = [
     description: "For climbers aged 13-18 with solid climbing experience.",
     climbs: [
       { name: "Tiny Edges Test", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Compression Master", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Compression Master", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Toe Hook Line", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -95,7 +100,8 @@ competitions_data = [
     description: "Friendly competition at our home gym. Food trucks and live music!",
     climbs: [
       { name: "Mid-Grade Crimps", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Dynamic Jumpers", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Dynamic Jumpers", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Competition Flows", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -106,7 +112,8 @@ competitions_data = [
     description: "Celebrating women in climbing. Amazing prize purse and sponsorships.",
     climbs: [
       { name: "Powerful Pockets", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Endurance Challenge", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Endurance Challenge", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Precision Finale", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -117,7 +124,8 @@ competitions_data = [
     description: "Learn comp format and climb with other beginners. No pressure, all fun!",
     climbs: [
       { name: "Getting Started", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Basic Moves", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Basic Moves", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Top Rope Practice", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -128,7 +136,8 @@ competitions_data = [
     description: "Fast-paced qualifier round with multiple heats throughout the day.",
     climbs: [
       { name: "Speed Boulder", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Power endurance", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Power endurance", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Final Burn", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -139,7 +148,8 @@ competitions_data = [
     description: "For younger climbers just starting their competition journey.",
     climbs: [
       { name: "Youth Jug Haul", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Kid-Friendly Volume", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Kid-Friendly Volume", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Tiny Topout", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -150,7 +160,8 @@ competitions_data = [
     description: "Focused on technical movement and problem solving. Advanced techniques only.",
     climbs: [
       { name: "Precision Required", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Balance Master", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Balance Master", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Tension Finale", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -161,7 +172,8 @@ competitions_data = [
     description: "Timed speed climbing event. Clock is your competitor.",
     climbs: [
       { name: "Fast Track", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Lightning Route", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Lightning Route", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Clock Crusher", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -172,7 +184,8 @@ competitions_data = [
     description: "Build your skills and compete with climbers at your level.",
     climbs: [
       { name: "Skill Builder A", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Skill Builder B", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Skill Builder B", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Movement Clinic", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -183,7 +196,8 @@ competitions_data = [
     description: "Long format competition testing stamina and mental strength.",
     climbs: [
       { name: "Long Haul Alpha", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Long Haul Beta", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Long Haul Beta", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Stamina Finish", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -194,7 +208,8 @@ competitions_data = [
     description: "Earn your spot at the nationals through this qualifier event.",
     climbs: [
       { name: "Qualifier Problem 1", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Qualifier Problem 2", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Qualifier Problem 2", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Qualifier Problem 3", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -205,7 +220,8 @@ competitions_data = [
     description: "All about building confidence in a supportive environment.",
     climbs: [
       { name: "Confidence Builder", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Success Guaranteed", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Success Guaranteed", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Happy Send Off", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -216,7 +232,8 @@ competitions_data = [
     description: "Extreme power test on the campus board. Elite climbers only.",
     climbs: [
       { name: "Campus Ladder Extreme", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Power Sprint", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Power Sprint", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Elite Finish", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -227,7 +244,8 @@ competitions_data = [
     description: "Test your jumping and dynamic movement skills against the best.",
     climbs: [
       { name: "Dyno Gauntlet", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Air Time Challenge", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Air Time Challenge", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Launch Sequence", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -238,7 +256,8 @@ competitions_data = [
     description: "All-pocket formats challenge. Crimp strength and technique required.",
     climbs: [
       { name: "Pocket Paradise", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Precision Pockets", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Precision Pockets", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Pocket Finale", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -249,7 +268,8 @@ competitions_data = [
     description: "All sloper format testing balance and technique.",
     climbs: [
       { name: "Slope Master", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Slope Control", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Slope Control", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Angle Shift", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -260,7 +280,8 @@ competitions_data = [
     description: "Big volume problems demand big movements. Are you ready?",
     climbs: [
       { name: "Mega Volume", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Size Matters", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Size Matters", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Volume Finale", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -271,7 +292,8 @@ competitions_data = [
     description: "Popular beginner event is back! Join us again for another round.",
     climbs: [
       { name: "Fun Boulder A", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Fun Boulder B", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Fun Boulder B", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Fun Boulder C", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -282,7 +304,8 @@ competitions_data = [
     description: "The biggest intermediate competition of the season.",
     climbs: [
       { name: "Championship A", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Championship B", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Championship B", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Championship C", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -293,7 +316,8 @@ competitions_data = [
     description: "End of summer party climb! Great vibes and stiff competition.",
     climbs: [
       { name: "Sendoff Problem 1", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Sendoff Problem 2", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Sendoff Problem 2", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Sendoff Problem 3", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -304,7 +328,8 @@ competitions_data = [
     description: "Only the absolute best climbers in the world can hang.",
     climbs: [
       { name: "World Class 1", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "World Class 2", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "World Class 2", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "World Class 3", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   },
   {
@@ -315,7 +340,8 @@ competitions_data = [
     description: "Team-based competition between regional gym networks.",
     climbs: [
       { name: "Team Problem 1", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
-      { name: "Team Problem 2", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+      { name: "Team Problem 2", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Team Problem 3", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
     ]
   }
 ]
@@ -335,6 +361,23 @@ competitions_data.each do |data|
 end
 
 puts "Created #{competitions.count} competitions with climbs"
+
+# Assign V-grades to climbs based on competition level
+grade_mapping = {
+  "beginner" => ["V2", "V3", "V4"],
+  "intermediate" => ["V4", "V5", "V6"],
+  "advanced" => ["V6", "V7", "V8"],
+  "elite" => ["V8", "V9", "V10"]
+}
+
+competitions.each do |comp|
+  grades = grade_mapping[comp.level]
+  comp.climbs.each_with_index do |climb, idx|
+    climb.update!(grading: grades[idx % grades.length])
+  end
+end
+
+puts "Assigned V-grades to all climbs"
 
 # Create some enrollments to show realistic participation
 competitions.each do |comp|
