@@ -11,6 +11,11 @@
     <%= form.text_field :name, class: "form-control", placeholder: "e.g., The Crimper" %>
   </div>
 
+  <div class="mb-2">
+    <%= form.label :grading, "V-Grade", class: "form-label" %>
+    <%= form.text_field :grading, class: "form-control", placeholder: "e.g., V4, V5", pattern: '^V\d{1,2}$', title: "V-grade format: V0-V99 (e.g., V4, V7)" %>
+  </div>
+
   <div class="mb-0">
     <%= form.label :url, "Climb Link (URL)", class: "form-label" %>
     <%= form.text_field :url, class: "form-control", placeholder: "https://..." %>

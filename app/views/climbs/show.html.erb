@@ -13,6 +13,42 @@
 
 <div class="detail-panel p-4 mb-3">
   <p class="detail-item mb-2"><span>Competition:</span> <%= @competition.name %></p>
-  <p class="detail-item mb-0"><span>Climb ID:</span> <%= @climb_id %></p>
+  <p class="detail-item mb-2"><span>Climb:</span> <%= @climb.name %></p>
+  <p class="detail-item mb-0"><span>Open on Kilter:</span> <a href="<%= @climb.url %>" target="_blank" rel="noopener noreferrer"><%= @climb.url %></a></p>
 </div>
+
+<% if authenticated? && current_user.competitions.include?(@competition) %>
+  <div class="detail-panel p-4 mb-3">
+    <h2 class="detail-heading mb-3">Log your attempt</h2>
+
+    <% if @attempt&.errors&.any? %>
+      <div class="alert alert-danger" role="alert">
+        <h2 class="h6"><%= pluralize(@attempt.errors.count, "error") %> prevented this attempt from being saved:</h2>
+        <ul class="mb-0">
+          <% @attempt.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <% if @attempt&.persisted? %>
+      <p class="detail-item mb-3"><span>Your current log:</span> <%= @attempt.attempt_count %> attempts, <%= @attempt.completed? ? "completed" : "not completed" %>, <%= @attempt.points_awarded %> points</p>
+    <% end %>
+
+    <%= form_with url: competition_climb_attempt_path(@competition, @climb), scope: :attempt, method: @attempt&.persisted? ? :patch : :post, html: { class: "board-form" } do |form| %>
+      <div class="mb-3">
+        <%= form.label :attempt_count, "Attempts", class: "form-label" %>
+        <%= form.number_field :attempt_count, class: "form-control", min: 1, max: 100, step: 1, required: true %>
+      </div>
+
+      <div class="mb-3 form-check">
+        <%= form.check_box :completed, class: "form-check-input", id: "attempt_completed" %>
+        <%= form.label :completed, "Completed the climb", class: "form-check-label", for: "attempt_completed" %>
+      </div>
+
+      <%= form.submit(@attempt&.persisted? ? "Update attempt" : "Save attempt", class: "btn btn-primary") %>
+    <% end %>
+  </div>
+<% end %>
 

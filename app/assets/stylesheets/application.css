@@ -15,7 +15,7 @@ body.app-shell {
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
-  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.4;
 }
 
@@ -206,6 +206,308 @@ body.app-shell.home-shell {
   text-underline-offset: 0.2em;
 }
 
+.competition-show-shell {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.competition-hero-panel.detail-panel {
+  padding: 1.65rem 2rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.competition-hero-inner {
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.competition-hero-title {
+  margin: 0;
+  font-size: clamp(1.8rem, 3.8vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.08;
+}
+
+.competition-hero-dates {
+  margin-top: 0.35rem;
+  font-size: 0.92rem;
+  color: rgba(243, 241, 234, 0.82);
+}
+
+.competition-hero-separator {
+  margin: 0 0.45rem;
+}
+
+.competition-hero-meta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.95rem;
+  padding: 0.15rem 0;
+  font-size: 0.84rem;
+  color: rgba(243, 241, 234, 0.86);
+}
+
+.competition-hero-meta span+span {
+  padding-left: 1rem;
+  border-left: 1px solid rgba(243, 241, 234, 0.18);
+}
+
+.competition-hero-owner {
+  margin-top: 0.9rem;
+  font-size: 0.84rem;
+  text-transform: lowercase;
+  color: rgba(243, 241, 234, 0.72);
+}
+
+.competition-hero-description {
+  max-width: 27rem;
+  margin: 1.15rem auto 0;
+  font-size: 0.94rem;
+  font-style: italic;
+  color: rgba(243, 241, 234, 0.84);
+}
+
+.competition-hero-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.35rem;
+}
+
+.competition-hero-action form {
+  margin: 0;
+}
+
+.btn-join-competition-show,
+.btn-leave-competition-show {
+  min-width: 4.4rem;
+  padding: 0.46rem 1rem;
+  border-radius: 0.28rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+
+.btn-join-competition-show {
+  background: #f2eee6;
+  color: #121212;
+  border: 1px solid #f2eee6;
+}
+
+.btn-join-competition-show:hover {
+  background: #ffffff;
+  color: #121212;
+  border-color: #ffffff;
+}
+
+.btn-leave-competition-show {
+  background: transparent;
+  color: #f2eee6;
+  border: 1px solid rgba(242, 238, 230, 0.9);
+}
+
+.btn-leave-competition-show:hover {
+  background: rgba(242, 238, 230, 0.08);
+  color: #f2eee6;
+  border-color: rgba(242, 238, 230, 0.98);
+}
+
+.competition-section-title {
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+  margin: 0;
+}
+
+.competition-section-caption {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: rgba(243, 241, 234, 0.76);
+}
+
+.climb-cards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.15rem;
+}
+
+.climb-cards-grid--two {
+  max-width: 34rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.climb-cards-grid--two .climb-card-link {
+  flex-basis: calc((100% - 1.15rem) / 2);
+  max-width: calc((100% - 1.15rem) / 2);
+}
+
+.climb-card-link {
+  flex: 1 1 calc((100% - 2.3rem) / 3);
+  max-width: calc((100% - 2.3rem) / 3);
+  min-width: 12.5rem;
+  min-height: 9.2rem;
+  padding: 1rem 1rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.climb-card-title {
+  margin-bottom: 0.65rem;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.climb-card-subtitle {
+  text-align: center;
+  font-size: 1rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.climb-card-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.42rem;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.btn-climb-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 9.4rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(243, 241, 234, 0.88);
+  border-radius: 0.22rem;
+  color: var(--text);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  background: transparent;
+}
+
+.btn-climb-action:hover {
+  color: var(--text);
+  background: rgba(243, 241, 234, 0.08);
+}
+
+.btn-climb-action-primary {
+  background: #f2eee6;
+  color: #121212;
+  border-color: #f2eee6;
+}
+
+.btn-climb-action-primary:hover {
+  background: #ffffff;
+  color: #121212;
+  border-color: #ffffff;
+}
+
+.btn-climb-action-secondary {
+  background: transparent;
+  color: #f3f1ea;
+  border-color: rgba(243, 241, 234, 0.88);
+}
+
+.btn-climb-action-secondary:hover {
+  background: rgba(243, 241, 234, 0.08);
+  color: #f3f1ea;
+  border-color: rgba(243, 241, 234, 0.98);
+}
+
+.competition-points-pill {
+  width: fit-content;
+  padding: 0.42rem 1.15rem;
+  border: 1px solid rgba(243, 241, 234, 0.32);
+  border-radius: 0.28rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.competition-leaderboard-section {
+  margin-top: 2.4rem;
+}
+
+.leaderboard-panel {
+  overflow: hidden;
+}
+
+.leaderboard-table thead th {
+  padding: 1rem 1rem 0.9rem;
+  font-size: 0.82rem;
+  text-transform: lowercase;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+  border-bottom: 0;
+  color: rgba(243, 241, 234, 0.9);
+}
+
+.leaderboard-table tbody td {
+  padding: 0.95rem 1rem;
+  border-top: 1px solid rgba(243, 241, 234, 0.08);
+}
+
+.leaderboard-user-row:hover {
+  background: rgba(243, 241, 234, 0.04);
+}
+
+.leaderboard-user-row.table-active {
+  background: rgba(243, 241, 234, 0.08) !important;
+}
+
+.leaderboard-user-row.table-active td,
+.leaderboard-user-row.table-active th {
+  color: var(--text) !important;
+}
+
+.leaderboard-detail-cell {
+  padding: 0 1rem 1rem;
+}
+
+.leaderboard-detail-card {
+  padding: 1rem;
+  border: 1px solid rgba(243, 241, 234, 0.1);
+  border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.leaderboard-detail-title {
+  margin-bottom: 0.85rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.leaderboard-attempts-table thead th {
+  padding: 0.45rem 0.6rem 0.55rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid rgba(243, 241, 234, 0.08);
+}
+
+.leaderboard-attempts-table tbody td {
+  padding: 0.55rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+.leaderboard-attempts-table .text-success,
+.leaderboard-attempts-table .text-danger,
+.leaderboard-attempts-table .text-muted {
+  color: inherit !important;
+}
+
 .climb-card-link {
   display: block;
   width: min(30rem, 100%);
@@ -244,6 +546,11 @@ body.app-shell.home-shell {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 600;
+}
+
+.attempt-note {
+  font-size: 0.92rem;
+  margin-bottom: 0.75rem;
 }
 
 .competitions-grid {
@@ -286,6 +593,15 @@ body.app-shell.home-shell {
     linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.05));
 }
 
+.competition-card-link-overlay {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
 .competition-name {
   font-size: 1.16rem;
   font-weight: 600;
@@ -293,7 +609,7 @@ body.app-shell.home-shell {
   line-height: 1.2;
 }
 
-.competition-date {
+.competitiononete {
   font-size: 0.86rem;
   margin-bottom: 0.88rem;
   text-transform: uppercase;
@@ -335,7 +651,7 @@ body.app-shell.home-shell {
   font-weight: 600;
   cursor: pointer;
   transition: all 160ms ease;
-  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -673,4 +989,675 @@ body.app-shell.home-shell {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-weight: 700;
+}
+
+/* Sort Buttons */
+.btn-sort {
+  display: inline-block;
+  padding: 0.65rem 1.2rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 160ms ease;
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.btn-sort:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-sort-active {
+  background: #c8f0d8;
+  color: #2d5a3d;
+  border-color: #a8e8c8;
+}
+
+.btn-sort-active:hover {
+  background: #b3e8c5;
+  border-color: #98ddb8;
+}
+
+/* Sort Filters Container */
+.sort-filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sort-section,
+.level-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.sort-label {
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  min-width: fit-content;
+}
+
+.sort-buttons-group,
+.level-buttons-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Date Sort Buttons */
+.btn-sort-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 160ms ease;
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.btn-sort-date:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-sort-date.btn-sort-active {
+  background: #c8f0d8;
+  color: #2d5a3d;
+  border-color: #a8e8c8;
+}
+
+.btn-sort-date.btn-sort-active:hover {
+  background: #b3e8c5;
+  border-color: #98ddb8;
+}
+
+.sort-arrow {
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-width: 0.75rem;
+  text-align: center;
+}
+
+/* Level Buttons */
+.btn-level {
+  display: inline-block;
+  padding: 0.45rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 160ms ease;
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  text-transform: capitalize;
+  text-decoration: none;
+}
+
+.btn-level:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-level-active {
+  background: #c8f0d8;
+  color: #2d5a3d;
+  border-color: #a8e8c8;
+}
+
+.btn-level-active:hover {
+  background: #b3e8c5;
+  border-color: #98ddb8;
+}
+
+/* Theme Overrides */
+:root {
+  --bg: #0e0f0c;
+  --text: #f3f1ea;
+  --surface: #212123;
+  --surface-2: #171718;
+  --surface-3: #262629;
+  --border: rgba(255, 255, 255, 0.12);
+  --muted: rgba(243, 241, 234, 0.72);
+  --card-bg: #212123;
+  --card-top: #212123;
+  --card-text: #f3f1ea;
+}
+
+body.app-shell:not(.home-shell) {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.9rem 2.35rem 0;
+}
+
+.app-page {
+  padding: 1.55rem 2.35rem 3rem;
+}
+
+.app-page-inner {
+  max-width: 1110px;
+  margin: 0 auto;
+}
+
+.app-brand {
+  font-size: 1.55rem;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+.app-nav--top {
+  flex-direction: row;
+  align-items: center;
+  gap: 1.85rem;
+  margin-top: 0;
+}
+
+.app-nav--top .app-nav-link {
+  font-size: 1.02rem;
+  line-height: 1;
+}
+
+.app-nav--top .app-nav-link.is-active,
+.app-nav--top .app-nav-link:hover {
+  text-decoration-thickness: 0.06em;
+}
+
+.page-header {
+  margin-bottom: 1.05rem;
+}
+
+.page-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--text);
+}
+
+.detail-panel,
+.modal-content,
+.climb-card-link,
+.competition-card {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.climb-card-link,
+.competition-card {
+  box-shadow:
+    0 10px 18px rgba(0, 0, 0, 0.25),
+    0 0 0 1px var(--card-outline, rgba(255, 255, 255, 0.12)) inset;
+}
+
+.competition-card {
+  border-radius: 0.5rem;
+  min-height: 11.7rem;
+  border-color: var(--card-outline, var(--border));
+}
+
+.competition-card--beginner {
+  --card-outline: #537c51;
+}
+
+.competition-card--intermediate {
+  --card-outline: #bd9a28;
+}
+
+.competition-card--advanced {
+  --card-outline: #629eff;
+}
+
+.competition-card--elite {
+  --card-outline: rgba(171, 98, 255, 0.66);
+}
+
+.competition-top-border {
+  display: none;
+}
+
+.competition-body {
+  padding: 0.82rem 1rem 0.42rem;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.competition-name {
+  font-size: 1.24rem;
+  font-weight: 600;
+  margin-bottom: 0.62rem;
+  line-height: 1.08;
+}
+
+.competition-date {
+  font-size: 0.86rem;
+  margin-bottom: 0.56rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-weight: 400;
+  color: rgba(243, 241, 234, 0.84);
+}
+
+.competition-links {
+  margin-top: 0.1rem;
+}
+
+.competition-action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  background: transparent;
+  border-top: 0;
+  padding: 0.04rem 0.9rem 0.52rem;
+}
+
+.competition-action-buttons .btn-join-competition,
+.competition-action-buttons .btn-leave-competition {
+  width: auto;
+  padding: 0.4rem 0.9rem;
+}
+
+.btn-join-competition,
+.btn-leave-competition {
+  background: #f2eee6;
+  color: #121212;
+  border: 1px solid #f2eee6;
+  font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.btn-join-competition:hover,
+.btn-join-competition-show:hover {
+  background: #ffffff;
+  color: #121212;
+  border-color: #ffffff;
+}
+
+.btn-leave-competition,
+.btn-leave-competition-show {
+  background: transparent;
+  color: #f2eee6;
+  border: 1px solid rgba(242, 238, 230, 0.9);
+  font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.btn-leave-competition:hover,
+.btn-leave-competition-show:hover {
+  background: rgba(242, 238, 230, 0.08);
+  color: #f2eee6;
+  border-color: rgba(242, 238, 230, 0.98);
+}
+
+.sort-filters-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 66rem);
+  gap: 1.8rem;
+  padding: 0;
+  margin-bottom: 1.15rem;
+  background: transparent;
+  border: 0;
+  flex-wrap: nowrap;
+}
+
+.sort-section,
+.level-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+}
+
+.sort-label {
+  padding-top: 0.16rem;
+  font-size: 0.72rem;
+  font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: 0.12em;
+  color: rgba(243, 241, 234, 0.78);
+  white-space: nowrap;
+}
+
+.sort-buttons-group,
+.level-buttons-group {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.btn-sort-date,
+.btn-level {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid rgba(243, 241, 234, 0.86);
+  border-radius: 0.3rem;
+  padding: 0.38rem 0.85rem;
+  font-size: 0.74rem;
+  font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: 0.08em;
+}
+
+.btn-sort-date:hover,
+.btn-level:hover {
+  background: rgba(243, 241, 234, 0.08);
+  border-color: rgba(243, 241, 234, 0.98);
+}
+
+.btn-sort-date.btn-sort-active,
+.btn-level.btn-level-active {
+  background: rgba(243, 241, 234, 0.92);
+  color: #0f100d;
+  border-color: rgba(243, 241, 234, 0.92);
+}
+
+.sort-arrow {
+  font-size: 0.76rem;
+}
+
+.detail-panel,
+.modal-content,
+.auth-panel .detail-panel,
+.auth-panel,
+.alert {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.alert {
+  background: rgba(33, 33, 35, 0.96);
+  border: 1px solid rgba(243, 241, 234, 0.12);
+}
+
+.board-form .form-control,
+.auth-panel .form-control,
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  background: #10110e;
+  border: 1px solid rgba(243, 241, 234, 0.14);
+  color: var(--text);
+  border-radius: 0.45rem;
+}
+
+.board-form .form-control:focus,
+.auth-panel .form-control:focus,
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,
+select:focus {
+  background: #10110e;
+  color: var(--text);
+  border-color: rgba(243, 241, 234, 0.34);
+  box-shadow: 0 0 0 0.18rem rgba(243, 241, 234, 0.08);
+}
+
+.table {
+  --bs-table-color: var(--text);
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: rgba(255, 255, 255, 0.03);
+  --bs-table-striped-color: var(--text);
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+  --bs-table-hover-color: var(--text);
+  color: var(--text);
+}
+
+.table thead th {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.pagination a,
+.pagination span {
+  background: var(--surface);
+  color: var(--text);
+  border-color: rgba(243, 241, 234, 0.14);
+}
+
+.pagination a:hover {
+  background: rgba(243, 241, 234, 0.08);
+}
+
+.pagination .page.current {
+  background: rgba(243, 241, 234, 0.92);
+  color: #0f100d;
+  border-color: rgba(243, 241, 234, 0.92);
+}
+
+.pagination .disabled {
+  opacity: 0.35;
+}
+
+.btn-board-primary,
+.btn-create {
+  background: #f2eee6;
+  border: 1px solid #f2eee6;
+  color: #121212;
+}
+
+.btn-board-primary:hover,
+.btn-create:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #121212;
+}
+
+.btn-board-secondary {
+  background: transparent;
+  border: 1px solid rgba(242, 238, 230, 0.36);
+  color: var(--text);
+}
+
+.btn-board-secondary:hover {
+  background: rgba(243, 241, 234, 0.08);
+  color: var(--text);
+}
+
+@media (max-width: 991.98px) {
+
+  .app-topbar,
+  .app-page {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .app-brand {
+    font-size: 1.3rem;
+  }
+
+  .app-nav--top {
+    gap: 1.15rem;
+  }
+
+  .sort-filters-container {
+    flex-wrap: wrap;
+  }
+
+  .competition-show-shell {
+    max-width: 100%;
+  }
+
+  .climb-cards-grid {
+    gap: 0.95rem;
+  }
+
+  .page-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .app-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding-top: 1.15rem;
+  }
+
+  .app-nav--top {
+    flex-wrap: wrap;
+    gap: 0.9rem 1.1rem;
+  }
+
+  .app-page {
+    padding: 1rem 0.85rem 2.4rem;
+  }
+
+  .sort-filters-container {
+    gap: 0.95rem;
+  }
+
+  .sort-section,
+  .level-section {
+    width: auto;
+  }
+
+  .level-section {
+    justify-content: flex-start;
+  }
+
+  .sort-buttons-group,
+  .level-buttons-group {
+    flex-wrap: wrap;
+  }
+
+  .btn-sort-date,
+  .btn-level {
+    padding: 0.4rem 0.7rem;
+  }
+
+  .competition-card {
+    min-height: 11.2rem;
+  }
+
+  .competition-hero-panel.detail-panel {
+    padding: 1.35rem 1rem 1.2rem;
+  }
+
+  .competition-hero-meta {
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .competition-hero-meta span+span {
+    padding-left: 0.75rem;
+  }
+
+  .climb-cards-grid {
+    flex-direction: column;
+  }
+
+  .climb-card-link {
+    flex-basis: auto;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .leaderboard-table thead th,
+  .leaderboard-table tbody td {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Pagination Styles */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination li {
+  margin: 0;
+}
+
+.pagination a,
+.pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.9rem;
+  height: 2.65rem;
+  padding: 0 0.85rem;
+  background: #212123;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  text-decoration: none;
+  transition: all 160ms ease;
+  cursor: pointer;
+}
+
+.pagination a:hover {
+  background: #2a2a2d;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.pagination .page.current {
+  background: #2a2a2d;
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.1);
+  cursor: default;
+}
+
+.pagination .page.current:hover {
+  background: #2a2a2d;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.pagination .previous_page,
+.pagination .next_page {
+  font-weight: 700;
+}
+
+.pagination .page:not(.current) {
+  min-width: 3.15rem;
+}
+
+.pagination .disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }

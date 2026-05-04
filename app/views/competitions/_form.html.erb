@@ -16,18 +16,29 @@
   </div>
 
   <div class="mb-3">
-    <%= form.label :date, class: "form-label" %>
-    <%= form.date_field :date, class: "form-control" %>
+    <div class="row">
+      <div class="col">
+        <%= form.label :starts_at_date, "Start Date", class: "form-label" %>
+        <%= form.date_field :starts_at_date, value: competition.starts_at&.to_date, class: "form-control" %>
+      </div>
+      <div class="col">
+        <%= form.label :starts_at_time, "Start Time", class: "form-label" %>
+        <%= form.time_field :starts_at_time, value: competition.starts_at&.strftime("%H:%M"), class: "form-control" %>
+      </div>
+    </div>
   </div>
 
   <div class="mb-3">
-    <%= form.label :starts_at, "Start Date & Time", class: "form-label" %>
-    <%= form.datetime_local_field :starts_at, class: "form-control" %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :ends_at, "End Date & Time", class: "form-label" %>
-    <%= form.datetime_local_field :ends_at, class: "form-control" %>
+    <div class="row">
+      <div class="col">
+        <%= form.label :ends_at_date, "End Date", class: "form-label" %>
+        <%= form.date_field :ends_at_date, value: competition.ends_at&.to_date, class: "form-control" %>
+      </div>
+      <div class="col">
+        <%= form.label :ends_at_time, "End Time", class: "form-label" %>
+        <%= form.time_field :ends_at_time, value: competition.ends_at&.strftime("%H:%M"), class: "form-control" %>
+      </div>
+    </div>
   </div>
 
   <div class="mb-3">
@@ -125,6 +136,11 @@ document.addEventListener("DOMContentLoaded", function() {
           <div class="mb-2">
             <label class="form-label" for="climb_name_${timestamp}">Climb Name</label>
             <input class="form-control" type="text" name="competition[climbs_attributes][${timestamp}][name]" id="climb_name_${timestamp}" placeholder="e.g., The Crimper">
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label" for="climb_grading_${timestamp}">V-Grade</label>
+            <input class="form-control" type="text" name="competition[climbs_attributes][${timestamp}][grading]" id="climb_grading_${timestamp}" placeholder="e.g., V4, V5" pattern="^V\\d{1,2}$" title="V-grade format: V0-V99 (e.g., V4, V7)">
           </div>
 
           <div class="mb-0">
