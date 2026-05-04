@@ -49,7 +49,7 @@
           <% attempt = @user_attempts_by_climb_id[climb.id] %>
           <div class="climb-card-link">
             <span class="climb-card-title"><%= climb.name %></span>
-            <span class="climb-card-subtitle">V4</span>
+            <span class="climb-card-subtitle"><%= climb.grading %></span>
             <div class="climb-card-actions">
               <a href="<%= climb.url %>" target="_blank" class="btn-climb-action">OPEN ON KILTER</a>
               <% if authenticated? && current_user.competitions.include?(@competition) %>

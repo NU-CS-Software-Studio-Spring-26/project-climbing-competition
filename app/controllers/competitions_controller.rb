@@ -59,12 +59,14 @@ class CompetitionsController < ApplicationController
   def create
     @competition = Competition.new(competition_params)
     @competition.owner = current_user
+    assign_combined_datetimes(@competition)
 
     respond_to do |format|
       if @competition.save
         format.html { redirect_to @competition, notice: "Competition was successfully created." }
         format.json { render :show, status: :created, location: @competition }
       else
+        ensure_minimum_climb_fields(@competition)
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @competition.errors, status: :unprocessable_entity }
       end
@@ -73,11 +75,14 @@ class CompetitionsController < ApplicationController
 
   # PATCH/PUT /competitions/1 or /competitions/1.json
   def update
+    @competition.assign_attributes(competition_params)
+    assign_combined_datetimes(@competition)
     respond_to do |format|
-      if @competition.update(competition_params)
+      if @competition.save
         format.html { redirect_to @competition, notice: "Competition was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @competition }
       else
+        ensure_minimum_climb_fields(@competition)
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @competition.errors, status: :unprocessable_entity }
       end
@@ -102,6 +107,22 @@ class CompetitionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def competition_params
-      params.require(:competition).permit(:name, :date, :starts_at, :ends_at, :level, :description, climbs_attributes: [ :id, :name, :url, :_destroy ])
+      params.require(:competition).permit(:name, :date, :starts_at, :ends_at, :level, :description, climbs_attributes: [ :id, :name, :url, :grading, :_destroy ])
+    end
+
+    def assign_combined_datetimes(competition)
+      raw = params.require(:competition).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time)
+      competition.starts_at = combine_date_and_time(raw[:starts_at_date], raw[:starts_at_time]) if raw.key?(:starts_at_date) || raw.key?(:starts_at_time)
+      competition.ends_at = combine_date_and_time(raw[:ends_at_date], raw[:ends_at_time]) if raw.key?(:ends_at_date) || raw.key?(:ends_at_time)
+    end
+
+    def combine_date_and_time(date, time)
+      return nil if date.blank?
+
+      Time.zone.parse("#{date} #{time.presence || '00:00'}")
+    end
+
+    def ensure_minimum_climb_fields(competition)
+      (2 - competition.climbs.size).times { competition.climbs.build } if competition.climbs.size < 2
     end
 end

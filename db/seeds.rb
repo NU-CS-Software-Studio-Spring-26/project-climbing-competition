@@ -364,10 +364,10 @@ puts "Created #{competitions.count} competitions with climbs"
 
 # Assign V-grades to climbs based on competition level
 grade_mapping = {
-  "beginner" => ["V2", "V3", "V4"],
-  "intermediate" => ["V4", "V5", "V6"],
-  "advanced" => ["V6", "V7", "V8"],
-  "elite" => ["V8", "V9", "V10"]
+  "beginner" => [ "V2", "V3", "V4" ],
+  "intermediate" => [ "V4", "V5", "V6" ],
+  "advanced" => [ "V6", "V7", "V8" ],
+  "elite" => [ "V8", "V9", "V10" ]
 }
 
 competitions.each do |comp|

@@ -30,7 +30,7 @@ class Competition < ApplicationRecord
       LeaderboardEntry.new(
         user: user,
         points: user_attempts.sum(&:points_awarded),
-        attempts_count: user_attempts.count
+        attempts_count: user_attempts.sum { |attempt| attempt.attempt_count.to_i }
       )
     end.sort_by { |entry| [ -entry.points, entry.attempts_count, entry.user.username.downcase ] }
   end

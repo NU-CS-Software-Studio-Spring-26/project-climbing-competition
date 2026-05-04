@@ -250,7 +250,7 @@ body.app-shell.home-shell {
   color: rgba(243, 241, 234, 0.86);
 }
 
-.competition-hero-meta span + span {
+.competition-hero-meta span+span {
   padding-left: 1rem;
   border-left: 1px solid rgba(243, 241, 234, 0.18);
 }
@@ -1485,6 +1485,7 @@ select:focus {
 }
 
 @media (max-width: 991.98px) {
+
   .app-topbar,
   .app-page {
     padding-left: 1.25rem;
@@ -1569,7 +1570,7 @@ select:focus {
     gap: 0.5rem 0.75rem;
   }
 
-  .competition-hero-meta span + span {
+  .competition-hero-meta span+span {
     padding-left: 0.75rem;
   }
 
