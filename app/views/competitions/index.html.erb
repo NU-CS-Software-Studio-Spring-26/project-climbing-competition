@@ -4,6 +4,60 @@
   <h1 class="page-title">active events</h1>
 </section>
 
+<div class="sort-filters-container mb-3">
+  <div class="sort-section">
+    <span class="sort-label">Date:</span>
+    <div class="sort-buttons-group">
+      <% 
+        # Toggle logic for sort buttons
+        start_new_sort_by = @sort_by == 'starts_at' ? nil : 'starts_at'
+        start_direction = @sort_by == 'starts_at' && @sort_direction == 'desc' ? 'asc' : 'desc'
+        end_new_sort_by = @sort_by == 'ends_at' ? nil : 'ends_at'
+        end_direction = @sort_by == 'ends_at' && @sort_direction == 'desc' ? 'asc' : 'desc'
+      %>
+      <%= link_to competitions_path(sort_by: start_new_sort_by, sort_direction: (start_new_sort_by.present? ? start_direction : nil), level: @selected_levels.presence), class: "btn-sort-date #{@sort_by == 'starts_at' ? 'btn-sort-active' : ''}" do %>
+        <span>Start</span>
+        <span class="sort-arrow">
+          <% if @sort_by == 'starts_at' %>
+            <%= @sort_direction == 'asc' ? '↑' : '↓' %>
+          <% else %>
+            <span style="opacity: 0.5;">↕</span>
+          <% end %>
+        </span>
+      <% end %>
+      
+      <%= link_to competitions_path(sort_by: end_new_sort_by, sort_direction: (end_new_sort_by.present? ? end_direction : nil), level: @selected_levels.presence), class: "btn-sort-date #{@sort_by == 'ends_at' ? 'btn-sort-active' : ''}" do %>
+        <span>End</span>
+        <span class="sort-arrow">
+          <% if @sort_by == 'ends_at' %>
+            <%= @sort_direction == 'asc' ? '↑' : '↓' %>
+          <% else %>
+            <span style="opacity: 0.5;">↕</span>
+          <% end %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="level-section">
+    <span class="sort-label">Level:</span>
+    <div class="level-buttons-group">
+      <%= link_to "All", competitions_path(sort_by: @sort_by, sort_direction: @sort_direction), class: "btn-level #{@selected_levels.blank? ? 'btn-level-active' : ''}" %>
+      <% Competition::LEVELS.each do |level| %>
+        <% 
+          # Build levels array with or without this level
+          new_levels = if @selected_levels.include?(level)
+            @selected_levels - [level]
+          else
+            @selected_levels + [level]
+          end
+        %>
+        <%= link_to level.titleize, competitions_path(sort_by: @sort_by, sort_direction: @sort_direction, level: new_levels.presence), class: "btn-level #{@selected_levels.include?(level) ? 'btn-level-active' : ''}" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
 <div class="row g-4 competitions-grid">
   <% @competitions.each do |competition| %>
     <div class="col-12 col-md-6 col-xl-4">

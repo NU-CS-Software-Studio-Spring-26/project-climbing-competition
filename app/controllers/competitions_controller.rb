@@ -5,7 +5,23 @@ class CompetitionsController < ApplicationController
   # GET /competitions or /competitions.json
   def index
     @competitions = Competition.includes(:owner, :users)
-end
+
+    # Handle sorting and filtering
+    @sort_by = params[:sort_by]
+    @sort_direction = params[:sort_direction] || "asc"
+    @selected_levels = Array(params[:level]).reject(&:blank?)
+
+    # Apply level filters if selected (multiple levels allowed)
+    @competitions = @competitions.where(level: @selected_levels) if @selected_levels.present?
+
+    # Apply sorting only if sort_by is specified
+    case @sort_by
+    when "starts_at"
+      @competitions = @competitions.order(starts_at: @sort_direction.to_sym)
+    when "ends_at"
+      @competitions = @competitions.order(ends_at: @sort_direction.to_sym)
+    end
+  end
   # GET /competitions/1 or /competitions/1.json
   def show
     @leaderboard_entries = @competition.leaderboard_entries

@@ -679,3 +679,150 @@ body.app-shell.home-shell {
   letter-spacing: 0.12em;
   font-weight: 700;
 }
+
+/* Sort Buttons */
+.btn-sort {
+  display: inline-block;
+  padding: 0.65rem 1.2rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 160ms ease;
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.btn-sort:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-sort-active {
+  background: #c8f0d8;
+  color: #2d5a3d;
+  border-color: #a8e8c8;
+}
+
+.btn-sort-active:hover {
+  background: #b3e8c5;
+  border-color: #98ddb8;
+}
+
+/* Sort Filters Container */
+.sort-filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sort-section,
+.level-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.sort-label {
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  min-width: fit-content;
+}
+
+.sort-buttons-group,
+.level-buttons-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Date Sort Buttons */
+.btn-sort-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 160ms ease;
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.btn-sort-date:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-sort-date.btn-sort-active {
+  background: #c8f0d8;
+  color: #2d5a3d;
+  border-color: #a8e8c8;
+}
+
+.btn-sort-date.btn-sort-active:hover {
+  background: #b3e8c5;
+  border-color: #98ddb8;
+}
+
+.sort-arrow {
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-width: 0.75rem;
+  text-align: center;
+}
+
+/* Level Buttons */
+.btn-level {
+  display: inline-block;
+  padding: 0.45rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 160ms ease;
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  text-transform: capitalize;
+  text-decoration: none;
+}
+
+.btn-level:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-level-active {
+  background: #c8f0d8;
+  color: #2d5a3d;
+  border-color: #a8e8c8;
+}
+
+.btn-level-active:hover {
+  background: #b3e8c5;
+  border-color: #98ddb8;
+}
