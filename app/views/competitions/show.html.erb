@@ -51,7 +51,7 @@
             <span class="climb-card-title"><%= climb.name %></span>
             <span class="climb-card-subtitle"><%= climb.grading %></span>
             <div class="climb-card-actions">
-              <a href="<%= climb.url %>" target="_blank" class="btn-climb-action">OPEN ON KILTER</a>
+              <a href="<%= climb.url %>" target="_blank" rel="noopener noreferrer" class="btn-climb-action">OPEN ON KILTER</a>
               <% if authenticated? && current_user.competitions.include?(@competition) %>
                 <%= link_to(attempt.present? ? "edit attempt" : "LOG ATTEMPT", competition_climb_path(@competition, climb), class: "btn-climb-action #{attempt.present? ? 'btn-climb-action-secondary' : 'btn-climb-action-primary'}") %>
               <% end %>
