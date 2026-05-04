@@ -21,6 +21,9 @@ class CompetitionsController < ApplicationController
     when "ends_at"
       @competitions = @competitions.order(ends_at: @sort_direction.to_sym)
     end
+
+    # Apply pagination
+    @competitions = @competitions.page(params[:page]).per(9)
   end
   # GET /competitions/1 or /competitions/1.json
   def show

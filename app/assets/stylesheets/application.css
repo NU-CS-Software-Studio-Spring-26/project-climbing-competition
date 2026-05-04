@@ -826,3 +826,72 @@ body.app-shell.home-shell {
   background: #b3e8c5;
   border-color: #98ddb8;
 }
+
+/* Pagination Styles */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination li {
+  margin: 0;
+}
+
+.pagination a,
+.pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  text-decoration: none;
+  transition: all 160ms ease;
+  cursor: pointer;
+}
+
+.pagination a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.pagination .page.current {
+  background: #c8f0d8;
+  color: #2d5a3d;
+  border-color: #a8e8c8;
+  cursor: default;
+}
+
+.pagination .page.current:hover {
+  background: #c8f0d8;
+  border-color: #a8e8c8;
+  transform: none;
+}
+
+.pagination .previous_page,
+.pagination .next_page {
+  font-weight: 700;
+}
+
+.pagination .disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
