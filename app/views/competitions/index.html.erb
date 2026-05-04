@@ -1,9 +1,5 @@
 <% content_for :title, "active events" %>
 
-<section class="page-header text-center">
-  <h1 class="page-title">active events</h1>
-</section>
-
 <div class="sort-filters-container mb-3">
   <div class="sort-section">
     <span class="sort-label">Date:</span>
@@ -61,29 +57,28 @@
 <div class="row g-4 competitions-grid">
   <% @competitions.each do |competition| %>
     <div class="col-12 col-md-6 col-xl-4">
-      <article class="competition-card h-100 d-flex flex-column">
+      <article class="competition-card competition-card--<%= competition.level %> h-100 d-flex flex-column">
         <div class="competition-top-border" aria-hidden="true"></div>
-        <div class="competition-body flex-grow-1">
-          <h2 class="competition-name"><%= competition.name %></h2>
-          <p class="competition-date">Level: <%= competition.level.to_s.titleize %></p>
-          <p class="competition-date">Climbers: <%= competition.users.count %></p>
-          <p class="competition-date">Starts: <%= competition.starts_at&.strftime("%b %-d, %Y") %></p>
-          <p class="competition-date">Ends: <%= competition.ends_at&.strftime("%b %-d, %Y") %></p>
-          <div class="competition-links">
-            <%= link_to "View Details", competition_path(competition), class: "competition-link" %>
+        <%= link_to competition_path(competition), class: "competition-card-link-overlay" do %>
+          <div class="competition-body flex-grow-1">
+            <h2 class="competition-name"><%= competition.name %></h2>
+            <p class="competition-date">Level: <%= competition.level.to_s.titleize %></p>
+            <p class="competition-date">Climbers: <%= competition.users.count %></p>
+            <p class="competition-date">Starts: <%= competition.starts_at&.strftime("%b %-d, %Y") %></p>
+            <p class="competition-date">Ends: <%= competition.ends_at&.strftime("%b %-d, %Y") %></p>
           </div>
-        </div>
+        <% end %>
         
         <% if authenticated? %>
           <div class="competition-action-buttons">
             <% if current_user.competitions.include?(competition) %>
               <% enrollment = competition.enrollments.find_by(user: current_user) %>
               <button type="button" class="btn-leave-competition" data-competition-id="<%= competition.id %>" data-enrollment-id="<%= enrollment.id %>" data-competition-name="<%= competition.name %>">
-                Leave Competition
+                LEAVE
               </button>
             <% else %>
               <button type="button" class="btn-join-competition" data-competition-id="<%= competition.id %>" data-competition-name="<%= competition.name %>">
-                Join Competition
+                JOIN
               </button>
             <% end %>
           </div>
