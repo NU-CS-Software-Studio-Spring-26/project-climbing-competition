@@ -2,7 +2,7 @@
 CS-397 Climbing Project 
 
 **Developers:** Eric Wang, Ethan Pan, Ishani Pidara, Hannah Kwak
-## About:
+
 ### MVP: 
 A platform to create climbing leagues with designated competition climbs on the Kilterboard with leaderboard feature. 
 See Heroku deployment here: https://climb-league-c5d605affe21.herokuapp.com/
