@@ -23,6 +23,100 @@
   <% end %>
 </div>
 
+<% if authenticated? && current_user.competitions.include?(@competition) %>
+  <div class="detail-panel p-4 mb-3">
+    <h3 class="detail-heading mb-2">Your points</h3>
+    <p class="detail-item mb-0"><span>Total points:</span> <%= @competition.points_for(current_user) %></p>
+  </div>
+<% end %>
+
+<% if @leaderboard_entries.any? %>
+  <div class="detail-panel p-4 mb-3">
+    <h3 class="detail-heading mb-3">Leaderboard</h3>
+    <div class="table-responsive">
+      <table class="table table-borderless align-middle mb-0 leaderboard-table">
+        <thead>
+          <tr>
+            <th scope="col">Rank</th>
+            <th scope="col">Username</th>
+            <th scope="col">Points</th>
+            <th scope="col">Total Attempts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @leaderboard_entries.each_with_index do |entry, index| %>
+            <tr class="<%= 'table-active' if authenticated? && entry.user == current_user %> leaderboard-user-row" style="cursor: pointer;" data-user-id="<%= entry.user.id %>" data-user-name="<%= entry.user.username %>" onclick="toggleLeaderboardDetails(this)">
+              <td><%= index + 1 %></td>
+              <td><%= entry.user.username %></td>
+              <td><%= entry.points %></td>
+              <td><%= entry.attempts_count %></td>
+            </tr>
+            <tr class="leaderboard-detail-row" style="display: none;" data-user-id="<%= entry.user.id %>">
+              <td colspan="4" style="padding: 15px;">
+                <div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px;">
+                  <h6 style="margin-bottom: 12px; font-weight: 600;"><%= entry.user.username %>'s Climb Attempts</h6>
+                  <div class="table-responsive">
+                    <table class="table table-sm table-borderless" style="margin-bottom: 0;">
+                      <thead style="background-color: #e9ecef;">
+                        <tr>
+                          <th style="padding: 8px;">Climb</th>
+                          <th style="padding: 8px;">Attempts</th>
+                          <th style="padding: 8px;">Status</th>
+                          <th style="padding: 8px;">Points</th>
+                        </tr>
+                      </thead>
+                      <tbody style="font-size: 0.9rem;">
+                        <% @competition.climbs.each do |climb| %>
+                          <% attempt = @attempts_by_user_and_climb[entry.user.id]&.[](climb.id) %>
+                          <tr>
+                            <td style="padding: 8px;"><strong><%= climb.name %></strong></td>
+                            <% if attempt %>
+                              <td style="padding: 8px;"><%= attempt.attempt_count %></td>
+                              <td style="padding: 8px;">
+                                <span class="<%= attempt.completed? ? 'text-success' : 'text-danger' %>">
+                                  <%= attempt.completed? ? '✓ Completed' : '✗ Not Completed' %>
+                                </span>
+                              </td>
+                              <td style="padding: 8px;"><strong><%= attempt.points_awarded %> pts</strong></td>
+                            <% else %>
+                              <td colspan="3" style="padding: 8px;" class="text-muted">Not attempted</td>
+                            <% end %>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  function toggleLeaderboardDetails(rowElement) {
+    const userId = rowElement.dataset.userId;
+    const detailRow = document.querySelector(`.leaderboard-detail-row[data-user-id="${userId}"]`);
+    
+    // Close any other open detail rows
+    document.querySelectorAll('.leaderboard-detail-row').forEach(row => {
+      if (row !== detailRow && row.style.display !== 'none') {
+        row.style.display = 'none';
+      }
+    });
+    
+    // Toggle the clicked detail row
+    if (detailRow.style.display === 'none') {
+      detailRow.style.display = 'table-row';
+    } else {
+      detailRow.style.display = 'none';
+    }
+  }
+</script>
+
 <% if authenticated? %>
   <% if current_user.competitions.include?(@competition) %>
     <% enrollment = @competition.enrollments.find_by(user: current_user) %>
@@ -37,10 +131,24 @@
     <h3 class="mb-3">Climbs</h3>
     <div class="action-row d-flex flex-column gap-3 align-items-start">
       <% @competition.climbs.each do |climb| %>
-        <a href="<%= climb.url %>" target="_blank" class="climb-card-link">
+        <% attempt = @user_attempts_by_climb_id[climb.id] %>
+        <div class="climb-card-link">
           <span class="climb-card-title"><%= climb.name %></span>
           <span class="climb-card-subtitle">Open climb on Kilter</span>
-        </a>
+          <% if attempt.present? %>
+            <p class="attempt-note mb-0 mt-2">
+              Logged: <%= attempt.attempt_count %> attempts,
+              <%= attempt.completed? ? "completed" : "not completed" %>,
+              <%= attempt.points_awarded %> points
+            </p>
+          <% end %>
+          <div class="mt-3 d-flex flex-wrap gap-2">
+            <a href="<%= climb.url %>" target="_blank" class="competition-link">Open Kilter</a>
+            <% if authenticated? && current_user.competitions.include?(@competition) %>
+              <%= link_to "Log attempts", competition_climb_path(@competition, climb), class: "competition-link" %>
+            <% end %>
+          </div>
+        </div>
       <% end %>
     </div>
   </div>

@@ -8,6 +8,20 @@ class CompetitionsController < ApplicationController
 end
   # GET /competitions/1 or /competitions/1.json
   def show
+    @leaderboard_entries = @competition.leaderboard_entries
+
+    if authenticated?
+      @user_attempts_by_climb_id = current_user.attempts.where(climb: @competition.climbs).index_by(&:climb_id)
+    else
+      @user_attempts_by_climb_id = {}
+    end
+
+    # Preload all attempts for modal data
+    @attempts_by_user_and_climb = {}
+    @competition.attempts.includes(:user, :climb).each do |attempt|
+      @attempts_by_user_and_climb[attempt.user_id] ||= {}
+      @attempts_by_user_and_climb[attempt.user_id][attempt.climb_id] = attempt
+    end
   end
 
   # GET /competitions/new

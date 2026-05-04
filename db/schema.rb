@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_04_060815) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_04_072000) do
+  create_table "attempts", force: :cascade do |t|
+    t.integer "attempt_count", null: false
+    t.integer "climb_id", null: false
+    t.boolean "completed", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["climb_id"], name: "index_attempts_on_climb_id"
+    t.index ["user_id", "climb_id"], name: "index_attempts_on_user_id_and_climb_id", unique: true
+    t.index ["user_id"], name: "index_attempts_on_user_id"
+    t.check_constraint "attempt_count >= 1 AND attempt_count <= 100", name: "attempt_count_between_1_and_100"
+  end
+
   create_table "climbs", force: :cascade do |t|
     t.integer "competition_id", null: false
     t.datetime "created_at", null: false
@@ -68,6 +81,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_04_060815) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "attempts", "climbs"
+  add_foreign_key "attempts", "users"
   add_foreign_key "climbs", "competitions"
   add_foreign_key "competitions", "users", column: "owner_id"
   add_foreign_key "enrollments", "competitions"

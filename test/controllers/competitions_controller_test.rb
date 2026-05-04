@@ -61,9 +61,18 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show competition" do
+    Enrollment.create!(user: users(:one), competition: @competition)
+    Enrollment.create!(user: users(:two), competition: @competition)
+
+    Attempt.create!(user: users(:one), climb: climbs(:one), attempt_count: 1, completed: true)
+    Attempt.create!(user: users(:two), climb: climbs(:one), attempt_count: 1, completed: true)
+    Attempt.create!(user: users(:two), climb: climbs(:one_two), attempt_count: 2, completed: false)
+
     get competition_url(@competition)
     assert_response :success
     assert_match @competition.level.titleize, response.body
+    assert_match "Leaderboard", response.body
+    assert_operator response.body.index(users(:one).username), :<, response.body.index(users(:two).username)
   end
 
   test "should get edit" do

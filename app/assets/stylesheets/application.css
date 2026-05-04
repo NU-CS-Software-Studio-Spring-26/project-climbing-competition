@@ -246,6 +246,11 @@ body.app-shell.home-shell {
   font-weight: 600;
 }
 
+.attempt-note {
+  font-size: 0.92rem;
+  margin-bottom: 0.75rem;
+}
+
 .competitions-grid {
   max-width: 1110px;
   margin: 0 auto;

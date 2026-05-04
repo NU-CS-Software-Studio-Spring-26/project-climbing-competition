@@ -148,8 +148,36 @@ competitions.each do |comp|
   end
 end
 
+
+# Create attempts so leaderboards have meaningful rankings
+primary_attempt_counts = [ 1, 1, 2, 1, 3, 1, 2, 1 ]
+
+competitions.each do |comp|
+  users_in_comp = comp.users.sort_by { |user| user.username.downcase }
+  climbs = comp.climbs.order(:id).to_a
+  next if climbs.empty?
+
+  users_in_comp.each_with_index do |user, index|
+    Attempt.create!(
+      user: user,
+      climb: climbs.first,
+      attempt_count: primary_attempt_counts[index % primary_attempt_counts.length],
+      completed: true
+    )
+
+    next unless climbs.second.present? && index.even?
+
+    Attempt.create!(
+      user: user,
+      climb: climbs.second,
+      attempt_count: 3,
+      completed: false
+    )
+  end
+end
 puts "Created enrollments for realistic participation"
 puts "\nSeed data complete!"
+puts "Created attempts for leaderboard rankings"
 puts "Sample login credentials:"
 puts "  Email: alex@climbing.local | Password: password123"
 puts "  Email: jordan@climbing.local | Password: password123"
