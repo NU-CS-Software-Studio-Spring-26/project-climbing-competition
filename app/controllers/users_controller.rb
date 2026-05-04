@@ -1,10 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[ show edit update destroy ]
-
-  # GET /users or /users.json
-  def index
-    @users = User.all
-  end
+  before_action :require_authentication, only: %i[ show edit update ]
+  before_action :set_user, only: %i[ show edit update ]
 
   # GET /users/1 or /users/1.json
   def show
@@ -25,7 +21,9 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to @user, notice: "User was successfully created." }
+        terminate_session
+        start_new_session_for(@user)
+        format.html { redirect_to @user, notice: "Profile was successfully created." }
         format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -47,24 +45,17 @@ class UsersController < ApplicationController
     end
   end
 
-  # DELETE /users/1 or /users/1.json
-  def destroy
-    @user.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to users_path, notice: "User was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params.expect(:id))
+      requested_id = params.expect(:id).to_s
+      raise ActiveRecord::RecordNotFound unless requested_id == current_user.id.to_s
+
+      @user = current_user
     end
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.expect(user: [ :name, :username ])
+      params.expect(user: [ :name, :username, :email_address, :bio, :password, :password_confirmation ])
     end
 end

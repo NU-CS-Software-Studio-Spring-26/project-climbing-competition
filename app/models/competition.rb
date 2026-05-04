@@ -1,19 +1,23 @@
 class Competition < ApplicationRecord
+  LEVELS = %w[beginner intermediate advanced elite].freeze
+
   belongs_to :owner, class_name: "User", optional: true
 
   has_many :enrollments, dependent: :destroy
   has_many :users, through: :enrollments
+  has_many :climbs, dependent: :destroy
 
-  validates :competition_start, :competition_end, presence: true
-  validates :difficulty,
-            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 17 }
-  validate :competition_end_on_or_after_start
+  accepts_nested_attributes_for :climbs, allow_destroy: true, reject_if: :all_blank
+
+  validates :name, :starts_at, :ends_at, :level, presence: true
+  validates :level, inclusion: { in: LEVELS }
+  validate :minimum_climbs
 
   private
-    def competition_end_on_or_after_start
-      return if competition_start.blank? || competition_end.blank?
-      return unless competition_end < competition_start
 
-      errors.add(:competition_end, "must be on or after competition start")
+  def minimum_climbs
+    if climbs.reject(&:marked_for_destruction?).length < 2
+      errors.add(:base, "Competition must have at least 2 climbs")
     end
+  end
 end

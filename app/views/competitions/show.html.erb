@@ -13,20 +13,36 @@
 
 <div class="detail-panel p-4 mb-3">
   <h2 class="detail-heading"><%= @competition.name %></h2>
-  <p class="detail-item mb-2"><span>Difficulty:</span> V<%= @competition.difficulty %></p>
-  <p class="detail-item mb-2"><span>Starts:</span> <%= @competition.competition_start&.strftime("%-m/%-d/%Y") %></p>
-  <p class="detail-item mb-2"><span>Ends:</span> <%= @competition.competition_end&.strftime("%-m/%-d/%Y") %></p>
-  <p class="detail-item mb-2"><span>Owner:</span> <%= @competition.owner&.username || "—" %></p>
+  <p class="detail-item mb-0"><span>Created by:</span> <%= @competition.owner&.username %></p>
+  <p class="detail-item mb-0"><span>Level:</span> <%= @competition.level.to_s.titleize %></p>
+  <p class="detail-item mb-0"><span>Climbers Joined:</span> <%= @competition.users.count %></p>
+  <p class="detail-item mb-0"><span>Starts:</span> <%= @competition.starts_at&.strftime("%B %-d, %Y at %l:%M %p") %></p>
+  <p class="detail-item mb-0"><span>Ends:</span> <%= @competition.ends_at&.strftime("%B %-d, %Y at %l:%M %p") %></p>
   <% if @competition.description.present? %>
     <p class="detail-item mb-0"><span>Description:</span> <%= @competition.description %></p>
-  <% else %>
-    <p class="detail-item mb-0 text-muted"><span>Description:</span> —</p>
   <% end %>
 </div>
 
-<div class="action-row d-flex flex-column gap-3 align-items-start">
-  <%= link_to competition_climb_path(@competition, 1), class: "climb-card-link" do %>
-    <span class="climb-card-title">View a Climb</span>
-    <span class="climb-card-subtitle">Open climb preview for this event</span>
+<% if authenticated? %>
+  <% if current_user.competitions.include?(@competition) %>
+    <% enrollment = @competition.enrollments.find_by(user: current_user) %>
+    <%= button_to "Leave Competition", competition_enrollment_path(@competition, enrollment), method: :delete, class: "btn-leave-competition-show mb-3" %>
+  <% else %>
+    <%= button_to "Join Competition", competition_enrollments_path(@competition), method: :post, class: "btn-join-competition-show mb-3" %>
   <% end %>
-</div>
+<% end %>
+
+<% if @competition.climbs.any? %>
+  <div class="climbs-section mb-4">
+    <h3 class="mb-3">Climbs</h3>
+    <div class="action-row d-flex flex-column gap-3 align-items-start">
+      <% @competition.climbs.each do |climb| %>
+        <a href="<%= climb.url %>" target="_blank" class="climb-card-link">
+          <span class="climb-card-title"><%= climb.name %></span>
+          <span class="climb-card-subtitle">Open climb on Kilter</span>
+        </a>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+

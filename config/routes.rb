@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
-  resources :users
+  resource :session, only: [ :new, :create, :destroy ]
+  resources :users, only: [ :new, :create, :show, :edit, :update ]
   resources :competitions do
-    resources :climbs, only: [ :show ]
+    resources :enrollments, only: [ :create, :destroy ]
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

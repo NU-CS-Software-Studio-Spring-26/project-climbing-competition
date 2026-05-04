@@ -1,11 +1,11 @@
 class CompetitionsController < ApplicationController
+  before_action :require_authentication, only: %i[ new create ]
   before_action :set_competition, only: %i[ show edit update destroy ]
 
   # GET /competitions or /competitions.json
   def index
-    @competitions = Competition.includes(:owner).order(:competition_start)
-  end
-
+    @competitions = Competition.includes(:owner, :users)
+end
   # GET /competitions/1 or /competitions/1.json
   def show
   end
@@ -13,15 +13,19 @@ class CompetitionsController < ApplicationController
   # GET /competitions/new
   def new
     @competition = Competition.new
+    3.times { @competition.climbs.build }
   end
 
   # GET /competitions/1/edit
   def edit
+    # Ensure at least one blank climb field for adding
+    @competition.climbs.build if @competition.climbs.empty?
   end
 
   # POST /competitions or /competitions.json
   def create
     @competition = Competition.new(competition_params)
+    @competition.owner = current_user
 
     respond_to do |format|
       if @competition.save
@@ -60,14 +64,11 @@ class CompetitionsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_competition
-      @competition = Competition.includes(:owner).find(params.expect(:id))
+      @competition = Competition.find(params.expect(:id))
     end
 
     # Only allow a list of trusted parameters through.
     def competition_params
-      params.expect(competition: [
-        :name, :description, :owner_id,
-        :competition_start, :competition_end, :difficulty
-      ])
+      params.require(:competition).permit(:name, :date, :starts_at, :ends_at, :level, :description, climbs_attributes: [ :id, :name, :url, :_destroy ])
     end
 end

@@ -28,7 +28,10 @@
   <body class="app-shell <%= "home-shell" if controller_name == "home" && action_name == "index" %>">
     <% if controller_name == "home" && action_name == "index" %>
       <main class="home-main">
-        <%= yield %>
+        <div class="home-stack">
+          <%= render "shared/flashes" %>
+          <%= yield %>
+        </div>
       </main>
     <% else %>
       <div class="app-grid">
@@ -40,13 +43,21 @@
             <%= link_to "events", competitions_path, class: "app-nav-link #{controller_name == "competitions" && action_name == "index" ? "is-active" : ""}" %>
             <%= link_to "create", new_competition_path, class: "app-nav-link #{controller_name == "competitions" && action_name == "new" ? "is-active" : ""}" %>
           </nav>
+
+          <nav class="app-nav" aria-label="Account">
+            <% if authenticated? %>
+              <%= link_to current_user.username, user_path(current_user), class: "app-nav-link #{controller_name == "users" && action_name == "show" ? "is-active" : ""}" %>
+              <%= link_to "sign out", session_path, data: { turbo_method: :delete }, class: "app-nav-link" %>
+            <% else %>
+              <%= link_to "sign up", new_user_path, class: "app-nav-link #{controller_name == "users" && action_name == "new" ? "is-active" : ""}" %>
+              <%= link_to "sign in", new_session_path, class: "app-nav-link #{controller_name == "sessions" && action_name == "new" ? "is-active" : ""}" %>
+            <% end %>
+          </nav>
         </aside>
 
         <main class="app-main pb-5">
-        <% if notice.present? %>
-          <div class="alert alert-success" role="alert"><%= notice %></div>
-        <% end %>
-        <%= yield %>
+          <%= render "shared/flashes" %>
+          <%= yield %>
         </main>
       </div>
     <% end %>

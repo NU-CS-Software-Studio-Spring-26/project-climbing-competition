@@ -1,83 +1,155 @@
 # This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here is idempotent so that it can be executed at any point in every environment.
+# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Re-seeding updates existing rows matched by username (users) or competition name (competitions). It does not delete
-# stale records; use db:reset for a clean slate.
 
-LOREM = <<~TEXT.strip.freeze
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-TEXT
+# Clear existing data
+User.destroy_all
+Competition.destroy_all
 
-USER_SEEDS = [
-  { name: "Eric Wang", username: "eric_wang" },
-  { name: "Ethan Pan", username: "ethan_pan" },
-  { name: "Ishani Pidara", username: "ish_climbs" },
-  { name: "Hannah Kwak", username: "hannah_k" },
-  { name: "Jordan Reyes", username: "crimp_lord" },
-  { name: "Sam Okonkwo", username: "slab_whisperer" },
-  { name: "Alex Kim", username: "dyno_dan" },
-  { name: "Riley Chen", username: "board_rat_99" },
-  { name: "Morgan Blake", username: "kilter_moose" },
-  { name: "Casey Nguyen", username: "tension_taylor" },
-  { name: "Jamie Foster", username: "campus_kid" },
-  { name: "Taylor Brooks", username: "rest_day_rachel" }
-].freeze
+# Create users
+users_data = [
+  { name: "Alex Rivera", username: "alexrivera", email: "alex@climbing.local", bio: "V-grader and spray beta enthusiast 🧗" },
+  { name: "Jordan Chen", username: "jordanclimbs", email: "jordan@climbing.local", bio: "Boulderer from the Bay Area" },
+  { name: "Morgan Lee", username: "morganflash", email: "morgan@climbing.local", bio: "Speed climber | Competition junkie" },
+  { name: "Casey Thompson", username: "caseyboulds", email: "casey@climbing.local", bio: "Outdoor crag rat, indoor gym lover" },
+  { name: "Parker Davis", username: "parkersends", email: "parker@climbing.local", bio: "Route setter by day, climber by night" },
+  { name: "Riley Kim", username: "rileybeta", email: "riley@climbing.local", bio: "Training for nationals" },
+  { name: "Avery Johnson", username: "averyclimbs", email: "avery@climbing.local", bio: "Youth competitive climber" },
+  { name: "Taylor Brown", username: "taylorboulder", email: "taylor@climbing.local", bio: "Problem solver and crimper" }
+]
 
-# start_offset: days from Date.current; duration_days: length of window (end = start + duration)
-COMPETITION_SEEDS = [
-  { name: "Spring Kilter League", description: LOREM, start_offset: 7, duration_days: 5, difficulty: 8, owner_username: "eric_wang" },
-  { name: "Tension Board After Dark", description: LOREM, start_offset: 14, duration_days: 3, difficulty: 10, owner_username: "ethan_pan" },
-  { name: "NU Bouldering Social", description: LOREM, start_offset: -7, duration_days: 1, difficulty: 4, owner_username: "ish_climbs" },
-  { name: "Campus Board Power Hour", description: LOREM, start_offset: 3, duration_days: 0, difficulty: 12, owner_username: "hannah_k" },
-  { name: "Midwest Sendfest Qualifier", description: LOREM, start_offset: -21, duration_days: 6, difficulty: 9, owner_username: "crimp_lord" },
-  { name: "Late Night V-Five Jam", description: LOREM, start_offset: 21, duration_days: 2, difficulty: 5, owner_username: "slab_whisperer" },
-  { name: "Gym Rats Mini Comp", description: LOREM, start_offset: -30, duration_days: 4, difficulty: 6, owner_username: "dyno_dan" },
-  { name: "Virtual Board Battle", description: LOREM, start_offset: 35, duration_days: 7, difficulty: 11, owner_username: "board_rat_99" },
-  { name: "Community Open Night", description: LOREM, start_offset: 0, duration_days: 2, difficulty: 3, owner_username: nil },
-  { name: "Friday Flash League", description: LOREM, start_offset: -14, duration_days: 1, difficulty: 7, owner_username: "kilter_moose" }
-].freeze
-
-# Deterministic enrollments (user must exist; competition name must match COMPETITION_SEEDS)
-ENROLLMENT_SEEDS = [
-  { username: "ethan_pan", competition_name: "Spring Kilter League" },
-  { username: "ish_climbs", competition_name: "Spring Kilter League" },
-  { username: "hannah_k", competition_name: "Spring Kilter League" },
-  { username: "eric_wang", competition_name: "Tension Board After Dark" },
-  { username: "campus_kid", competition_name: "NU Bouldering Social" },
-  { username: "rest_day_rachel", competition_name: "Virtual Board Battle" },
-  { username: "tension_taylor", competition_name: "Friday Flash League" }
-].freeze
-
-USER_SEEDS.each do |attrs|
-  user = User.find_or_initialize_by(username: attrs[:username])
-  user.name = attrs[:name]
-  user.save!
-end
-
-users_by_username = User.all.index_by(&:username)
-
-COMPETITION_SEEDS.each do |attrs|
-  start_date = Date.current + attrs[:start_offset]
-  end_date = start_date + attrs[:duration_days]
-  owner = attrs[:owner_username] ? users_by_username[attrs[:owner_username]] : nil
-
-  competition = Competition.find_or_initialize_by(name: attrs[:name])
-  competition.assign_attributes(
-    description: attrs[:description],
-    competition_start: start_date,
-    competition_end: end_date,
-    difficulty: attrs[:difficulty],
-    owner: owner
+users = users_data.map do |data|
+  User.create!(
+    name: data[:name],
+    username: data[:username],
+    email_address: data[:email],
+    bio: data[:bio],
+    password: "password123"
   )
-  competition.save!
 end
 
-ENROLLMENT_SEEDS.each do |attrs|
-  user = User.find_by(username: attrs[:username])
-  competition = Competition.find_by(name: attrs[:competition_name])
-  next unless user && competition
+puts "Created #{users.length} users"
 
-  Enrollment.find_or_create_by!(user: user, competition: competition)
+# Create competitions with climbs
+competitions_data = [
+  {
+    name: "Spring Send Fest 2026",
+    level: "beginner",
+    starts_at: "2026-05-15 09:00:00",
+    ends_at: "2026-05-15 17:00:00",
+    description: "Open to climbers new to competition. Great atmosphere and plenty of cheering!",
+    climbs: [
+      { name: "Slopers Warm-up", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Jug Ladder", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+    ]
+  },
+  {
+    name: "Midwest Regional Championship",
+    level: "intermediate",
+    starts_at: "2026-06-02 08:00:00",
+    ends_at: "2026-06-02 18:00:00",
+    description: "Qualifying round for nationals. All skill levels welcome.",
+    climbs: [
+      { name: "Crimpy Sequence", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Dyno to Sloper", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+    ]
+  },
+  {
+    name: "Elite Nationals Qualifier",
+    level: "elite",
+    starts_at: "2026-07-20 10:00:00",
+    ends_at: "2026-07-20 20:00:00",
+    description: "Invite-only competition for top climbers. Tough problems and fierce competition.",
+    climbs: [
+      { name: "One-Finger Pocket Nightmare", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Volume to Dyno Sprint", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+    ]
+  },
+  {
+    name: "Summer Boulder Bash",
+    level: "beginner",
+    starts_at: "2026-06-10 09:00:00",
+    ends_at: "2026-06-10 16:00:00",
+    description: "Casual comp with fun prizes. Perfect for your first competition!",
+    climbs: [
+      { name: "Warm-up Jugs", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Easy Slopers", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+    ]
+  },
+  {
+    name: "Advanced Youth Open",
+    level: "advanced",
+    starts_at: "2026-05-28 10:00:00",
+    ends_at: "2026-05-28 17:00:00",
+    description: "For climbers aged 13-18 with solid climbing experience.",
+    climbs: [
+      { name: "Tiny Edges Test", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Compression Master", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+    ]
+  },
+  {
+    name: "Local Gym Championship",
+    level: "intermediate",
+    starts_at: "2026-05-22 18:00:00",
+    ends_at: "2026-05-23 00:00:00",
+    description: "Friendly competition at our home gym. Food trucks and live music!",
+    climbs: [
+      { name: "Mid-Grade Crimps", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Dynamic Jumpers", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+    ]
+  },
+  {
+    name: "Women's Boulder Invitational",
+    level: "advanced",
+    starts_at: "2026-06-15 09:00:00",
+    ends_at: "2026-06-15 18:00:00",
+    description: "Celebrating women in climbing. Amazing prize purse and sponsorships.",
+    climbs: [
+      { name: "Powerful Pockets", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Endurance Challenge", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+    ]
+  },
+  {
+    name: "Beginner Basics Series - Round 1",
+    level: "beginner",
+    starts_at: "2026-05-10 10:00:00",
+    ends_at: "2026-05-10 15:00:00",
+    description: "Learn comp format and climb with other beginners. No pressure, all fun!",
+    climbs: [
+      { name: "Getting Started", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" },
+      { name: "Basic Moves", url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=D0E5387D5B974D38B4E93FC4DFD61EF6" }
+    ]
+  }
+]
+
+competitions = []
+competitions_data.each do |data|
+  climbs = data.delete(:climbs)
+  climbs_attributes = {}
+  climbs.each_with_index do |climb, index|
+    climbs_attributes[index.to_s] = climb
+  end
+
+  comp = users[rand(0...users.length)].owned_competitions.create!(
+    data.merge(climbs_attributes: climbs_attributes)
+  )
+  competitions << comp
 end
+
+puts "Created #{competitions.count} competitions with climbs"
+
+# Create some enrollments to show realistic participation
+competitions.each do |comp|
+  # Randomly enroll 2-6 users per competition
+  enrolled_count = rand(2..6)
+  sample_users = users.sample(enrolled_count)
+  sample_users.each do |user|
+    Enrollment.find_or_create_by(user: user, competition: comp)
+  end
+end
+
+puts "Created enrollments for realistic participation"
+puts "\nSeed data complete!"
+puts "Sample login credentials:"
+puts "  Email: alex@climbing.local | Password: password123"
+puts "  Email: jordan@climbing.local | Password: password123"

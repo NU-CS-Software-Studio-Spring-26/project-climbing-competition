@@ -1,12 +1,16 @@
-<% content_for :title, "Editing user" %>
+<% content_for :title, "Edit profile" %>
 
-<h1>Editing user</h1>
+<section class="detail-panel p-4">
+  <div class="d-flex flex-column gap-3">
+    <div>
+      <p class="eyebrow mb-1">profile settings</p>
+      <h1 class="page-title page-title-left">edit profile</h1>
+    </div>
 
-<%= render "form", user: @user %>
+    <%= render "form", user: @user %>
 
-<br>
-
-<div>
-  <%= link_to "Show this user", @user %> |
-  <%= link_to "Back to users", users_path %>
-</div>
+    <div class="action-row">
+      <%= link_to "Back to profile", @user, class: "back-arrow-text-link" %>
+    </div>
+  </div>
+</section>
