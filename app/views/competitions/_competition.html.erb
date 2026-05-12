@@ -1,22 +1,30 @@
-<div id="<%= dom_id competition %>">
+<div id="<%= dom_id competition %>" role="article" aria-label="<%= competition.name %>">
   <div>
-    <strong>Name:</strong>
-    <%= competition.name %>
+    <strong id="<%= dom_id competition %>-name">Name:</strong>
+    <span aria-labelledby="<%= dom_id competition %>-name">
+      <%= competition.name %>
+    </span>
   </div>
 
   <div>
-    <strong>Starts:</strong>
-    <%= competition.competition_start %>
+    <strong id="<%= dom_id competition %>-start">Starts:</strong>
+    <time aria-labelledby="<%= dom_id competition %>-start" datetime="<%= competition.competition_start.iso8601 %>">
+      <%= competition.competition_start %>
+    </time>
   </div>
 
   <div>
-    <strong>Ends:</strong>
-    <%= competition.competition_end %>
+    <strong id="<%= dom_id competition %>-end">Ends:</strong>
+    <time aria-labelledby="<%= dom_id competition %>-end" datetime="<%= competition.competition_end.iso8601 %>">
+      <%= competition.competition_end %>
+    </time>
   </div>
 
   <div>
-    <strong>Difficulty:</strong>
-    V<%= competition.difficulty %>
+    <strong id="<%= dom_id competition %>-difficulty">Difficulty:</strong>
+    <span aria-labelledby="<%= dom_id competition %>-difficulty">
+      V<%= competition.difficulty %>
+    </span>
   </div>
 
 </div>
