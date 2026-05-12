@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title><%= content_for(:title) || "Climbing Competition" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -27,6 +27,8 @@
   </head>
 
   <body class="app-shell <%= "home-shell" if controller_name == "home" && action_name == "index" %>">
+    <h1 class="visually-hidden">Board Base</h1>
+
     <% if controller_name == "home" && action_name == "index" %>
       <main class="home-main">
         <div class="home-stack">
