@@ -9,6 +9,10 @@ class Competition < ApplicationRecord
   has_many :climbs, dependent: :destroy
   has_many :attempts, through: :climbs
 
+  scope :upcoming, -> { where("starts_at > ?", Time.current) }
+  scope :active, -> { where("starts_at <= ? AND ends_at > ?", Time.current, Time.current) }
+  scope :past, -> { where("ends_at <= ?", Time.current) }
+
   accepts_nested_attributes_for :climbs, allow_destroy: true, reject_if: :all_blank
 
   validates :name, :starts_at, :ends_at, :level, presence: true

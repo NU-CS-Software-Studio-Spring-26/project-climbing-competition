@@ -1,6 +1,6 @@
 <% content_for :title, @user.username %>
 
-<section class="detail-panel p-4">
+<section class="detail-panel p-4 mb-3">
   <div class="d-flex flex-column gap-3">
     <div>
       <p class="eyebrow mb-1">profile</p>
@@ -9,13 +9,55 @@
     </div>
 
     <div class="d-flex flex-column gap-2">
-      <p class="detail-item mb-0"><span>Email:</span> <%= @user.email_address %></p>
+      <% if @profile_owner %>
+        <p class="detail-item mb-0"><span>Email:</span> <%= @user.email_address %></p>
+      <% end %>
       <p class="detail-item mb-0"><span>Bio:</span> <%= @user.bio.presence || "No bio added yet." %></p>
     </div>
 
     <div class="action-row d-flex gap-2 flex-wrap">
-      <%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-board-primary" %>
+      <% if @profile_owner %>
+        <%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-board-primary" %>
+      <% end %>
       <%= link_to "Back to events", competitions_path, class: "btn btn-board-secondary" %>
     </div>
   </div>
+</section>
+
+<section class="detail-panel p-4 mb-3">
+  <h2 class="h5 mb-3">Upcoming competitions</h2>
+  <% if @enrolled_upcoming.any? %>
+    <%= render collection: @enrolled_upcoming, partial: "users/profile_competition_row", as: :competition, locals: { show_delete: false } %>
+  <% else %>
+    <p class="mb-0 text-muted">No upcoming competitions.</p>
+  <% end %>
+</section>
+
+<section class="detail-panel p-4 mb-3">
+  <h2 class="h5 mb-3">Active competitions</h2>
+  <% if @enrolled_active.any? %>
+    <%= render collection: @enrolled_active, partial: "users/profile_competition_row", as: :competition, locals: { show_delete: false } %>
+  <% else %>
+    <p class="mb-0 text-muted">No active competitions.</p>
+  <% end %>
+</section>
+
+<section class="detail-panel p-4 mb-3">
+  <h2 class="h5 mb-3">Past competitions</h2>
+  <% if @enrolled_past.any? %>
+    <%= render collection: @enrolled_past, partial: "users/profile_competition_row", as: :competition, locals: { show_delete: false } %>
+  <% else %>
+    <p class="mb-0 text-muted">No past competitions.</p>
+  <% end %>
+</section>
+
+<section class="detail-panel p-4 mb-3">
+  <h2 class="h5 mb-3">Created competitions</h2>
+  <% if @created_competitions.any? %>
+    <% @created_competitions.each do |competition| %>
+      <%= render "users/profile_competition_row", competition: competition, show_delete: @profile_owner, return_to: user_path(@user) %>
+    <% end %>
+  <% else %>
+    <p class="mb-0 text-muted">No created competitions.</p>
+  <% end %>
 </section>

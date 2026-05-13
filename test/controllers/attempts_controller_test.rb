@@ -21,7 +21,6 @@ class AttemptsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create an attempt for an enrolled user" do
     sign_in_as(@user)
-    Enrollment.create!(user: @user, competition: @competition)
 
     assert_difference("Attempt.count", 1) do
       post competition_climb_attempt_url(@competition, @climb), params: { attempt: { attempt_count: 1, completed: true } }
@@ -36,11 +35,13 @@ class AttemptsControllerTest < ActionDispatch::IntegrationTest
 
   test "should reject attempt logging for a non enrolled user" do
     sign_in_as(@user)
+    other_competition = competitions(:two)
+    other_climb = climbs(:two)
 
     assert_no_difference("Attempt.count") do
-      post competition_climb_attempt_url(@competition, @climb), params: { attempt: { attempt_count: 2, completed: false } }
+      post competition_climb_attempt_url(other_competition, other_climb), params: { attempt: { attempt_count: 2, completed: false } }
     end
 
-    assert_redirected_to competition_path(@competition)
+    assert_redirected_to competition_path(other_competition)
   end
 end

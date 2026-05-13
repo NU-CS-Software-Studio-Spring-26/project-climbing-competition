@@ -6,9 +6,6 @@ class CompetitionTest < ActiveSupport::TestCase
     user_one = users(:one)
     user_two = users(:two)
 
-    Enrollment.create!(user: user_one, competition: competition)
-    Enrollment.create!(user: user_two, competition: competition)
-
     climb_one = climbs(:one)
     climb_two = climbs(:one_two)
 
