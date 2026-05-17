@@ -29,7 +29,10 @@
       <% end %>
 
       <% if authenticated? %>
-        <div class="competition-hero-action">
+        <div class="competition-hero-action d-flex flex-wrap gap-2 justify-content-center align-items-center">
+          <% if current_user == @competition.owner && @competition.owner_id.present? %>
+            <%= button_to "Delete competition", competition_path(@competition), method: :delete, class: "btn btn-outline-danger btn-sm", form: { data: { turbo_confirm: "Permanently delete this competition? All enrollments and attempts will be removed." } } %>
+          <% end %>
           <% if current_user.competitions.include?(@competition) %>
             <% enrollment = @competition.enrollments.find_by(user: current_user) %>
             <%= button_to "LEAVE", competition_enrollment_path(@competition, enrollment), method: :delete, class: "btn-leave-competition-show" %>

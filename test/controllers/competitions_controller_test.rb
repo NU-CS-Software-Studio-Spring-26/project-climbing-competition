@@ -61,9 +61,6 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show competition" do
-    Enrollment.create!(user: users(:one), competition: @competition)
-    Enrollment.create!(user: users(:two), competition: @competition)
-
     Attempt.create!(user: users(:one), climb: climbs(:one), attempt_count: 1, completed: true)
     Attempt.create!(user: users(:two), climb: climbs(:one), attempt_count: 1, completed: true)
     Attempt.create!(user: users(:two), climb: climbs(:one_two), attempt_count: 2, completed: false)
@@ -96,11 +93,56 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to competition_url(@competition)
   end
 
-  test "should destroy competition" do
+  test "should destroy competition when signed in as owner" do
+    sign_in_as(@user)
+
     assert_difference("Competition.count", -1) do
       delete competition_url(@competition)
     end
 
     assert_redirected_to competitions_url
+  end
+
+  test "should return to user profile after deleting from profile page" do
+    sign_in_as(@user)
+
+    assert_difference("Competition.count", -1) do
+      delete competition_url(@competition), params: { return_to: user_path(@user) }
+    end
+
+    assert_redirected_to user_url(@user)
+  end
+
+  test "should redirect destroy when unauthenticated" do
+    assert_no_difference("Competition.count") do
+      delete competition_url(@competition)
+    end
+
+    assert_redirected_to new_session_url
+  end
+
+  test "should not destroy competition when signed in as non-owner" do
+    sign_in_as(users(:two))
+
+    assert_no_difference("Competition.count") do
+      delete competition_url(@competition)
+    end
+
+    assert_redirected_to competitions_url
+    follow_redirect!
+    assert_match(/only delete/i, flash[:alert].to_s)
+  end
+
+  test "should not destroy competition when owner_id is nil" do
+    @competition.update_column(:owner_id, nil)
+    sign_in_as(@user)
+
+    assert_no_difference("Competition.count") do
+      delete competition_url(@competition)
+    end
+
+    assert_redirected_to competitions_url
+    follow_redirect!
+    assert_match(/only delete/i, flash[:alert].to_s)
   end
 end

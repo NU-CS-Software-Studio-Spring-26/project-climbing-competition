@@ -6,6 +6,10 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     @other_user = users(:two)
   end
 
+  def sign_in_as(user)
+    post session_url, params: { session: { email_address: user.email_address, password: "password123" } }
+  end
+
   test "should get new" do
     get new_user_url
     assert_response :success
@@ -28,34 +32,48 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to user_url(User.last)
   end
 
-  test "should redirect show when unauthenticated" do
+  test "should show user profile when unauthenticated" do
     get user_url(@user)
-    assert_redirected_to new_session_url
+    assert_response :success
+    assert_match @user.username, response.body
+    assert_no_match @user.email_address, response.body
   end
 
-  test "should show own user profile" do
-    post session_url, params: { session: { email_address: @user.email_address, password: "password123" } }
+  test "should show another user profile when authenticated" do
+    sign_in_as(@user)
+
+    get user_url(@other_user)
+    assert_response :success
+    assert_match @other_user.username, response.body
+    assert_no_match @other_user.email_address, response.body
+  end
+
+  test "should show own email on own profile when authenticated" do
+    sign_in_as(@user)
 
     get user_url(@user)
     assert_response :success
+    assert_match @user.email_address, response.body
   end
 
-  test "should not show another user profile" do
-    post session_url, params: { session: { email_address: @user.email_address, password: "password123" } }
-
-    get user_url(@other_user)
-    assert_response :not_found
+  test "should list enrolled competition in past bucket after event ends" do
+    travel_to Time.zone.parse("2026-05-16 12:00:00") do
+      get user_url(@user)
+      assert_response :success
+      assert_match "Past competitions", response.body
+      assert_match competitions(:one).name, response.body
+    end
   end
 
   test "should get own edit" do
-    post session_url, params: { session: { email_address: @user.email_address, password: "password123" } }
+    sign_in_as(@user)
 
     get edit_user_url(@user)
     assert_response :success
   end
 
   test "should update own user" do
-    post session_url, params: { session: { email_address: @user.email_address, password: "password123" } }
+    sign_in_as(@user)
 
     patch user_url(@user), params: { user: { name: "Updated Name", username: @user.username } }
     assert_redirected_to user_url(@user)

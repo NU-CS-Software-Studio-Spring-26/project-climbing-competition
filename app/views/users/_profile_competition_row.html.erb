@@ -1,0 +1,12 @@
+<div class="profile-competition-row d-flex flex-wrap align-items-center justify-content-between gap-2 py-2 border-bottom border-secondary-subtle">
+  <div class="flex-grow-1 min-w-0">
+    <%= link_to competition.name, competition_path(competition), class: "fw-semibold text-decoration-none" %>
+    <p class="mb-0 small text-muted">
+      <%= competition.level.to_s.titleize %>
+      · <%= competition.starts_at&.strftime("%b %-d, %Y %l:%M %p") %> – <%= competition.ends_at&.strftime("%b %-d, %Y %l:%M %p") %>
+    </p>
+  </div>
+  <% if local_assigns[:show_delete] %>
+    <%= button_to "Delete", competition_path(competition), method: :delete, params: { return_to: local_assigns[:return_to] }, class: "btn btn-sm btn-outline-danger flex-shrink-0", form: { data: { turbo_confirm: "Permanently delete this competition? All enrollments and attempts will be removed." } } %>
+  <% end %>
+</div>

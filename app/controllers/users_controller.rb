@@ -1,9 +1,16 @@
 class UsersController < ApplicationController
-  before_action :require_authentication, only: %i[ show edit update ]
-  before_action :set_user, only: %i[ show edit update ]
+  before_action :require_authentication, only: %i[ edit update ]
+  before_action :set_user_for_edit, only: %i[ edit update ]
 
   # GET /users/1 or /users/1.json
   def show
+    @user = User.find(params.expect(:id))
+    @profile_owner = authenticated? && current_user == @user
+
+    @enrolled_upcoming = @user.competitions.merge(Competition.upcoming).order(:starts_at)
+    @enrolled_active = @user.competitions.merge(Competition.active).order(:starts_at)
+    @enrolled_past = @user.competitions.merge(Competition.past).order(ends_at: :desc)
+    @created_competitions = @user.owned_competitions.order(starts_at: :desc)
   end
 
   # GET /users/new
@@ -46,8 +53,7 @@ class UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
+    def set_user_for_edit
       requested_id = params.expect(:id).to_s
       raise ActiveRecord::RecordNotFound unless requested_id == current_user.id.to_s
 

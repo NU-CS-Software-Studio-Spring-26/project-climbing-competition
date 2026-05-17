@@ -1,5 +1,5 @@
 class CompetitionsController < ApplicationController
-  before_action :require_authentication, only: %i[ new create ]
+  before_action :require_authentication, only: %i[ new create destroy ]
   before_action :set_competition, only: %i[ show edit update destroy ]
 
   # GET /competitions or /competitions.json
@@ -91,10 +91,18 @@ class CompetitionsController < ApplicationController
 
   # DELETE /competitions/1 or /competitions/1.json
   def destroy
+    unless @competition.owner_id.present? && current_user == @competition.owner
+      respond_to do |format|
+        format.html { redirect_to competitions_path, alert: "You can only delete competitions you created.", status: :see_other }
+        format.json { head :forbidden }
+      end
+      return
+    end
+
     @competition.destroy!
 
     respond_to do |format|
-      format.html { redirect_to competitions_path, notice: "Competition was successfully destroyed.", status: :see_other }
+      format.html { redirect_to destroy_return_path, notice: "Competition was successfully deleted.", status: :see_other }
       format.json { head :no_content }
     end
   end
@@ -124,5 +132,14 @@ class CompetitionsController < ApplicationController
 
     def ensure_minimum_climb_fields(competition)
       (2 - competition.climbs.size).times { competition.climbs.build } if competition.climbs.size < 2
+    end
+
+    def destroy_return_path
+      return competitions_path unless params[:return_to].present?
+
+      return_to = params[:return_to].to_s
+      return competitions_path unless return_to.start_with?("/") && !return_to.start_with?("//")
+
+      return_to
     end
 end
