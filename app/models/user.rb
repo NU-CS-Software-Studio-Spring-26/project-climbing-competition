@@ -1,5 +1,14 @@
 class User < ApplicationRecord
   USERNAME_FORMAT = /\A[a-zA-Z0-9_.-]+\z/
+  CONTROL_CHAR_PATTERN = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/
+  UNICODE_LETTER_PATTERN = /\p{L}/
+
+  NAME_MAX_LENGTH = 80
+  USERNAME_MAX_LENGTH = 30
+  EMAIL_MAX_LENGTH = 254
+  BIO_MAX_LENGTH = 500
+  PASSWORD_MIN_LENGTH = 8
+  PASSWORD_MAX_LENGTH = 72
 
   has_many :enrollments, dependent: :destroy
   has_many :competitions, through: :enrollments
@@ -16,13 +25,19 @@ class User < ApplicationRecord
   normalizes :username, with: ->(value) { value.strip }
 
   validates :name, :username, :email_address, presence: true
-  validates :name, length: { maximum: 80 }
+  validates :name, length: { minimum: 1, maximum: NAME_MAX_LENGTH }
   validates :username, uniqueness: { case_sensitive: false }
-  validates :username, length: { maximum: 30 }, format: { with: USERNAME_FORMAT }
+  validates :username, length: { minimum: 1, maximum: USERNAME_MAX_LENGTH }, format: { with: USERNAME_FORMAT }
   validates :email_address, uniqueness: { case_sensitive: false }
+  validates :email_address, length: { maximum: EMAIL_MAX_LENGTH }
   validates :email_address, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :password, length: { minimum: 8 }, allow_blank: true
-  validates :bio, length: { maximum: 500 }, allow_blank: true
+  validates :password, length: { minimum: PASSWORD_MIN_LENGTH, maximum: PASSWORD_MAX_LENGTH }, allow_blank: true
+  validates :password, confirmation: true, if: -> { password.present? }
+  validates :bio, length: { maximum: BIO_MAX_LENGTH }, allow_blank: true
+
+  validate :name_has_no_control_characters
+  validate :name_contains_letter
+  validate :bio_has_no_control_characters, if: -> { bio.present? }
 
   private
     def sanitize_profile_fields
@@ -35,5 +50,27 @@ class User < ApplicationRecord
       return if value.nil?
 
       ActionController::Base.helpers.strip_tags(value.to_s).squish
+    end
+
+    def name_has_no_control_characters
+      reject_control_characters(:name, name)
+    end
+
+    def bio_has_no_control_characters
+      reject_control_characters(:bio, bio)
+    end
+
+    def reject_control_characters(attribute, value)
+      return if value.blank?
+      return unless value.match?(CONTROL_CHAR_PATTERN)
+
+      errors.add(attribute, "contains invalid characters")
+    end
+
+    def name_contains_letter
+      return if name.blank?
+      return if name.match?(UNICODE_LETTER_PATTERN)
+
+      errors.add(:name, "must include at least one letter")
     end
 end
