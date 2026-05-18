@@ -1754,6 +1754,8 @@ select:focus {
 .about-github-link:hover {
   border-color: #fff;
   color: #fff;
+}
+
 /* Site footer */
 .app-footer {
   flex-shrink: 0;
