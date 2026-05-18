@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_04_132000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_18_063022) do
   create_table "attempts", force: :cascade do |t|
     t.integer "attempt_count", null: false
     t.integer "climb_id", null: false
@@ -25,25 +25,39 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_04_132000) do
   end
 
   create_table "climbs", force: :cascade do |t|
+    t.integer "angle"
+    t.integer "ascents_count", default: 0
+    t.string "boardsesh_url"
     t.integer "competition_id", null: false
     t.datetime "created_at", null: false
+    t.decimal "difficulty_average", precision: 5, scale: 2
+    t.string "frames"
     t.string "grading"
+    t.string "kilter_uuid"
+    t.string "layout_slug", default: "original"
     t.string "name"
+    t.decimal "quality_average", precision: 3, scale: 2
+    t.string "setter_username"
+    t.string "size_slug", default: "12x12-square"
     t.datetime "updated_at", null: false
     t.string "url"
     t.index ["competition_id"], name: "index_climbs_on_competition_id"
+    t.index ["kilter_uuid"], name: "index_climbs_on_kilter_uuid", unique: true, where: "kilter_uuid IS NOT NULL"
   end
 
   create_table "competitions", force: :cascade do |t|
+    t.integer "attempt_deduction", default: 5, null: false
     t.date "competition_end"
     t.date "competition_start"
     t.datetime "created_at", null: false
     t.text "description"
     t.integer "difficulty", default: 0, null: false
     t.datetime "ends_at"
+    t.integer "flash_points", default: 30, null: false
     t.string "level"
     t.string "name"
     t.integer "owner_id"
+    t.integer "send_points", default: 25, null: false
     t.datetime "starts_at"
     t.datetime "updated_at", null: false
     t.index ["owner_id"], name: "index_competitions_on_owner_id"
@@ -57,6 +71,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_04_132000) do
     t.index ["competition_id"], name: "index_enrollments_on_competition_id"
     t.index ["user_id", "competition_id"], name: "index_enrollments_on_user_id_and_competition_id", unique: true
     t.index ["user_id"], name: "index_enrollments_on_user_id"
+  end
+
+  create_table "kilter_placement_roles", force: :cascade do |t|
+    t.string "color_hex", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.integer "role_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["role_id"], name: "index_kilter_placement_roles_on_role_id", unique: true
+  end
+
+  create_table "kilter_placements", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "hole_id"
+    t.string "layout_slug", default: "original", null: false
+    t.integer "placement_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "x", null: false
+    t.integer "y", null: false
+    t.index ["layout_slug", "placement_id"], name: "index_kilter_placements_on_layout_slug_and_placement_id", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|
