@@ -25,24 +25,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_063022) do
   end
 
   create_table "climbs", force: :cascade do |t|
-    t.integer "angle"
-    t.integer "ascents_count", default: 0
-    t.string "boardsesh_url"
     t.integer "competition_id", null: false
     t.datetime "created_at", null: false
-    t.decimal "difficulty_average", precision: 5, scale: 2
-    t.string "frames"
     t.string "grading"
-    t.string "kilter_uuid"
-    t.string "layout_slug", default: "original"
     t.string "name"
-    t.decimal "quality_average", precision: 3, scale: 2
-    t.string "setter_username"
-    t.string "size_slug", default: "12x12-square"
     t.datetime "updated_at", null: false
     t.string "url"
     t.index ["competition_id"], name: "index_climbs_on_competition_id"
-    t.index ["kilter_uuid"], name: "index_climbs_on_kilter_uuid", unique: true, where: "kilter_uuid IS NOT NULL"
   end
 
   create_table "competitions", force: :cascade do |t|
@@ -73,26 +62,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_063022) do
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
-  create_table "kilter_placement_roles", force: :cascade do |t|
-    t.string "color_hex", null: false
-    t.datetime "created_at", null: false
-    t.string "name", null: false
-    t.integer "role_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["role_id"], name: "index_kilter_placement_roles_on_role_id", unique: true
-  end
-
-  create_table "kilter_placements", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.integer "hole_id"
-    t.string "layout_slug", default: "original", null: false
-    t.integer "placement_id", null: false
-    t.datetime "updated_at", null: false
-    t.integer "x", null: false
-    t.integer "y", null: false
-    t.index ["layout_slug", "placement_id"], name: "index_kilter_placements_on_layout_slug_and_placement_id", unique: true
-  end
-
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -107,11 +76,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_063022) do
   create_table "users", force: :cascade do |t|
     t.text "bio"
     t.datetime "created_at", null: false
-    t.string "email_address"
-    t.string "name"
-    t.string "password_digest"
+    t.string "email_address", null: false
+    t.string "name", null: false
+    t.string "password_digest", null: false
     t.datetime "updated_at", null: false
-    t.string "username"
+    t.string "username", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end

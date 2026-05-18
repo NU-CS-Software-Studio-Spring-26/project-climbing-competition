@@ -1,0 +1,93 @@
+<% content_for :title, "Privacy Policy" %>
+
+<section class="page-header">
+  <h1 class="page-title page-title-left">privacy policy</h1>
+  <p class="legal-meta">Last updated: May 17, 2026</p>
+</section>
+
+<div class="legal-document detail-panel p-4">
+  <ol class="legal-list">
+    <li>
+      <h2>Who we are</h2>
+      <p>board base is operated by students in Northwestern University’s CS Software Studio (Spring 2026) course. Contact: <%= mail_to "ethanpan2028@u.northwestern.edu" %>.</p>
+    </li>
+    <li>
+      <h2>Information we collect</h2>
+      <div class="table-responsive">
+        <table class="table legal-table">
+          <thead>
+            <tr>
+              <th scope="col">Category</th>
+              <th scope="col">Examples</th>
+              <th scope="col">Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Account</td>
+              <td>Name, username, email, password (stored hashed), optional bio</td>
+              <td>Registration, authentication, profiles</td>
+            </tr>
+            <tr>
+              <td>Session</td>
+              <td>IP address, browser user agent, session token</td>
+              <td>Security, keeping you signed in</td>
+            </tr>
+            <tr>
+              <td>Competition</td>
+              <td>Enrollments, attempt counts, completion status, competitions you create</td>
+              <td>Leaderboards and event operation</td>
+            </tr>
+            <tr>
+              <td>Technical</td>
+              <td>Server logs, cookies/session storage</td>
+              <td>Operation and debugging</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>We do not intentionally collect payment information (the Service is free).</p>
+    </li>
+    <li>
+      <h2>How we use information</h2>
+      <p>To provide and improve the Service; display leaderboards and profiles; prevent abuse; comply with law; and communicate about the Service if needed.</p>
+    </li>
+    <li>
+      <h2>Sharing</h2>
+      <p>We do not sell your personal information. We may share data with:</p>
+      <ul>
+        <li><strong>Hosting providers</strong> (e.g. Heroku) that process data on our behalf.</li>
+        <li><strong>Other users</strong>, as part of normal use (e.g. username and scores on public leaderboards).</li>
+        <li><strong>Authorities</strong>, if required by law.</li>
+      </ul>
+    </li>
+    <li>
+      <h2>Retention</h2>
+      <p>We retain account and competition data while your account exists or as needed to operate the Service. You may request account deletion by contacting <%= mail_to "ethanpan2028@u.northwestern.edu" %>; we will delete or anonymize data within a reasonable period unless we must retain it for legal reasons.</p>
+    </li>
+    <li>
+      <h2>Security</h2>
+      <p>Passwords are stored using one-way hashing. No method of transmission or storage is 100% secure.</p>
+    </li>
+    <li>
+      <h2>Children</h2>
+      <p>The Service is not directed to children under 13. We do not knowingly collect personal information from children under 13.</p>
+    </li>
+    <li>
+      <h2>Your choices</h2>
+      <p>You may update profile fields in account settings. You may sign out at any time. California and similar privacy laws may grant additional rights; contact us to exercise them.</p>
+    </li>
+    <li>
+      <h2>International users</h2>
+      <p>Data may be processed in the United States.</p>
+    </li>
+    <li>
+      <h2>Changes</h2>
+      <p>We will post updates with a new “Last updated” date.</p>
+    </li>
+    <li>
+      <h2>Contact</h2>
+      <p>Privacy questions: <%= mail_to "ethanpan2028@u.northwestern.edu" %></p>
+    </li>
+  </ol>
+</div>

@@ -397,6 +397,7 @@ DEPENDENCIES
   jbuilder
   kamal
   kaminari
+  net-imap (>= 0.6.4)
   pg
   propshaft
   puma (>= 5.0)
