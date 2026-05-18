@@ -13,6 +13,13 @@ class Competition < ApplicationRecord
   scope :active, -> { where("starts_at <= ? AND ends_at > ?", Time.current, Time.current) }
   scope :past, -> { where("ends_at <= ?", Time.current) }
 
+  def status
+    now = Time.current
+    return :upcoming if starts_at.nil? || starts_at > now
+    return :past    if ends_at.nil?   || ends_at <= now
+    :active
+  end
+
   accepts_nested_attributes_for :climbs, allow_destroy: true, reject_if: :all_blank
 
   validates :name, :starts_at, :ends_at, :level, presence: true

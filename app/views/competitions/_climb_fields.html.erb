@@ -6,9 +6,12 @@
     </button>
   </div>
 
-  <div class="mb-2">
+  <div class="mb-2" data-controller="char-counter" data-char-counter-max-value="100">
     <%= form.label :name, "Climb Name", class: "form-label" %>
-    <%= form.text_field :name, class: "form-control", placeholder: "e.g., The Crimper" %>
+    <%= form.text_field :name, class: "form-control", placeholder: "e.g., The Crimper",
+          maxlength: 100,
+          data: { char_counter_target: "input", action: "input->char-counter#update" } %>
+    <span class="char-counter" data-char-counter-target="count"></span>
   </div>
 
   <div class="mb-2">

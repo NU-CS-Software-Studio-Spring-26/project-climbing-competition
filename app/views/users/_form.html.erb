@@ -26,9 +26,12 @@
     <%= form.email_field :email_address, class: "form-control", autocomplete: "email", placeholder: "name@example.com", maxlength: User::EMAIL_MAX_LENGTH %>
   </div>
 
-  <div class="mb-3">
+  <div class="mb-3" data-controller="char-counter" data-char-counter-max-value="<%= User::BIO_MAX_LENGTH %>">
     <%= form.label :bio, class: "form-label" %>
-    <%= form.text_area :bio, class: "form-control", rows: 4, placeholder: "Share a quick intro or climbing style.", maxlength: User::BIO_MAX_LENGTH %>
+    <%= form.text_area :bio, class: "form-control", rows: 4, placeholder: "Share a quick intro or climbing style.",
+          maxlength: User::BIO_MAX_LENGTH,
+          data: { char_counter_target: "input", action: "input->char-counter#update" } %>
+    <span class="char-counter" data-char-counter-target="count"></span>
   </div>
 
   <div class="mb-3">
