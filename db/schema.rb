@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_17_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_18_063022) do
   create_table "attempts", force: :cascade do |t|
     t.integer "attempt_count", null: false
     t.integer "climb_id", null: false
@@ -35,15 +35,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_17_120000) do
   end
 
   create_table "competitions", force: :cascade do |t|
+    t.integer "attempt_deduction", default: 5, null: false
     t.date "competition_end"
     t.date "competition_start"
     t.datetime "created_at", null: false
     t.text "description"
     t.integer "difficulty", default: 0, null: false
     t.datetime "ends_at"
+    t.integer "flash_points", default: 30, null: false
     t.string "level"
     t.string "name"
     t.integer "owner_id"
+    t.integer "send_points", default: 25, null: false
     t.datetime "starts_at"
     t.datetime "updated_at", null: false
     t.index ["owner_id"], name: "index_competitions_on_owner_id"

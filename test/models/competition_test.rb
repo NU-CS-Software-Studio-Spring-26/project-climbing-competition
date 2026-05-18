@@ -16,7 +16,7 @@ class CompetitionTest < ActiveSupport::TestCase
     leaderboard = competition.leaderboard_entries
 
     assert_equal [ user_one.username, user_two.username ], leaderboard.map { |entry| entry.user.username }
-    assert_equal [ 15, 15 ], leaderboard.map(&:points)
+    assert_equal [ 30, 30 ], leaderboard.map(&:points)  # flash_points(30) for both
     assert_equal [ 1, 4 ], leaderboard.map(&:attempts_count)
   end
 end

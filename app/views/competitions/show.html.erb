@@ -162,4 +162,15 @@
   }
 </script>
 
-
+<section class="scoring-rules">
+  <h3>Scoring Rules</h3>
+  <ul>
+    <li><strong>Flash (1st attempt):</strong> <%= @competition.flash_points %> pts</li>
+    <li><strong>Send:</strong> <%= @competition.send_points %> pts</li>
+    <li><strong>Per extra attempt:</strong> &minus;<%= @competition.attempt_deduction %> pts</li>
+  </ul>
+  <p class="hint">
+    Example: sending a problem on your 3rd attempt earns
+    <%= [@competition.send_points - 2 * @competition.attempt_deduction, 0].max %> pts.
+  </p>
+</section>

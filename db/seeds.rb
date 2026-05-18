@@ -355,7 +355,12 @@ competitions_data.each do |data|
   end
 
   comp = users[rand(0...users.length)].owned_competitions.create!(
-    data.merge(climbs_attributes: climbs_attributes)
+    data.merge(
+      climbs_attributes:  climbs_attributes,
+      send_points:        100,
+      flash_points:       125,
+      attempt_deduction:  10
+    )
   )
   competitions << comp
 end

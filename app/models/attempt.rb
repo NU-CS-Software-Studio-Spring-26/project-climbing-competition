@@ -10,7 +10,11 @@ class Attempt < ApplicationRecord
   def points_awarded
     return 0 unless completed?
 
-    10 + (attempt_count == 1 ? 5 : 0)
+    competition.score_for_climb(
+      sent:     true,
+      flashed:  attempt_count == 1,
+      attempts: attempt_count
+    )
   end
 
   private
