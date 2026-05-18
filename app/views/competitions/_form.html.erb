@@ -125,7 +125,7 @@
 <% end %>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("turbo:load", function() {
   // ── Scoring sliders ──────────────────────────────────────────────────────────
   function getSlider(name) {
     return document.querySelector(`[data-scoring-slider="${name}"]`);
@@ -135,13 +135,17 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function updateScoringPreview() {
-    const send   = parseInt(getNumber("send_points")?.value)      || 0;
-    const flash  = parseInt(getNumber("flash_points")?.value)     || 0;
+    const send   = parseInt(getNumber("send_points")?.value)       || 0;
+    const flash  = parseInt(getNumber("flash_points")?.value)      || 0;
     const deduct = parseInt(getNumber("attempt_deduction")?.value) || 0;
 
-    document.querySelector('[data-preview="flash"]').textContent  = flash;
-    document.querySelector('[data-preview="send2"]').textContent  = Math.max(send - deduct, 0);
-    document.querySelector('[data-preview="send3"]').textContent  = Math.max(send - 2 * deduct, 0);
+    const previewFlash = document.querySelector('[data-preview="flash"]');
+    const previewSend2 = document.querySelector('[data-preview="send2"]');
+    const previewSend3 = document.querySelector('[data-preview="send3"]');
+
+    if (previewFlash) previewFlash.textContent = flash;
+    if (previewSend2) previewSend2.textContent = Math.max(send - deduct, 0);
+    if (previewSend3) previewSend3.textContent = Math.max(send - 2 * deduct, 0);
   }
 
   function syncPair(name) {
@@ -149,7 +153,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const number = getNumber(name);
     if (!slider || !number) return;
 
-    // Sync slider position to match the model value on page load
     slider.value = number.value;
 
     slider.addEventListener("input", function () {
