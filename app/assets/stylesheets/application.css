@@ -13,10 +13,16 @@
 body.app-shell {
   margin: 0;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: var(--bg);
   color: var(--text);
   font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.4;
+}
+
+body.app-shell > main {
+  flex: 1 0 auto;
 }
 
 body.app-shell.home-shell {
@@ -25,7 +31,6 @@ body.app-shell.home-shell {
 }
 
 .home-main {
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   padding: 2.2rem 1rem 0;
@@ -1660,4 +1665,127 @@ select:focus {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+/* Site footer */
+.app-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding: 1.35rem 2.35rem 1.75rem;
+  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+}
+
+.app-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 1.35rem;
+}
+
+.app-footer-link {
+  color: var(--text);
+  font-size: 0.92rem;
+  text-decoration: none;
+  text-transform: lowercase;
+}
+
+.app-footer-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.app-footer-copy {
+  font-size: 0.92rem;
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+  text-transform: lowercase;
+}
+
+.app-footer-tagline {
+  margin: 0.65rem 0 0;
+  max-width: 42rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+}
+
+body.app-shell.home-shell .app-footer {
+  border-top-color: rgba(17, 17, 17, 0.14);
+}
+
+body.app-shell.home-shell .app-footer-link {
+  color: #111111;
+}
+
+body.app-shell.home-shell .app-footer-copy,
+body.app-shell.home-shell .app-footer-tagline {
+  color: rgba(17, 17, 17, 0.62);
+}
+
+/* Legal pages */
+.legal-meta {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+}
+
+.legal-document {
+  max-width: 52rem;
+}
+
+.legal-list {
+  margin: 0;
+  padding-left: 1.35rem;
+}
+
+.legal-list > li {
+  margin-bottom: 1.35rem;
+}
+
+.legal-list > li:last-child {
+  margin-bottom: 0;
+}
+
+.legal-list h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+
+.legal-list p,
+.legal-list ul {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.legal-list ul {
+  padding-left: 1.2rem;
+}
+
+.legal-list ul li + li {
+  margin-top: 0.35rem;
+}
+
+.legal-table {
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.legal-table th,
+.legal-table td {
+  border-color: var(--border);
+  vertical-align: top;
+}
+
+@media (max-width: 768px) {
+  .app-footer {
+    padding: 1.1rem 1.25rem 1.4rem;
+  }
+
+  .app-footer-nav {
+    gap: 0.5rem 1rem;
+  }
 }
