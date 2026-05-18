@@ -1674,6 +1674,10 @@ select:focus {
   padding: 1.25rem 1.5rem;
 }
 
+.scoring-settings .form-text {
+  color: #c8c4b4;
+}
+
 .scoring-number {
   width: 75px;
   text-align: center;
@@ -1802,6 +1806,134 @@ body.app-shell.home-shell .app-footer-link {
 body.app-shell.home-shell .app-footer-copy,
 body.app-shell.home-shell .app-footer-tagline {
   color: rgba(17, 17, 17, 0.62);
+}
+
+/* ── Competition status badges ─────────────────────────────────────────── */
+.competition-status-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.competition-status-badge--active {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.competition-status-badge--upcoming {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #93c5fd;
+}
+
+.competition-status-badge--past {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+/* Hero panel — badges sit on a dark background, invert colors */
+.competition-hero-meta .competition-status-badge--active {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.competition-hero-meta .competition-status-badge--upcoming {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border-color: rgba(147, 197, 253, 0.35);
+}
+
+.competition-hero-meta .competition-status-badge--past {
+  background: rgba(107, 114, 128, 0.15);
+  color: #9ca3af;
+  border-color: rgba(156, 163, 175, 0.3);
+}
+
+/* ── V-grade badges ────────────────────────────────────────────────────── */
+.grade-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.grade--easy {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.grade--moderate {
+  background: #fef9c3;
+  color: #854d0e;
+  border: 1px solid #fde047;
+}
+
+.grade--hard {
+  background: #ffedd5;
+  color: #9a3412;
+  border: 1px solid #fdba74;
+}
+
+.grade--extreme {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.grade--ungraded {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+/* ── Character counter ─────────────────────────────────────────────────── */
+.char-counter {
+  display: block;
+  font-size: 0.72rem;
+  text-align: right;
+  margin-top: 0.25rem;
+  color: rgba(243, 241, 234, 0.45);
+  transition: color 150ms ease;
+}
+
+.char-counter--near {
+  color: #f59e0b;
+}
+
+.char-counter--over {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+/* Inside light panels (auth forms, user form) */
+.detail-panel .char-counter,
+.auth-panel .char-counter {
+  color: rgba(26, 26, 28, 0.45);
+}
+
+.detail-panel .char-counter--near,
+.auth-panel .char-counter--near {
+  color: #d97706;
+}
+
+.detail-panel .char-counter--over,
+.auth-panel .char-counter--over {
+  color: #dc2626;
 }
 
 /* Legal pages */
