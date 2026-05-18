@@ -1674,6 +1674,10 @@ select:focus {
   padding: 1.25rem 1.5rem;
 }
 
+.scoring-settings .form-text {
+  color: #c8c4b4;
+}
+
 .scoring-number {
   width: 75px;
   text-align: center;

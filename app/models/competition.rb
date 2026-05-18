@@ -16,12 +16,15 @@ class Competition < ApplicationRecord
   accepts_nested_attributes_for :climbs, allow_destroy: true, reject_if: :all_blank
 
   validates :name, :starts_at, :ends_at, :level, presence: true
+  validates :name, length: { maximum: 100 }
+  validates :description, length: { maximum: 2000 }, allow_blank: true
   validates :level, inclusion: { in: LEVELS }
-  # ↓ ADD THESE THREE
   validates :send_points, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :flash_points, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :attempt_deduction, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validate :minimum_climbs
+
+  before_validation :sanitize_text_fields
 
   # ↓ REPLACE the existing points_for(user) with this
   def points_for(user)
@@ -54,6 +57,15 @@ class Competition < ApplicationRecord
   end
 
   private
+
+  def sanitize_text_fields
+    self.name = strip_tags(name)&.squish if name.present?
+    self.description = strip_tags(description)&.squish if description.present?
+  end
+
+  def strip_tags(value)
+    ActionController::Base.helpers.strip_tags(value.to_s)
+  end
 
   def minimum_climbs
     if climbs.reject(&:marked_for_destruction?).length < 2
