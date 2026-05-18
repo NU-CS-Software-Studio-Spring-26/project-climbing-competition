@@ -33,3 +33,6 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+# Ignore all files in the .cursor directory.
+/.cursor/*
+!/cursor/.keep
