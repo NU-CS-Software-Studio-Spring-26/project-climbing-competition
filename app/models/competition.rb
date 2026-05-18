@@ -36,7 +36,7 @@ class Competition < ApplicationRecord
 
     base      = flashed ? flash_points : send_points
     deduction = flashed ? 0 : (attempts - 1) * attempt_deduction
-    [base - deduction, 0].max
+    [ base - deduction, 0 ].max
   end
 
   def leaderboard_entries
