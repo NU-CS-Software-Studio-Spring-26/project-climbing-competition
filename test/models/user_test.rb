@@ -1,6 +1,16 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
+  def valid_user_attributes(overrides = {})
+    {
+      name: "Valid User",
+      username: "validuser#{SecureRandom.hex(4)}",
+      email_address: "valid-#{SecureRandom.hex(4)}@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    }.merge(overrides)
+  end
+
   test "sanitizes profile text fields" do
     user = User.new(
       name: "<b>Alice</b>",
@@ -18,15 +28,66 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "rejects usernames with invalid characters" do
-    user = User.new(
-      name: "Invalid User",
-      username: "bad user!",
-      email_address: "invalid-user@example.com",
-      password: "password123",
-      password_confirmation: "password123"
-    )
+    user = User.new(valid_user_attributes(username: "bad user!"))
 
     assert_not user.valid?
     assert_includes user.errors[:username], "is invalid"
+  end
+
+  test "accepts unicode display names" do
+    user = User.new(valid_user_attributes(name: "José O'Brien"))
+    assert user.valid?
+
+    user = User.new(valid_user_attributes(name: "山田太郎"))
+    assert user.valid?
+  end
+
+  test "rejects control characters in name and bio" do
+    user = User.new(valid_user_attributes(name: "Bad\u0007Name"))
+    assert_not user.valid?
+    assert_includes user.errors[:name], "contains invalid characters"
+
+    user = User.new(valid_user_attributes(bio: "Bio\u007fwith control"))
+    assert_not user.valid?
+    assert_includes user.errors[:bio], "contains invalid characters"
+  end
+
+  test "rejects names without letters" do
+    user = User.new(valid_user_attributes(name: "---"))
+    assert_not user.valid?
+    assert_includes user.errors[:name], "must include at least one letter"
+
+    user = User.new(valid_user_attributes(name: "123"))
+    assert_not user.valid?
+    assert_includes user.errors[:name], "must include at least one letter"
+  end
+
+  test "rejects email addresses over 254 characters" do
+    local_part = "a" * 245
+    user = User.new(valid_user_attributes(email_address: "#{local_part}@example.com"))
+
+    assert_not user.valid?
+    assert user.errors[:email_address].any? { |message| message.include?("too long") }
+  end
+
+  test "rejects passwords over 72 characters" do
+    user = User.new(valid_user_attributes(password: "a" * 73, password_confirmation: "a" * 73))
+
+    assert_not user.valid?
+    assert user.errors[:password].any? { |message| message.include?("too long") }
+  end
+
+  test "rejects html-only username after sanitization" do
+    user = User.new(valid_user_attributes(username: "<script></script>"))
+
+    assert_not user.valid?
+    assert user.errors[:username].any?
+  end
+
+  test "requires password confirmation when password is present" do
+    user = User.new(valid_user_attributes(password_confirmation: "different-password"))
+
+    assert_not user.valid?
+    assert_includes user.errors[:password_confirmation], "doesn't match Password"
   end
 end

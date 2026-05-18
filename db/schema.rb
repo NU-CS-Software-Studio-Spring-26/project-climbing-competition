@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_04_132000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_17_120000) do
   create_table "attempts", force: :cascade do |t|
     t.integer "attempt_count", null: false
     t.integer "climb_id", null: false
@@ -73,11 +73,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_04_132000) do
   create_table "users", force: :cascade do |t|
     t.text "bio"
     t.datetime "created_at", null: false
-    t.string "email_address"
-    t.string "name"
-    t.string "password_digest"
+    t.string "email_address", null: false
+    t.string "name", null: false
+    t.string "password_digest", null: false
     t.datetime "updated_at", null: false
-    t.string "username"
+    t.string "username", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end

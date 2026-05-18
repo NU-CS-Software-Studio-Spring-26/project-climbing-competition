@@ -80,4 +80,76 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     @user.reload
     assert_equal "Updated Name", @user.name
   end
+
+  test "should not create user with script payloads in profile fields" do
+    assert_no_difference("User.count") do
+      post users_url, params: {
+        user: {
+          name: "<script></script>",
+          username: "<script></script>",
+          email_address: "new-user@example.com",
+          bio: "<img src=x onerror=alert(1)>",
+          password: "password123",
+          password_confirmation: "password123"
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_match "error", response.body
+  end
+
+  test "should not create user with oversized name" do
+    assert_no_difference("User.count") do
+      post users_url, params: {
+        user: valid_signup_params(name: "a" * 81)
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_match "error", response.body
+  end
+
+  test "should handle missing user params on create" do
+    assert_no_difference("User.count") do
+      post users_url, params: {}
+    end
+
+    assert_response :unprocessable_entity
+    assert_match "Please fill out the profile form.", response.body
+  end
+
+  test "should not create user with duplicate username" do
+    assert_no_difference("User.count") do
+      post users_url, params: {
+        user: valid_signup_params(username: @user.username, email_address: "duplicate-username@example.com")
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_match "Username has already been taken", response.body
+  end
+
+  test "should not create user with duplicate email" do
+    assert_no_difference("User.count") do
+      post users_url, params: {
+        user: valid_signup_params(username: "unique-username", email_address: @user.email_address)
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_match "Email address has already been taken", response.body
+  end
+
+  private
+    def valid_signup_params(overrides = {})
+      {
+        name: "New Climber",
+        username: "newclimber#{SecureRandom.hex(4)}",
+        email_address: "newclimber-#{SecureRandom.hex(4)}@example.com",
+        bio: "Boulderer",
+        password: "password123",
+        password_confirmation: "password123"
+      }.merge(overrides)
+    end
 end

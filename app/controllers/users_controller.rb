@@ -2,6 +2,8 @@ class UsersController < ApplicationController
   before_action :require_authentication, only: %i[ edit update ]
   before_action :set_user_for_edit, only: %i[ edit update ]
 
+  rescue_from ActionController::ParameterMissing, with: :handle_missing_user_params
+
   # GET /users/1 or /users/1.json
   def show
     @user = User.find(params.expect(:id))
@@ -63,5 +65,16 @@ class UsersController < ApplicationController
     # Only allow a list of trusted parameters through.
     def user_params
       params.expect(user: [ :name, :username, :email_address, :bio, :password, :password_confirmation ])
+    end
+
+    def handle_missing_user_params
+      flash.now[:alert] = "Please fill out the profile form."
+
+      if action_name == "update"
+        render :edit, status: :unprocessable_entity
+      else
+        @user = User.new
+        render :new, status: :unprocessable_entity
+      end
     end
 end
