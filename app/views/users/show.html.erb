@@ -29,7 +29,7 @@
   <% if @enrolled_upcoming.any? %>
     <%= render collection: @enrolled_upcoming, partial: "users/profile_competition_row", as: :competition, locals: { show_delete: false } %>
   <% else %>
-    <p class="mb-0 text-muted">No upcoming competitions.</p>
+    <p class="mb-0 profile-empty-state">No upcoming competitions.</p>
   <% end %>
 </section>
 
@@ -38,7 +38,7 @@
   <% if @enrolled_active.any? %>
     <%= render collection: @enrolled_active, partial: "users/profile_competition_row", as: :competition, locals: { show_delete: false } %>
   <% else %>
-    <p class="mb-0 text-muted">No active competitions.</p>
+    <p class="mb-0 profile-empty-state">No active competitions.</p>
   <% end %>
 </section>
 
@@ -47,7 +47,7 @@
   <% if @enrolled_past.any? %>
     <%= render collection: @enrolled_past, partial: "users/profile_competition_row", as: :competition, locals: { show_delete: false } %>
   <% else %>
-    <p class="mb-0 text-muted">No past competitions.</p>
+    <p class="mb-0 profile-empty-state">No past competitions.</p>
   <% end %>
 </section>
 
@@ -58,6 +58,6 @@
       <%= render "users/profile_competition_row", competition: competition, show_delete: @profile_owner, return_to: user_path(@user) %>
     <% end %>
   <% else %>
-    <p class="mb-0 text-muted">No created competitions.</p>
+    <p class="mb-0 profile-empty-state">No created competitions.</p>
   <% end %>
 </section>

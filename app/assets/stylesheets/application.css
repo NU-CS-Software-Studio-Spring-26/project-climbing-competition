@@ -811,6 +811,10 @@ body.app-shell.home-shell {
   font-weight: 700;
 }
 
+.profile-empty-state {
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+}
+
 .board-form .form-label {
   font-size: 0.92rem;
   font-weight: 600;
