@@ -1,6 +1,13 @@
 require "test_helper"
 
 class PagesControllerTest < ActionDispatch::IntegrationTest
+  test "should get about" do
+    get about_url
+    assert_response :success
+    assert_select "h1", text: /about us/i
+    assert_select "a.about-github-link", text: "View on GitHub"
+  end
+
   test "should get terms" do
     get terms_url
     assert_response :success
@@ -18,8 +25,9 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     get root_url
     assert_response :success
     assert_select "footer.app-footer"
+    assert_select "a.app-footer-link", text: "About"
     assert_select "a.app-footer-link", text: "Terms of Service"
     assert_select "a.app-footer-link", text: "GitHub"
-    assert_select "p.app-footer-tagline"
+    assert_select "span.app-footer-tagline"
   end
 end

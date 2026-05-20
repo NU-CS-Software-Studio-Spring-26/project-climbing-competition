@@ -1,9 +1,10 @@
 <footer class="app-footer" aria-label="Site footer">
   <nav class="app-footer-nav" aria-label="Legal and project links">
+    <%= link_to "About", about_path, class: "app-footer-link" %>
     <%= link_to "Terms of Service", terms_path, class: "app-footer-link" %>
     <%= link_to "Privacy Policy", privacy_path, class: "app-footer-link" %>
     <%= link_to "GitHub", "https://github.com/NU-CS-Software-Studio-Spring-26/project-climbing-competition", class: "app-footer-link", target: "_blank", rel: "noopener noreferrer" %>
     <span class="app-footer-copy">© <%= Date.current.year %> board base</span>
+    <span class="app-footer-tagline">board base is a student project. Climb at your own risk. Not affiliated with Kilter Board or other training-board brands.</span>
   </nav>
-  <p class="app-footer-tagline">board base is a student project. Climb at your own risk. Not affiliated with Kilter Board or other training-board brands.</p>
 </footer>

@@ -811,6 +811,10 @@ body.app-shell.home-shell {
   font-weight: 700;
 }
 
+.profile-empty-state {
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+}
+
 .board-form .form-label {
   font-size: 0.92rem;
   font-weight: 600;
@@ -1444,7 +1448,7 @@ select:focus {
 }
 
 .pagination a,
-.pagination span {
+.pagination span.page.current {
   background: var(--surface);
   color: var(--text);
   border-color: rgba(243, 241, 234, 0.14);
@@ -1454,10 +1458,8 @@ select:focus {
   background: rgba(243, 241, 234, 0.08);
 }
 
-.pagination .page.current {
-  background: rgba(243, 241, 234, 0.92);
-  color: #0f100d;
-  border-color: rgba(243, 241, 234, 0.92);
+.pagination span.page.current {
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 .pagination .disabled {
@@ -1616,11 +1618,11 @@ select:focus {
 }
 
 .pagination a,
-.pagination span {
+.pagination span.page.current {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 3.9rem;
+  min-width: 3.15rem;
   height: 2.65rem;
   padding: 0 0.85rem;
   background: #212123;
@@ -1633,6 +1635,7 @@ select:focus {
   text-decoration: none;
   transition: all 160ms ease;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .pagination a:hover {
@@ -1640,25 +1643,20 @@ select:focus {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-.pagination .page.current {
-  background: #2a2a2d;
-  color: var(--text);
-  border-color: rgba(255, 255, 255, 0.1);
+.pagination span.page.current {
+  background: #212123;
+  border-color: rgba(255, 255, 255, 0.9);
   cursor: default;
 }
 
-.pagination .page.current:hover {
-  background: #2a2a2d;
-  border-color: rgba(255, 255, 255, 0.1);
+.pagination span.page.current:hover {
+  background: #212123;
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 .pagination .previous_page,
 .pagination .next_page {
   font-weight: 700;
-}
-
-.pagination .page:not(.current) {
-  min-width: 3.15rem;
 }
 
 .pagination .disabled {
@@ -1710,31 +1708,6 @@ select:focus {
 
 .scoring-preview strong {
   color: #fff;
-}
-
-.about-section {
-  padding: 4rem 2rem;
-  text-align: center;
-  border-top: 1px solid #333;
-}
-
-.about-content {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.about-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.about-text {
-  color: #aaa;
-  line-height: 1.7;
-  margin-bottom: 1rem;
 }
 
 .about-github-link {
@@ -1790,8 +1763,6 @@ select:focus {
 }
 
 .app-footer-tagline {
-  margin: 0.65rem 0 0;
-  max-width: 42rem;
   font-size: 0.8rem;
   line-height: 1.45;
   color: var(--muted, rgba(243, 241, 234, 0.72));
