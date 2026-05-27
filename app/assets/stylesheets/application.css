@@ -332,6 +332,57 @@ body.app-shell.home-shell {
   color: rgba(243, 241, 234, 0.76);
 }
 
+.scoring-rules-panel {
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 1.15rem 1.35rem;
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scoring-rules-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+  font-size: 0.92rem;
+  color: rgba(243, 241, 234, 0.9);
+}
+
+.scoring-rules-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.scoring-rules-label {
+  font-weight: 600;
+}
+
+.scoring-rules-value {
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-weight: 600;
+  color: #c8f0d8;
+}
+
+.scoring-rules-list li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.scoring-rules-hint {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.82rem;
+  font-style: italic;
+  color: rgba(243, 241, 234, 0.68);
+  text-align: center;
+}
+
 .climb-cards-grid {
   display: flex;
   flex-wrap: wrap;
