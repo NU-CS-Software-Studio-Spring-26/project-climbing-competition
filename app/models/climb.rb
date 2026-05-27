@@ -1,12 +1,13 @@
 class Climb < ApplicationRecord
   GRADES = (0..17).map { |n| "V#{n}" }.freeze
+  URL_MAX_LENGTH = 2000
 
   belongs_to :competition, optional: true
   has_many :attempts, dependent: :destroy
 
   validates :name, :url, presence: true
   validates :name, length: { maximum: 100 }
-  validates :url, length: { maximum: 2000 },
+  validates :url, length: { maximum: URL_MAX_LENGTH },
                   format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid URL" }
   validates :grading, allow_blank: true, inclusion: { in: GRADES, message: "must be a V-grade (V0–V17)" }
 

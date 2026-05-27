@@ -19,6 +19,7 @@ export default class extends Controller {
     const max = this.maxValue
     this.countTarget.textContent = `${len} / ${max}`
     this.countTarget.classList.toggle("char-counter--near", len >= max * 0.85)
-    this.countTarget.classList.toggle("char-counter--over", len > max)
+    this.countTarget.classList.toggle("char-counter--over", len >= max)
+    this.inputTarget.classList.toggle("is-invalid", len >= max)
   }
 }

@@ -28,4 +28,11 @@ class AttemptTest < ActiveSupport::TestCase
     assert_not attempt.valid?
     assert_includes attempt.errors[:attempt_count], "is invalid"
   end
+
+  test "rejects attempt counts longer than the allowed input length" do
+    attempt = Attempt.new(user: users(:one), climb: climbs(:one), attempt_count: "101", completed: false)
+
+    assert_not attempt.valid?
+    assert_includes attempt.errors[:attempt_count], "is invalid"
+  end
 end
