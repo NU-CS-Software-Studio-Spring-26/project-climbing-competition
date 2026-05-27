@@ -131,7 +131,7 @@
                 <%= competition.status.to_s.titleize %>
               </span>
             </div>
-            <p class="competition-date">Difficulty: V<%= competition.v_grade_min %>–V<%= competition.v_grade_max == 10 ? "10+" : competition.v_grade_max %></p>
+            <p class="competition-date">Difficulty: <%= competition.climb_grade_range_label || "—" %></p>
             <p class="competition-date">Climbers: <%= competition.users.count %></p>
             <p class="competition-date">Starts: <%= competition.starts_at&.strftime("%b %-d, %Y") %></p>
             <p class="competition-date">Ends: <%= competition.ends_at&.strftime("%b %-d, %Y") %></p>

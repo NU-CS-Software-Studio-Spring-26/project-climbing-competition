@@ -27,9 +27,26 @@ class Competition < ApplicationRecord
     :active
   end
 
+  def climb_grade_integers
+    climbs.reject(&:marked_for_destruction?).filter_map { |climb| grading_to_int(climb.grading) }
+  end
+
+  def climb_grade_range_label
+    grades = climb_grade_integers
+    return nil if grades.empty?
+
+    min = grades.min
+    max = grades.max
+    return format_v_grade(min) if min == max
+    return "V10+" if min >= 10
+
+    "#{format_v_grade(min)}–#{format_v_grade(max)}"
+  end
+
   # Card color tier from peak grade: V0–3, V4–6, V7–9, V10+
   def grade_range_tier
-    case v_grade_max
+    peak = climb_grade_integers.max || v_grade_max
+    case peak
     when 0..3 then :v0_3
     when 4..6 then :v4_6
     when 7..9 then :v7_9
@@ -102,9 +119,7 @@ class Competition < ApplicationRecord
   end
 
   def derive_level_and_grades_from_climbs
-    active_climbs = climbs.reject(&:marked_for_destruction?)
-    grades = active_climbs.filter_map { |climb| grading_to_int(climb.grading) }
-
+    grades = climb_grade_integers
     return if grades.empty?
 
     self.v_grade_min = grades.min
@@ -125,6 +140,10 @@ class Competition < ApplicationRecord
     return if grading.blank?
 
     grading.to_s.delete_prefix("V").to_i
+  end
+
+  def format_v_grade(grade)
+    grade >= 10 ? "V10+" : "V#{grade}"
   end
 
   def level_for_peak_grade(peak)

@@ -17,6 +17,20 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_equal :v10_plus, competition.grade_range_tier
   end
 
+  test "climb_grade_range_label reflects climb gradings" do
+    competition = competitions(:one)
+    assert_equal "V2–V3", competition.climb_grade_range_label
+  end
+
+  test "climb_grade_range_label shows V10+ when lowest climb is V10 or harder" do
+    competition = competitions(:one)
+    competition.climbs.each { |climb| climb.update!(grading: "V10") }
+    assert_equal "V10+", competition.climb_grade_range_label
+
+    competition.climbs.first.update!(grading: "V12")
+    assert_equal "V10+", competition.climb_grade_range_label
+  end
+
   test "derives level and grade range from climb gradings" do
     competition = Competition.new(
       name: "Auto Level Comp",

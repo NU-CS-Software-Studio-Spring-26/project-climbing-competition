@@ -4,7 +4,7 @@ class CompetitionsController < ApplicationController
 
   # GET /competitions or /competitions.json
   def index
-    @competitions = Competition.includes(:owner, :users)
+    @competitions = Competition.includes(:owner, :users, :climbs)
 
     @sort_by = params[:sort_by].presence_in(%w[ starts_at ends_at ])
     @sort_direction = if @sort_by
@@ -141,7 +141,7 @@ class CompetitionsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_competition
-      @competition = Competition.find(params.expect(:id))
+      @competition = Competition.includes(:climbs).find(params.expect(:id))
     end
 
     # Only allow a list of trusted parameters through.

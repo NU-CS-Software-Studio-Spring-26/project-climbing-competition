@@ -69,7 +69,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
 
     get competition_url(@competition)
     assert_response :success
-    assert_match @competition.level.titleize, response.body
+    assert_match @competition.climb_grade_range_label, response.body
     assert_match "Leaderboard", response.body
     assert_operator response.body.index(users(:one).username), :<, response.body.index(users(:two).username)
   end

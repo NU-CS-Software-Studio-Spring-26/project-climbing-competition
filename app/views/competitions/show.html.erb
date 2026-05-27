@@ -18,7 +18,7 @@
       </p>
 
       <div class="competition-hero-meta">
-        <span><%= @competition.level.to_s.titleize %></span>
+        <span><%= @competition.climb_grade_range_label || "—" %></span>
         <span>Climbers: <%= @competition.users.count %></span>
         <span class="competition-status-badge competition-status-badge--<%= @competition.status %>">
           <%= @competition.status.to_s.titleize %>
