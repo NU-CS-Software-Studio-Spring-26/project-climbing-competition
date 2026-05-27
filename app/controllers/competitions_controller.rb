@@ -6,9 +6,21 @@ class CompetitionsController < ApplicationController
   def index
     @competitions = Competition.includes(:owner, :users)
 
-    @sort_by        = params[:sort_by]
-    @sort_direction = params[:sort_direction] || "asc"
+    @sort_by = params[:sort_by].presence_in(%w[ starts_at ends_at ])
+    @sort_direction = if @sort_by
+      params[:sort_direction].presence_in(%w[ asc desc ]) || "asc"
+    end
     @selected_v_grade = params[:v_grade].present? ? params[:v_grade].to_i : nil
+    @selected_status  = params[:status].presence_in(%w[ upcoming ongoing past ])
+
+    case @selected_status
+    when "upcoming"
+      @competitions = @competitions.upcoming
+    when "ongoing"
+      @competitions = @competitions.active
+    when "past"
+      @competitions = @competitions.past
+    end
 
     # Filter to competitions whose grade range overlaps the selected grade
     if @selected_v_grade
@@ -22,6 +34,13 @@ class CompetitionsController < ApplicationController
     when "ends_at"
       @competitions = @competitions.order(ends_at: @sort_direction.to_sym)
     end
+
+    @filter_params = {
+      sort_by: @sort_by,
+      sort_direction: @sort_direction,
+      v_grade: @selected_v_grade,
+      status: @selected_status
+    }.compact
 
     # Apply pagination
     @competitions = @competitions.page(params[:page]).per(9)
