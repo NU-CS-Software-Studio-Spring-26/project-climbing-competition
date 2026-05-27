@@ -17,6 +17,8 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   teardown do
     OmniAuth.config.mock_auth[:google_oauth2] = nil
+    OmniAuth.config.mock_auth[:default] = nil
+    OmniAuth.config.test_mode = false
   end
 
   test "should get new" do

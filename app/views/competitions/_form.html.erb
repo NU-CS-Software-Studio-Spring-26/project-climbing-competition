@@ -123,13 +123,17 @@
 <% end %>
 
 <script>
-document.addEventListener("turbo:load", function() {
+function initializeCompetitionForm() {
+  const formEl = document.querySelector("form.board-form");
+  if (!formEl || formEl.dataset.competitionFormInitialized === "true") return;
+  formEl.dataset.competitionFormInitialized = "true";
+
   // ── Scoring sliders ──────────────────────────────────────────────────────────
   function getSlider(name) {
-    return document.querySelector(`[data-scoring-slider="${name}"]`);
+    return formEl.querySelector(`[data-scoring-slider="${name}"]`);
   }
   function getNumber(name) {
-    return document.querySelector(`[data-scoring-number="${name}"]`);
+    return formEl.querySelector(`[data-scoring-number="${name}"]`);
   }
 
   function updateScoringPreview() {
@@ -137,9 +141,9 @@ document.addEventListener("turbo:load", function() {
     const flash  = parseInt(getNumber("flash_points")?.value)      || 0;
     const deduct = parseInt(getNumber("attempt_deduction")?.value) || 0;
 
-    const previewFlash = document.querySelector('[data-preview="flash"]');
-    const previewSend2 = document.querySelector('[data-preview="send2"]');
-    const previewSend3 = document.querySelector('[data-preview="send3"]');
+    const previewFlash = formEl.querySelector('[data-preview="flash"]');
+    const previewSend2 = formEl.querySelector('[data-preview="send2"]');
+    const previewSend3 = formEl.querySelector('[data-preview="send3"]');
 
     if (previewFlash) previewFlash.textContent = flash;
     if (previewSend2) previewSend2.textContent = Math.max(send - deduct, 0);
@@ -175,11 +179,12 @@ document.addEventListener("turbo:load", function() {
   updateScoringPreview();
   // ────────────────────────────────────────────────────────────────────────────
 
-  const addClimbBtn = document.getElementById("add-climb-btn");
-  const climbsContainer = document.getElementById("climbs-container");
-  const submitBtn = document.getElementById("submit-btn");
+  const addClimbBtn = formEl.querySelector("#add-climb-btn");
+  const climbsContainer = formEl.querySelector("#climbs-container");
+  const submitBtn = formEl.querySelector("#submit-btn");
 
   function validateClimbCount() {
+    if (!climbsContainer) return;
     const climbCount = climbsContainer.querySelectorAll('[data-climb-field]').length;
     const hasMinimumClimbs = climbCount >= 2;
     
@@ -208,7 +213,7 @@ document.addEventListener("turbo:load", function() {
     });
   }
 
-  document.querySelectorAll('.delete-climb-btn').forEach(btn => {
+  formEl.querySelectorAll('.delete-climb-btn').forEach(btn => {
     attachDeleteHandler(btn);
   });
 
@@ -262,5 +267,12 @@ document.addEventListener("turbo:load", function() {
   }
 
   validateClimbCount();
-});
+}
+
+if (!window.__competitionFormListenerBound) {
+  document.addEventListener("turbo:load", initializeCompetitionForm);
+  window.__competitionFormListenerBound = true;
+}
+
+initializeCompetitionForm();
 </script>
