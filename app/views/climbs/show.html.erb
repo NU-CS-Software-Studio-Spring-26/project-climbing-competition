@@ -38,8 +38,11 @@
 
     <%= form_with url: competition_climb_attempt_path(@competition, @climb), scope: :attempt, method: @attempt&.persisted? ? :patch : :post, html: { class: "board-form" } do |form| %>
       <div class="mb-3">
-        <%= form.label :attempt_count, "Attempts", class: "form-label" %>
-        <%= form.number_field :attempt_count, class: "form-control", min: 1, max: 100, step: 1, required: true %>
+        <%= form.label :attempt_count, "Attempts (Max 100)", class: "form-label" %>
+        <%= form.number_field :attempt_count, class: "form-control", min: 1, max: Attempt::MAX_ATTEMPT_COUNT, step: 1, required: true,
+              inputmode: "numeric",
+              onkeydown: "if (['e','E','+','-','.'].includes(event.key)) event.preventDefault()",
+              oninput: "if (this.value !== '' && Number(this.value) > #{Attempt::MAX_ATTEMPT_COUNT}) this.value = #{Attempt::MAX_ATTEMPT_COUNT}" %>
       </div>
 
       <div class="mb-3 form-check">

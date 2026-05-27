@@ -1,4 +1,6 @@
 class Attempt < ApplicationRecord
+  MAX_ATTEMPT_COUNT = 100
+
   belongs_to :user
   belongs_to :climb
 
@@ -20,11 +22,11 @@ class Attempt < ApplicationRecord
   private
 
   def attempt_count_must_be_integer_within_bounds
-    raw_value = attempt_count_before_type_cast
-    return errors.add(:attempt_count, "is invalid") unless raw_value.to_s.match?(/\A\d+\z/)
+    raw_value = attempt_count_before_type_cast.to_s
+    return errors.add(:attempt_count, "is invalid") unless raw_value.match?(/\A\d+\z/)
 
     value = raw_value.to_i
-    errors.add(:attempt_count, "is invalid") unless value.between?(1, 100)
+    errors.add(:attempt_count, "is invalid") unless value.between?(1, MAX_ATTEMPT_COUNT)
   rescue ArgumentError, TypeError
     errors.add(:attempt_count, "is invalid")
   end
