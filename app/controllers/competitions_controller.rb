@@ -10,8 +10,14 @@ class CompetitionsController < ApplicationController
     @sort_direction = if @sort_by
       params[:sort_direction].presence_in(%w[ asc desc ]) || "asc"
     end
-    @selected_v_grade = params[:v_grade].present? ? params[:v_grade].to_i : nil
-    @selected_status  = params[:status].presence_in(%w[ upcoming ongoing past ])
+    @grade_range_min = params[:grade_min].present? ? params[:grade_min].to_i.clamp(0, 16) : 0
+    @grade_range_max = params[:grade_max].present? ? params[:grade_max].to_i.clamp(0, 16) : 16
+    if @grade_range_min > @grade_range_max
+      @grade_range_min, @grade_range_max = @grade_range_max, @grade_range_min
+    end
+    @grade_filter_active = @grade_range_min > 0 || @grade_range_max < 16
+
+    @selected_status = params[:status].presence_in(%w[ upcoming ongoing past ])
 
     case @selected_status
     when "upcoming"
@@ -22,9 +28,13 @@ class CompetitionsController < ApplicationController
       @competitions = @competitions.past
     end
 
-    # Filter to competitions whose grade range overlaps the selected grade
-    if @selected_v_grade
-      @competitions = @competitions.where("v_grade_min <= ? AND v_grade_max >= ?", @selected_v_grade, @selected_v_grade)
+    # Competitions whose grade range overlaps the selected difficulty range
+    if @grade_filter_active
+      @competitions = @competitions.where(
+        "v_grade_min <= ? AND v_grade_max >= ?",
+        @grade_range_max,
+        @grade_range_min
+      )
     end
 
     # Apply sorting only if sort_by is specified
@@ -38,9 +48,10 @@ class CompetitionsController < ApplicationController
     @filter_params = {
       sort_by: @sort_by,
       sort_direction: @sort_direction,
-      v_grade: @selected_v_grade,
       status: @selected_status
     }.compact
+    @filter_params[:grade_min] = @grade_range_min if @grade_range_min > 0
+    @filter_params[:grade_max] = @grade_range_max if @grade_range_max < 16
 
     # Apply pagination
     @competitions = @competitions.page(params[:page]).per(9)
@@ -136,8 +147,8 @@ class CompetitionsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def competition_params
       params.require(:competition).permit(
-        :name, :date, :starts_at, :ends_at, :level, :description,
-        :v_grade_min, :v_grade_max, :send_points, :flash_points, :attempt_deduction,
+        :name, :date, :starts_at, :ends_at, :description,
+        :send_points, :flash_points, :attempt_deduction,
         climbs_attributes: [ :id, :name, :url, :grading, :_destroy ]
       )
     end

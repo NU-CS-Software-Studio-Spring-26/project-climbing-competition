@@ -1,6 +1,6 @@
 <% content_for :title, "active events" %>
 
-<% filters_active = @sort_by.present? || @selected_v_grade.present? || @selected_status.present? %>
+<% filters_active = @sort_by.present? || @selected_status.present? || @grade_filter_active %>
 
 <div class="competitions-filter-bar mb-3">
   <div class="filter-dropdown" data-controller="filter-menu">
@@ -24,7 +24,7 @@
         <span class="sort-label">Status</span>
         <div class="level-buttons-group">
           <%= link_to "All", competitions_path(@filter_params.except(:status)), class: "btn-level #{@selected_status.blank? ? "btn-level-active" : ""}" %>
-          <% { "upcoming" => "Upcoming", "ongoing" => "Ongoing", "past" => "Past" }.each do |value, label| %>
+          <% { "upcoming" => "Upcoming", "ongoing" => "Active", "past" => "Past" }.each do |value, label| %>
             <%= link_to label, competitions_path(@filter_params.merge(status: value)), class: "btn-level #{@selected_status == value ? "btn-level-active" : ""}" %>
           <% end %>
         </div>
@@ -59,13 +59,54 @@
 
       <div class="filter-menu-section">
         <span class="sort-label">Difficulty</span>
-        <div class="level-buttons-group">
-          <%= link_to "All", competitions_path(@filter_params.except(:v_grade)), class: "btn-level #{@selected_v_grade.blank? ? "btn-level-active" : ""}" %>
-          <% Competition::V_GRADES.each do |grade| %>
-            <% label = grade == 10 ? "V10+" : "V#{grade}" %>
-            <%= link_to label, competitions_path(@filter_params.merge(v_grade: grade)), class: "btn-level #{@selected_v_grade == grade ? "btn-level-active" : ""}" %>
+        <%= form_with url: competitions_path, method: :get,
+              html: {
+                class: "grade-range-filter",
+                data: { controller: "grade-range-filter" }
+              } do %>
+          <% if @sort_by.present? %>
+            <%= hidden_field_tag :sort_by, @sort_by %>
+            <%= hidden_field_tag :sort_direction, @sort_direction if @sort_direction.present? %>
           <% end %>
-        </div>
+          <%= hidden_field_tag :status, @selected_status if @selected_status.present? %>
+
+          <div class="grade-range-slider">
+            <div class="grade-range-slider__labels">
+              <span data-grade-range-filter-target="minLabel"><%= v_grade_label(@grade_range_min) %></span>
+              <span data-grade-range-filter-target="maxLabel"><%= v_grade_label(@grade_range_max) %></span>
+            </div>
+
+            <div
+              class="grade-range-slider__control"
+              data-grade-range-filter-target="control"
+              style="--range-min: <%= @grade_range_min / 16.0 %>; --range-max: <%= @grade_range_max / 16.0 %>;"
+            >
+              <div class="grade-range-slider__rail" aria-hidden="true"></div>
+              <div class="grade-range-slider__fill" aria-hidden="true"></div>
+              <%= range_field_tag :grade_min, @grade_range_min,
+                    min: 0, max: 16, step: 1,
+                    class: "grade-range-slider__input grade-range-slider__input--min",
+                    data: {
+                      grade_range_filter_target: "min",
+                      action: "pointerdown->grade-range-filter#pointerDown input->grade-range-filter#update change->grade-range-filter#apply"
+                    },
+                    aria: { label: "Minimum difficulty" } %>
+              <%= range_field_tag :grade_max, @grade_range_max,
+                    min: 0, max: 16, step: 1,
+                    class: "grade-range-slider__input grade-range-slider__input--max",
+                    data: {
+                      grade_range_filter_target: "max",
+                      action: "pointerdown->grade-range-filter#pointerDown input->grade-range-filter#update change->grade-range-filter#apply"
+                    },
+                    aria: { label: "Maximum difficulty" } %>
+            </div>
+
+            <div class="grade-range-slider__bounds" aria-hidden="true">
+              <span>V0</span>
+              <span>V10+</span>
+            </div>
+          </div>
+        <% end %>
       </div>
 
       <% if filters_active %>

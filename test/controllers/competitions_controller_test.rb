@@ -36,12 +36,11 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
         competition: {
           starts_at: @competition.starts_at,
           ends_at: @competition.ends_at,
-          level: "intermediate",
           name: "Spring Send Fest",
           description: "Open event",
           climbs_attributes: {
-            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1" },
-            "1" => { name: "Climb 2", url: "https://kilterboard.com/climb/2" }
+            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1", grading: "V4" },
+            "1" => { name: "Climb 2", url: "https://kilterboard.com/climb/2", grading: "V6" }
           }
         }
       }
@@ -85,11 +84,10 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
       competition: {
         starts_at: @competition.starts_at,
         ends_at: @competition.ends_at,
-        level: @competition.level,
         name: @competition.name,
         climbs_attributes: {
-          @competition.climbs.first.id.to_s => { name: "Updated Climb", url: "https://kilterboard.com/climb/updated" },
-          @competition.climbs.last.id.to_s => { name: "Second Climb", url: "https://kilterboard.com/climb/second" }
+          @competition.climbs.first.id.to_s => { name: "Updated Climb", url: "https://kilterboard.com/climb/updated", grading: "V2" },
+          @competition.climbs.last.id.to_s => { name: "Second Climb", url: "https://kilterboard.com/climb/second", grading: "V3" }
         }
       }
     }

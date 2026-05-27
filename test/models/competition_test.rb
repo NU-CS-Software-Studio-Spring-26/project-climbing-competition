@@ -3,17 +3,36 @@ require "test_helper"
 class CompetitionTest < ActiveSupport::TestCase
   test "grade_range_tier follows peak grade" do
     competition = competitions(:one)
-    competition.update!(v_grade_min: 0, v_grade_max: 3)
+
+    competition.v_grade_max = 3
     assert_equal :v0_3, competition.grade_range_tier
 
-    competition.update!(v_grade_min: 4, v_grade_max: 6)
+    competition.v_grade_max = 6
     assert_equal :v4_6, competition.grade_range_tier
 
-    competition.update!(v_grade_min: 7, v_grade_max: 9)
+    competition.v_grade_max = 9
     assert_equal :v7_9, competition.grade_range_tier
 
-    competition.update!(v_grade_min: 10, v_grade_max: 16)
+    competition.v_grade_max = 16
     assert_equal :v10_plus, competition.grade_range_tier
+  end
+
+  test "derives level and grade range from climb gradings" do
+    competition = Competition.new(
+      name: "Auto Level Comp",
+      starts_at: 1.day.from_now,
+      ends_at: 2.days.from_now,
+      send_points: 25,
+      flash_points: 30,
+      attempt_deduction: 5
+    )
+    competition.climbs.build(name: "A", url: "https://example.com/a", grading: "V4")
+    competition.climbs.build(name: "B", url: "https://example.com/b", grading: "V6")
+
+    assert competition.valid?
+    assert_equal "intermediate", competition.level
+    assert_equal 4, competition.v_grade_min
+    assert_equal 6, competition.v_grade_max
   end
 
   test "leaderboard sorts by points then attempts then username" do
