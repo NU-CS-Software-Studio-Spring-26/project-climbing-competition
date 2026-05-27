@@ -45,9 +45,6 @@ class Competition < ApplicationRecord
   validate :minimum_climbs
   validate :grade_range_is_valid
 
-  before_validation :sanitize_text_fields
-
-  # ↓ REPLACE the existing points_for(user) with this
   def points_for(user)
     return 0 if user.nil?
     attempts.where(user: user).to_a.sum(&:points_awarded)

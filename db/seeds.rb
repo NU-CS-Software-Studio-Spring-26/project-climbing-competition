@@ -13,14 +13,14 @@ Session.destroy_all
 User.destroy_all
 
 users_data = [
-  { name: "Alex Rivera", username: "alexrivera", email: "alex@climbing.local", bio: "V-grader and spray beta enthusiast" },
-  { name: "Jordan Chen", username: "jordanclimbs", email: "jordan@climbing.local", bio: "Boulderer from the Bay Area" },
-  { name: "Morgan Lee", username: "morganflash", email: "morgan@climbing.local", bio: "Speed climber | Competition junkie" },
-  { name: "Casey Thompson", username: "caseyboulds", email: "casey@climbing.local", bio: "Outdoor crag rat, indoor gym lover" },
-  { name: "Parker Davis", username: "parkersends", email: "parker@climbing.local", bio: "Route setter by day, climber by night" },
-  { name: "Riley Kim", username: "rileybeta", email: "riley@climbing.local", bio: "Training for nationals" },
-  { name: "Avery Johnson", username: "averyclimbs", email: "avery@climbing.local", bio: "Youth competitive climber" },
-  { name: "Taylor Brown", username: "taylorboulder", email: "taylor@climbing.local", bio: "Problem solver and crimper" }
+  { name: "Alex Rivera", username: "alexrivera", email_address: "alex@climbing.local", bio: "V-grader and spray beta enthusiast" },
+  { name: "Jordan Chen", username: "jordanclimbs", email_address: "jordan@climbing.local", bio: "Boulderer from the Bay Area" },
+  { name: "Morgan Lee", username: "morganflash", email_address: "morgan@climbing.local", bio: "Speed climber | Competition junkie" },
+  { name: "Casey Thompson", username: "caseyboulds", email_address: "casey@climbing.local", bio: "Outdoor crag rat, indoor gym lover" },
+  { name: "Parker Davis", username: "parkersends", email_address: "parker@climbing.local", bio: "Route setter by day, climber by night" },
+  { name: "Riley Kim", username: "rileybeta", email_address: "riley@climbing.local", bio: "Training for nationals" },
+  { name: "Avery Johnson", username: "averyclimbs", email_address: "avery@climbing.local", bio: "Youth competitive climber" },
+  { name: "Taylor Brown", username: "taylorboulder", email_address: "taylor@climbing.local", bio: "Problem solver and crimper" }
 ]
 
 users = users_data.map do |data|
