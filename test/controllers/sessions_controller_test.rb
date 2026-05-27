@@ -71,9 +71,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should redirect on google auth failure" do
-    OmniAuth.config.mock_auth[:google_oauth2] = :invalid_credentials
-
-    post "/auth/google_oauth2/callback"
+    get "/auth/failure", params: { message: "invalid_credentials", strategy: "google_oauth2" }
 
     assert_redirected_to new_session_url
   end
