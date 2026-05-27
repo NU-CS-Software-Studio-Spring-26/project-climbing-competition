@@ -1,9 +1,43 @@
 <% content_for :title, "active events" %>
 
-<% filters_active = @sort_by.present? || @selected_status.present? || @grade_filter_active %>
+<% filters_active = @sort_by.present? || @selected_status.present? || @grade_filter_active || @search_query.present? %>
 
-<div class="competitions-filter-bar mb-3">
-  <div class="filter-dropdown" data-controller="filter-menu">
+<div class="row gx-4 mb-1 competitions-grid">
+  <div class="col-12">
+    <div class="competitions-toolbar">
+      <div class="competitions-search-bar">
+        <%= form_with url: competitions_path, method: :get, local: true, class: "competitions-search-form" do %>
+          <% @filter_params.except(:q).each do |key, value| %>
+            <%= hidden_field_tag key, value %>
+          <% end %>
+
+      <div class="competitions-search-input-group">
+        <%= text_field_tag :q, @search_query,
+              class: "competitions-search-input",
+              placeholder: "Search competitions…",
+              aria: { label: "Search competitions" } %>
+
+        <button type="submit" class="competitions-search-btn" aria-label="Submit search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+
+        <% if @search_query.present? %>
+          <%= link_to competitions_path(@filter_params.except(:q)), class: "competitions-search-clear", aria: { label: "Clear search" } do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+        </div>
+
+      <div class="competitions-filter-bar">
+        <div class="filter-dropdown" data-controller="filter-menu">
     <button
       type="button"
       class="btn-filter<%= " btn-filter--active" if filters_active %>"
@@ -69,6 +103,7 @@
             <%= hidden_field_tag :sort_direction, @sort_direction if @sort_direction.present? %>
           <% end %>
           <%= hidden_field_tag :status, @selected_status if @selected_status.present? %>
+          <%= hidden_field_tag :q, @search_query if @search_query.present? %>
 
           <div class="grade-range-slider">
             <div class="grade-range-slider__labels">
@@ -114,6 +149,8 @@
           <%= link_to "Clear all", competitions_path, class: "btn-filter-clear" %>
         </div>
       <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

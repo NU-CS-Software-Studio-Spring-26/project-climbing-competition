@@ -6,6 +6,15 @@ class CompetitionsController < ApplicationController
   def index
     @competitions = Competition.includes(:owner, :users, :climbs)
 
+    @search_query = params[:q].to_s.strip
+    if @search_query.present?
+      # SQLite compatibility: use LOWER(...) + LIKE instead of ILIKE.
+      @competitions = @competitions.where(
+        "LOWER(competitions.name) LIKE ?",
+        "%#{@search_query.downcase}%"
+      )
+    end
+
     @sort_by = params[:sort_by].presence_in(%w[ starts_at ends_at ])
     @sort_direction = if @sort_by
       params[:sort_direction].presence_in(%w[ asc desc ]) || "asc"
@@ -52,6 +61,7 @@ class CompetitionsController < ApplicationController
     }.compact
     @filter_params[:grade_min] = @grade_range_min if @grade_range_min > 0
     @filter_params[:grade_max] = @grade_range_max if @grade_range_max < 16
+    @filter_params[:q] = @search_query if @search_query.present?
 
     # Apply pagination
     @competitions = @competitions.page(params[:page]).per(9)
