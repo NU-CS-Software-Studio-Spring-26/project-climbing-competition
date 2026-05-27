@@ -6,13 +6,14 @@ class CompetitionsController < ApplicationController
   def index
     @competitions = Competition.includes(:owner, :users)
 
-    # Handle sorting and filtering
-    @sort_by = params[:sort_by]
+    @sort_by        = params[:sort_by]
     @sort_direction = params[:sort_direction] || "asc"
-    @selected_levels = Array(params[:level]).reject(&:blank?)
+    @selected_v_grade = params[:v_grade].present? ? params[:v_grade].to_i : nil
 
-    # Apply level filters if selected (multiple levels allowed)
-    @competitions = @competitions.where(level: @selected_levels) if @selected_levels.present?
+    # Filter to competitions whose grade range overlaps the selected grade
+    if @selected_v_grade
+      @competitions = @competitions.where("v_grade_min <= ? AND v_grade_max >= ?", @selected_v_grade, @selected_v_grade)
+    end
 
     # Apply sorting only if sort_by is specified
     case @sort_by
@@ -115,9 +116,8 @@ class CompetitionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def competition_params
-      params.require(:competition).permit(:name, :date, :starts_at, :ends_at, :level, :description, climbs_attributes: [ :id, :name, :url, :grading, :_destroy ])
+      params.require(:competition).permit(:name, :date, :starts_at, :ends_at, :level, :description, :send_points, :flash_points, :attempt_deduction, climbs_attributes: [ :id, :name, :url, :grading, :_destroy ])
     end
-
     def assign_combined_datetimes(competition)
       raw = params.require(:competition).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time)
       competition.starts_at = combine_date_and_time(raw[:starts_at_date], raw[:starts_at_time]) if raw.key?(:starts_at_date) || raw.key?(:starts_at_time)
