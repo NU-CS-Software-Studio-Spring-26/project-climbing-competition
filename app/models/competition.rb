@@ -27,9 +27,26 @@ class Competition < ApplicationRecord
     :active
   end
 
+  def climb_grade_integers
+    climbs.reject(&:marked_for_destruction?).filter_map { |climb| grading_to_int(climb.grading) }
+  end
+
+  def climb_grade_range_label
+    grades = climb_grade_integers
+    return nil if grades.empty?
+
+    min = grades.min
+    max = grades.max
+    return format_v_grade(min) if min == max
+    return "V10+" if min >= 10
+
+    "#{format_v_grade(min)}–#{format_v_grade(max)}"
+  end
+
   # Card color tier from peak grade: V0–3, V4–6, V7–9, V10+
   def grade_range_tier
-    case v_grade_max
+    peak = climb_grade_integers.max || v_grade_max
+    case peak
     when 0..3 then :v0_3
     when 4..6 then :v4_6
     when 7..9 then :v7_9
@@ -40,7 +57,7 @@ class Competition < ApplicationRecord
   accepts_nested_attributes_for :climbs, allow_destroy: true, reject_if: :all_blank
 
   before_validation :sanitize_text_fields
-  before_validation :sync_v_grades_from_level, if: -> { level.present? && level_changed? }
+  before_validation :derive_level_and_grades_from_climbs
 
   validates :name, :starts_at, :ends_at, presence: true
   validates :name, length: { maximum: 100 }
@@ -51,6 +68,7 @@ class Competition < ApplicationRecord
   validates :v_grade_min, :v_grade_max, presence: true,
             numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 16 }
   validate :minimum_climbs
+  validate :climbs_have_grades
   validate :grade_range_is_valid
 
   def points_for(user)
@@ -100,9 +118,40 @@ class Competition < ApplicationRecord
     errors.add(:v_grade_max, "must be >= min grade") if v_grade_max < v_grade_min
   end
 
-  def sync_v_grades_from_level
-    min, max = LEVEL_GRADE_RANGES.fetch(level)
-    self.v_grade_min = min
-    self.v_grade_max = max
+  def derive_level_and_grades_from_climbs
+    grades = climb_grade_integers
+    return if grades.empty?
+
+    self.v_grade_min = grades.min
+    self.v_grade_max = grades.max
+    self.level = level_for_peak_grade(v_grade_max)
+  end
+
+  def climbs_have_grades
+    active_climbs = climbs.reject(&:marked_for_destruction?)
+    return if active_climbs.empty?
+
+    if active_climbs.any? { |climb| climb.grading.blank? }
+      errors.add(:base, "Every climb must have a V-grade so competition difficulty can be set automatically")
+    end
+  end
+
+  def grading_to_int(grading)
+    return if grading.blank?
+
+    grading.to_s.delete_prefix("V").to_i
+  end
+
+  def format_v_grade(grade)
+    grade >= 10 ? "V10+" : "V#{grade}"
+  end
+
+  def level_for_peak_grade(peak)
+    case peak
+    when 0..3 then "beginner"
+    when 4..6 then "intermediate"
+    when 7..9 then "advanced"
+    else "elite"
+    end
   end
 end

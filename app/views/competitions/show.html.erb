@@ -18,7 +18,7 @@
       </p>
 
       <div class="competition-hero-meta">
-        <span><%= @competition.level.to_s.titleize %></span>
+        <span><%= @competition.climb_grade_range_label || "—" %></span>
         <span>Climbers: <%= @competition.users.count %></span>
         <span class="competition-status-badge competition-status-badge--<%= @competition.status %>">
           <%= @competition.status.to_s.titleize %>
@@ -44,6 +44,30 @@
           <% end %>
         </div>
       <% end %>
+    </div>
+  </section>
+
+  <section class="competition-section competition-scoring-rules mb-5">
+    <h2 class="competition-section-title text-center mb-3">Scoring Rules</h2>
+    <div class="detail-panel scoring-rules-panel">
+      <ul class="scoring-rules-list mb-0">
+        <li>
+          <span class="scoring-rules-label">Flash (1st attempt)</span>
+          <span class="scoring-rules-value"><%= @competition.flash_points %> pts</span>
+        </li>
+        <li>
+          <span class="scoring-rules-label">Send</span>
+          <span class="scoring-rules-value"><%= @competition.send_points %> pts</span>
+        </li>
+        <li>
+          <span class="scoring-rules-label">Per extra attempt</span>
+          <span class="scoring-rules-value">&minus;<%= @competition.attempt_deduction %> pts</span>
+        </li>
+      </ul>
+      <p class="scoring-rules-hint mb-0">
+        Example: sending a problem on your 3rd attempt earns
+        <%= [@competition.send_points - 2 * @competition.attempt_deduction, 0].max %> pts.
+      </p>
     </div>
   </section>
 
@@ -148,38 +172,23 @@
       </div>
     </section>
   <% end %>
-</div>
 
-<script>
-  function toggleLeaderboardDetails(rowElement) {
-    const userId = rowElement.dataset.userId;
-    const detailRow = document.querySelector(`.leaderboard-detail-row[data-user-id="${userId}"]`);
-    
-    // Close any other open detail rows
-    document.querySelectorAll('.leaderboard-detail-row').forEach(row => {
-      if (row !== detailRow && row.style.display !== 'none') {
-        row.style.display = 'none';
+  <script>
+    function toggleLeaderboardDetails(rowElement) {
+      const userId = rowElement.dataset.userId;
+      const detailRow = document.querySelector(`.leaderboard-detail-row[data-user-id="${userId}"]`);
+
+      document.querySelectorAll('.leaderboard-detail-row').forEach(row => {
+        if (row !== detailRow && row.style.display !== 'none') {
+          row.style.display = 'none';
+        }
+      });
+
+      if (detailRow.style.display === 'none') {
+        detailRow.style.display = 'table-row';
+      } else {
+        detailRow.style.display = 'none';
       }
-    });
-    
-    // Toggle the clicked detail row
-    if (detailRow.style.display === 'none') {
-      detailRow.style.display = 'table-row';
-    } else {
-      detailRow.style.display = 'none';
     }
-  }
-</script>
-
-<section class="scoring-rules">
-  <h3>Scoring Rules</h3>
-  <ul>
-    <li><strong>Flash (1st attempt):</strong> <%= @competition.flash_points %> pts</li>
-    <li><strong>Send:</strong> <%= @competition.send_points %> pts</li>
-    <li><strong>Per extra attempt:</strong> &minus;<%= @competition.attempt_deduction %> pts</li>
-  </ul>
-  <p class="hint">
-    Example: sending a problem on your 3rd attempt earns
-    <%= [@competition.send_points - 2 * @competition.attempt_deduction, 0].max %> pts.
-  </p>
-</section>
+  </script>
+</div>

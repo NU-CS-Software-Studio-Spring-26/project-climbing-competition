@@ -14,7 +14,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     get competitions_url
     assert_response :success
     assert_match competitions(:one).name, response.body
-    assert_match "V#{competitions(:one).v_grade_min}", response.body
+    assert_match competitions(:one).climb_grade_range_label, response.body
   end
 
   test "should get new" do
@@ -36,12 +36,14 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
         competition: {
           starts_at: @competition.starts_at,
           ends_at: @competition.ends_at,
-          level: "intermediate",
           name: "Spring Send Fest",
           description: "Open event",
+          send_points: 25,
+          flash_points: 30,
+          attempt_deduction: 5,
           climbs_attributes: {
-            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1" },
-            "1" => { name: "Climb 2", url: "https://kilterboard.com/climb/2" }
+            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1", grading: "V4" },
+            "1" => { name: "Climb 2", url: "https://kilterboard.com/climb/2", grading: "V6" }
           }
         }
       }
@@ -70,7 +72,8 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
 
     get competition_url(@competition)
     assert_response :success
-    assert_match @competition.level.titleize, response.body
+    assert_match @competition.reload.climb_grade_range_label, response.body
+    assert_match "Scoring Rules", response.body
     assert_match "Leaderboard", response.body
     assert_operator response.body.index(users(:one).username), :<, response.body.index(users(:two).username)
   end
@@ -85,15 +88,19 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
       competition: {
         starts_at: @competition.starts_at,
         ends_at: @competition.ends_at,
-        level: @competition.level,
         name: @competition.name,
+        send_points: @competition.send_points,
+        flash_points: @competition.flash_points,
+        attempt_deduction: @competition.attempt_deduction,
         climbs_attributes: {
-          @competition.climbs.first.id.to_s => { name: "Updated Climb", url: "https://kilterboard.com/climb/updated" },
-          @competition.climbs.last.id.to_s => { name: "Second Climb", url: "https://kilterboard.com/climb/second" }
+          @competition.climbs.first.id.to_s => { name: "Updated Climb", url: "https://kilterboard.com/climb/updated", grading: "V2" },
+          @competition.climbs.last.id.to_s => { name: "Second Climb", url: "https://kilterboard.com/climb/second", grading: "V3" }
         }
       }
     }
     assert_redirected_to competition_url(@competition)
+    @competition.reload
+    assert_equal "V2–V3", @competition.climb_grade_range_label
   end
 
   test "should destroy competition when signed in as owner" do
