@@ -13,7 +13,8 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get competitions_url
     assert_response :success
-    assert_match competitions(:one).level.titleize, response.body
+    assert_match competitions(:one).name, response.body
+    assert_match "V#{competitions(:one).v_grade_min}", response.body
   end
 
   test "should get new" do
@@ -49,6 +50,8 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to competition_url(Competition.last)
     assert_equal @user.id, Competition.last.owner_id
     assert_equal "intermediate", Competition.last.level
+    assert_equal 4, Competition.last.v_grade_min
+    assert_equal 6, Competition.last.v_grade_max
     assert_equal 2, Competition.last.climbs.count
   end
 

@@ -1,54 +1,77 @@
 <% content_for :title, "active events" %>
 
-<div class="sort-filters-container mb-3">
-  <div class="sort-section">
-    <span class="sort-label">Date:</span>
-    <div class="sort-buttons-group">
-      <% 
-        # Toggle logic for sort buttons
-        start_new_sort_by = @sort_by == 'starts_at' ? nil : 'starts_at'
-        start_direction = @sort_by == 'starts_at' && @sort_direction == 'desc' ? 'asc' : 'desc'
-        end_new_sort_by = @sort_by == 'ends_at' ? nil : 'ends_at'
-        end_direction = @sort_by == 'ends_at' && @sort_direction == 'desc' ? 'asc' : 'desc'
-      %>
-      <%= link_to competitions_path(sort_by: start_new_sort_by, sort_direction: (start_new_sort_by.present? ? start_direction : nil), level: @selected_levels.presence), class: "btn-sort-date #{@sort_by == 'starts_at' ? 'btn-sort-active' : ''}" do %>
-        <span>Start</span>
-        <span class="sort-arrow">
-          <% if @sort_by == 'starts_at' %>
-            <%= @sort_direction == 'asc' ? '↑' : '↓' %>
-          <% else %>
-            <span style="opacity: 0.5;">↕</span>
-          <% end %>
-        </span>
-      <% end %>
-      
-      <%= link_to competitions_path(sort_by: end_new_sort_by, sort_direction: (end_new_sort_by.present? ? end_direction : nil), level: @selected_levels.presence), class: "btn-sort-date #{@sort_by == 'ends_at' ? 'btn-sort-active' : ''}" do %>
-        <span>End</span>
-        <span class="sort-arrow">
-          <% if @sort_by == 'ends_at' %>
-            <%= @sort_direction == 'asc' ? '↑' : '↓' %>
-          <% else %>
-            <span style="opacity: 0.5;">↕</span>
-          <% end %>
-        </span>
-      <% end %>
-    </div>
-  </div>
+<% filters_active = @sort_by.present? || @selected_v_grade.present? || @selected_status.present? %>
 
-  <div class="level-section">
-    <span class="sort-label">Level:</span>
-    <div class="level-buttons-group">
-      <%= link_to "All", competitions_path(sort_by: @sort_by, sort_direction: @sort_direction), class: "btn-level #{@selected_levels.blank? ? 'btn-level-active' : ''}" %>
-      <% Competition::LEVELS.each do |level| %>
-        <% 
-          # Build levels array with or without this level
-          new_levels = if @selected_levels.include?(level)
-            @selected_levels - [level]
-          else
-            @selected_levels + [level]
-          end
-        %>
-        <%= link_to level.titleize, competitions_path(sort_by: @sort_by, sort_direction: @sort_direction, level: new_levels.presence), class: "btn-level #{@selected_levels.include?(level) ? 'btn-level-active' : ''}" %>
+<div class="competitions-filter-bar mb-3">
+  <div class="filter-dropdown" data-controller="filter-menu">
+    <button
+      type="button"
+      class="btn-filter<%= " btn-filter--active" if filters_active %>"
+      data-filter-menu-target="button"
+      data-action="filter-menu#toggle"
+      aria-expanded="false"
+      aria-haspopup="true"
+      id="competitionsFilterToggle"
+    >
+      Filter
+      <% if filters_active %>
+        <span class="filter-active-dot" aria-hidden="true"></span>
+      <% end %>
+    </button>
+
+    <div class="filter-menu" data-filter-menu-target="menu" aria-labelledby="competitionsFilterToggle">
+      <div class="filter-menu-section">
+        <span class="sort-label">Status</span>
+        <div class="level-buttons-group">
+          <%= link_to "All", competitions_path(@filter_params.except(:status)), class: "btn-level #{@selected_status.blank? ? "btn-level-active" : ""}" %>
+          <% { "upcoming" => "Upcoming", "ongoing" => "Ongoing", "past" => "Past" }.each do |value, label| %>
+            <%= link_to label, competitions_path(@filter_params.merge(status: value)), class: "btn-level #{@selected_status == value ? "btn-level-active" : ""}" %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="filter-menu-section">
+        <span class="sort-label">Date</span>
+        <div class="sort-buttons-group">
+          <%= link_to competitions_path(next_sort_params("starts_at")), class: "btn-sort-date #{@sort_by == "starts_at" ? "btn-sort-active" : ""}" do %>
+            <span>Start</span>
+            <span class="sort-arrow">
+              <% if @sort_by == "starts_at" %>
+                <%= @sort_direction == "asc" ? "↑" : "↓" %>
+              <% else %>
+                <span class="sort-arrow-inactive">↕</span>
+              <% end %>
+            </span>
+          <% end %>
+
+          <%= link_to competitions_path(next_sort_params("ends_at")), class: "btn-sort-date #{@sort_by == "ends_at" ? "btn-sort-active" : ""}" do %>
+            <span>End</span>
+            <span class="sort-arrow">
+              <% if @sort_by == "ends_at" %>
+                <%= @sort_direction == "asc" ? "↑" : "↓" %>
+              <% else %>
+                <span class="sort-arrow-inactive">↕</span>
+              <% end %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="filter-menu-section">
+        <span class="sort-label">Difficulty</span>
+        <div class="level-buttons-group">
+          <%= link_to "All", competitions_path(@filter_params.except(:v_grade)), class: "btn-level #{@selected_v_grade.blank? ? "btn-level-active" : ""}" %>
+          <% Competition::V_GRADES.each do |grade| %>
+            <% label = grade == 10 ? "V10+" : "V#{grade}" %>
+            <%= link_to label, competitions_path(@filter_params.merge(v_grade: grade)), class: "btn-level #{@selected_v_grade == grade ? "btn-level-active" : ""}" %>
+          <% end %>
+        </div>
+      </div>
+
+      <% if filters_active %>
+        <div class="filter-menu-footer">
+          <%= link_to "Clear all", competitions_path, class: "btn-filter-clear" %>
+        </div>
       <% end %>
     </div>
   </div>
@@ -57,7 +80,7 @@
 <div class="row gx-4 gy-5 competitions-grid">
   <% @competitions.each do |competition| %>
     <div class="col-12 col-md-6 col-xl-4">
-      <article class="competition-card competition-card--<%= competition.level %> h-100 d-flex flex-column">
+      <article class="competition-card competition-card--<%= competition.grade_range_tier.to_s.dasherize %> h-100 d-flex flex-column">
         <div class="competition-top-border" aria-hidden="true"></div>
         <%= link_to competition_path(competition), class: "competition-card-link-overlay" do %>
           <div class="competition-body flex-grow-1">
@@ -67,7 +90,7 @@
                 <%= competition.status.to_s.titleize %>
               </span>
             </div>
-            <p class="competition-date">Level: <%= competition.level.to_s.titleize %></p>
+            <p class="competition-date">Difficulty: V<%= competition.v_grade_min %>–V<%= competition.v_grade_max == 10 ? "10+" : competition.v_grade_max %></p>
             <p class="competition-date">Climbers: <%= competition.users.count %></p>
             <p class="competition-date">Starts: <%= competition.starts_at&.strftime("%b %-d, %Y") %></p>
             <p class="competition-date">Ends: <%= competition.ends_at&.strftime("%b %-d, %Y") %></p>
@@ -94,7 +117,7 @@
 </div>
 
 <div class="pagination-container mt-5 mb-5 d-flex justify-content-center">
-  <%= paginate @competitions, params: { sort_by: @sort_by, sort_direction: @sort_direction, level: @selected_levels.presence } %>
+  <%= paginate @competitions, params: @filter_params %>
 </div>
 
 <!-- Join Confirmation Modal -->

@@ -6,13 +6,26 @@ class CompetitionsController < ApplicationController
   def index
     @competitions = Competition.includes(:owner, :users)
 
-    # Handle sorting and filtering
-    @sort_by = params[:sort_by]
-    @sort_direction = params[:sort_direction] || "asc"
-    @selected_levels = Array(params[:level]).reject(&:blank?)
+    @sort_by = params[:sort_by].presence_in(%w[ starts_at ends_at ])
+    @sort_direction = if @sort_by
+      params[:sort_direction].presence_in(%w[ asc desc ]) || "asc"
+    end
+    @selected_v_grade = params[:v_grade].present? ? params[:v_grade].to_i : nil
+    @selected_status  = params[:status].presence_in(%w[ upcoming ongoing past ])
 
-    # Apply level filters if selected (multiple levels allowed)
-    @competitions = @competitions.where(level: @selected_levels) if @selected_levels.present?
+    case @selected_status
+    when "upcoming"
+      @competitions = @competitions.upcoming
+    when "ongoing"
+      @competitions = @competitions.active
+    when "past"
+      @competitions = @competitions.past
+    end
+
+    # Filter to competitions whose grade range overlaps the selected grade
+    if @selected_v_grade
+      @competitions = @competitions.where("v_grade_min <= ? AND v_grade_max >= ?", @selected_v_grade, @selected_v_grade)
+    end
 
     # Apply sorting only if sort_by is specified
     case @sort_by
@@ -21,6 +34,13 @@ class CompetitionsController < ApplicationController
     when "ends_at"
       @competitions = @competitions.order(ends_at: @sort_direction.to_sym)
     end
+
+    @filter_params = {
+      sort_by: @sort_by,
+      sort_direction: @sort_direction,
+      v_grade: @selected_v_grade,
+      status: @selected_status
+    }.compact
 
     # Apply pagination
     @competitions = @competitions.page(params[:page]).per(9)
@@ -115,7 +135,11 @@ class CompetitionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def competition_params
-      params.require(:competition).permit(:name, :date, :starts_at, :ends_at, :level, :description, :send_points, :flash_points, :attempt_deduction, climbs_attributes: [ :id, :name, :url, :grading, :_destroy ])
+      params.require(:competition).permit(
+        :name, :date, :starts_at, :ends_at, :level, :description,
+        :v_grade_min, :v_grade_max, :send_points, :flash_points, :attempt_deduction,
+        climbs_attributes: [ :id, :name, :url, :grading, :_destroy ]
+      )
     end
     def assign_combined_datetimes(competition)
       raw = params.require(:competition).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time)
