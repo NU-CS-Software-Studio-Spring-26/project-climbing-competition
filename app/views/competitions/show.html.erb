@@ -20,6 +20,9 @@
       <div class="competition-hero-meta">
         <span><%= @competition.level.to_s.titleize %></span>
         <span>Climbers: <%= @competition.users.count %></span>
+        <span class="competition-status-badge competition-status-badge--<%= @competition.status %>">
+          <%= @competition.status.to_s.titleize %>
+        </span>
       </div>
 
       <p class="competition-hero-owner mb-0">creator: <%= @competition.owner&.username %></p>
@@ -52,7 +55,13 @@
           <% attempt = @user_attempts_by_climb_id[climb.id] %>
           <div class="climb-card-link">
             <span class="climb-card-title"><%= climb.name %></span>
-            <span class="climb-card-subtitle"><%= climb.grading %></span>
+            <span class="climb-card-subtitle">
+              <% if climb.grading.present? %>
+                <span class="grade-badge <%= grade_css_class(climb.grading) %>"><%= climb.grading %></span>
+              <% else %>
+                <span class="grade-badge grade--ungraded">Ungraded</span>
+              <% end %>
+            </span>
             <div class="climb-card-actions">
               <a href="<%= climb.url %>" target="_blank" rel="noopener noreferrer" class="btn-climb-action">OPEN ON KILTER</a>
               <% if authenticated? && current_user.competitions.include?(@competition) %>
@@ -162,4 +171,15 @@
   }
 </script>
 
-
+<section class="scoring-rules">
+  <h3>Scoring Rules</h3>
+  <ul>
+    <li><strong>Flash (1st attempt):</strong> <%= @competition.flash_points %> pts</li>
+    <li><strong>Send:</strong> <%= @competition.send_points %> pts</li>
+    <li><strong>Per extra attempt:</strong> &minus;<%= @competition.attempt_deduction %> pts</li>
+  </ul>
+  <p class="hint">
+    Example: sending a problem on your 3rd attempt earns
+    <%= [@competition.send_points - 2 * @competition.attempt_deduction, 0].max %> pts.
+  </p>
+</section>

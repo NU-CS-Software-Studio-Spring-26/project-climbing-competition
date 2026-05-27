@@ -13,10 +13,16 @@
 body.app-shell {
   margin: 0;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: var(--bg);
   color: var(--text);
   font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.4;
+}
+
+body.app-shell > main {
+  flex: 1 0 auto;
 }
 
 body.app-shell.home-shell {
@@ -25,7 +31,6 @@ body.app-shell.home-shell {
 }
 
 .home-main {
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   padding: 2.2rem 1rem 0;
@@ -806,6 +811,10 @@ body.app-shell.home-shell {
   font-weight: 700;
 }
 
+.profile-empty-state {
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+}
+
 .board-form .form-label {
   font-size: 0.92rem;
   font-weight: 600;
@@ -1571,7 +1580,7 @@ select:focus {
 }
 
 .pagination a,
-.pagination span {
+.pagination span.page.current {
   background: var(--surface);
   color: var(--text);
   border-color: rgba(243, 241, 234, 0.14);
@@ -1581,10 +1590,8 @@ select:focus {
   background: rgba(243, 241, 234, 0.08);
 }
 
-.pagination .page.current {
-  background: rgba(243, 241, 234, 0.92);
-  color: #0f100d;
-  border-color: rgba(243, 241, 234, 0.92);
+.pagination span.page.current {
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 .pagination .disabled {
@@ -1739,11 +1746,11 @@ select:focus {
 }
 
 .pagination a,
-.pagination span {
+.pagination span.page.current {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 3.9rem;
+  min-width: 3.15rem;
   height: 2.65rem;
   padding: 0 0.85rem;
   background: #212123;
@@ -1756,6 +1763,7 @@ select:focus {
   text-decoration: none;
   transition: all 160ms ease;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .pagination a:hover {
@@ -1763,16 +1771,15 @@ select:focus {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-.pagination .page.current {
-  background: #2a2a2d;
-  color: var(--text);
-  border-color: rgba(255, 255, 255, 0.1);
+.pagination span.page.current {
+  background: #212123;
+  border-color: rgba(255, 255, 255, 0.9);
   cursor: default;
 }
 
-.pagination .page.current:hover {
-  background: #2a2a2d;
-  border-color: rgba(255, 255, 255, 0.1);
+.pagination span.page.current:hover {
+  background: #212123;
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 .pagination .previous_page,
@@ -1780,12 +1787,321 @@ select:focus {
   font-weight: 700;
 }
 
-.pagination .page:not(.current) {
-  min-width: 3.15rem;
-}
-
 .pagination .disabled {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+.scoring-settings {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
+.scoring-settings .form-text {
+  color: #c8c4b4;
+}
+
+.scoring-number {
+  width: 75px;
+  text-align: center;
+  background: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.95rem;
+}
+
+.scoring-number:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+}
+
+.form-range {
+  accent-color: #2563eb;
+}
+
+.scoring-preview {
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  color: #aaa;
+}
+
+.scoring-preview strong {
+  color: #fff;
+}
+
+.about-github-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.about-github-link:hover {
+  border-color: #fff;
+  color: #fff;
+}
+
+/* Site footer */
+.app-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding: 1.35rem 2.35rem 1.75rem;
+  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+}
+
+.app-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 1.35rem;
+}
+
+.app-footer-link {
+  color: var(--text);
+  font-size: 0.92rem;
+  text-decoration: none;
+  text-transform: lowercase;
+}
+
+.app-footer-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.app-footer-copy {
+  font-size: 0.92rem;
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+  text-transform: lowercase;
+}
+
+.app-footer-tagline {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+}
+
+body.app-shell.home-shell .app-footer {
+  border-top-color: rgba(17, 17, 17, 0.14);
+}
+
+body.app-shell.home-shell .app-footer-link {
+  color: #111111;
+}
+
+body.app-shell.home-shell .app-footer-copy,
+body.app-shell.home-shell .app-footer-tagline {
+  color: rgba(17, 17, 17, 0.62);
+}
+
+/* ── Competition status badges ─────────────────────────────────────────── */
+.competition-status-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.competition-status-badge--active {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.competition-status-badge--upcoming {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #93c5fd;
+}
+
+.competition-status-badge--past {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+/* Hero panel — badges sit on a dark background, invert colors */
+.competition-hero-meta .competition-status-badge--active {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.competition-hero-meta .competition-status-badge--upcoming {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border-color: rgba(147, 197, 253, 0.35);
+}
+
+.competition-hero-meta .competition-status-badge--past {
+  background: rgba(107, 114, 128, 0.15);
+  color: #9ca3af;
+  border-color: rgba(156, 163, 175, 0.3);
+}
+
+/* ── V-grade badges ────────────────────────────────────────────────────── */
+.grade-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.grade--easy {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.grade--moderate {
+  background: #fef9c3;
+  color: #854d0e;
+  border: 1px solid #fde047;
+}
+
+.grade--hard {
+  background: #ffedd5;
+  color: #9a3412;
+  border: 1px solid #fdba74;
+}
+
+.grade--extreme {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.grade--ungraded {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+/* ── Character counter ─────────────────────────────────────────────────── */
+.char-counter {
+  display: block;
+  font-size: 0.72rem;
+  text-align: right;
+  margin-top: 0.25rem;
+  color: rgba(243, 241, 234, 0.45);
+  transition: color 150ms ease;
+}
+
+.char-counter--near {
+  color: #f59e0b;
+}
+
+.char-counter--over {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+/* Inside light panels (auth forms, user form) */
+.detail-panel .char-counter,
+.auth-panel .char-counter {
+  color: rgba(26, 26, 28, 0.45);
+}
+
+.detail-panel .char-counter--near,
+.auth-panel .char-counter--near {
+  color: #d97706;
+}
+
+.detail-panel .char-counter--over,
+.auth-panel .char-counter--over {
+  color: #dc2626;
+}
+
+/* Legal pages */
+.legal-meta {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+}
+
+.legal-document {
+  max-width: 52rem;
+}
+
+.legal-list {
+  margin: 0;
+  padding-left: 1.35rem;
+}
+
+.legal-list > li {
+  margin-bottom: 1.35rem;
+}
+
+.legal-list > li:last-child {
+  margin-bottom: 0;
+}
+
+.legal-list h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+
+.legal-list p,
+.legal-list ul {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.legal-list ul {
+  padding-left: 1.2rem;
+}
+
+.legal-list ul li + li {
+  margin-top: 0.35rem;
+}
+
+.legal-table {
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.legal-table th,
+.legal-table td {
+  border-color: var(--border);
+  vertical-align: top;
+}
+
+@media (max-width: 768px) {
+  .app-footer {
+    padding: 1.1rem 1.25rem 1.4rem;
+  }
+
+  .app-footer-nav {
+    gap: 0.5rem 1rem;
+  }
 }

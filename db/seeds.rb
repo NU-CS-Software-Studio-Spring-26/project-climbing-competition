@@ -1,12 +1,17 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+# frozen_string_literal: true
 
-# Clear existing data
-User.destroy_all
+# Default seed data for development, test, and CI (db:seed / db:seed:replant).
+# For ~1000 users and competitions in development only, run: bin/rails db:seed:large
+
+require Rails.root.join("db/seeds/support")
+
+Attempt.destroy_all
+Enrollment.destroy_all
+Climb.destroy_all
 Competition.destroy_all
+Session.destroy_all
+User.destroy_all
 
-# Create users
 users_data = [
   { name: "Alex Rivera", username: "alexrivera", email: "alex@climbing.local", bio: "V-grader and spray beta enthusiast" },
   { name: "Jordan Chen", username: "jordanclimbs", email: "jordan@climbing.local", bio: "Boulderer from the Bay Area" },
@@ -19,13 +24,7 @@ users_data = [
 ]
 
 users = users_data.map do |data|
-  User.create!(
-    name: data[:name],
-    username: data[:username],
-    email_address: data[:email],
-    bio: data[:bio],
-    password: "password123"
-  )
+  User.create!(data.merge(password: SeedSupport::SEED_PASSWORD))
 end
 
 puts "Created #{users.length} users"

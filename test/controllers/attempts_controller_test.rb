@@ -29,7 +29,7 @@ class AttemptsControllerTest < ActionDispatch::IntegrationTest
     attempt = Attempt.last
     assert_equal @user, attempt.user
     assert_equal @climb, attempt.climb
-    assert_equal 15, attempt.points_awarded
+    assert_equal 30, attempt.points_awarded  # flash_points(30)
     assert_redirected_to competition_climb_path(@competition, @climb)
   end
 

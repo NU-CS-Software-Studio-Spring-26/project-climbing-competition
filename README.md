@@ -7,6 +7,11 @@ CS-397 Climbing Project
 A platform to create climbing leagues with designated competition climbs on the Kilterboard with leaderboard feature. 
 See Heroku deployment here: https://climb-league-c5d605affe21.herokuapp.com/
 
+### Local development seeds
+
+- `bin/rails db:seed` — small dataset for everyday dev and CI
+- `bin/rails db:seed:large` — development only; ~1000 users and competitions for UI stress-testing
+
 ## Description: 
 A service for virtual climbing competitions, particularly bouldering.
 

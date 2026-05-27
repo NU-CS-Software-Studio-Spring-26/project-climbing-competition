@@ -10,9 +10,12 @@
     </div>
   <% end %>
 
-  <div class="mb-3">
+  <div class="mb-3" data-controller="char-counter" data-char-counter-max-value="100">
     <%= form.label :name, class: "form-label" %>
-    <%= form.text_field :name, class: "form-control", placeholder: "Example: Regional Boulder Jam" %>
+    <%= form.text_field :name, class: "form-control", placeholder: "Example: Regional Boulder Jam",
+          maxlength: 100,
+          data: { char_counter_target: "input", action: "input->char-counter#update" } %>
+    <span class="char-counter" data-char-counter-target="count"></span>
   </div>
 
   <div class="mb-3">
@@ -50,10 +53,65 @@
         required: true %>
   </div>
 
-  <div class="mb-3">
+  <div class="mb-3" data-controller="char-counter" data-char-counter-max-value="2000">
     <%= form.label :description, class: "form-label" %>
-    <%= form.text_area :description, class: "form-control", placeholder: "Describe this competition...", rows: 4 %>
+    <%= form.text_area :description, class: "form-control", placeholder: "Describe this competition...", rows: 4,
+          maxlength: 2000,
+          data: { char_counter_target: "input", action: "input->char-counter#update" } %>
+    <span class="char-counter" data-char-counter-target="count"></span>
   </div>
+
+ <!-- Scoring Settings -->
+<div class="mb-4 scoring-settings">
+  <h3 class="mb-3">Scoring Settings</h3>
+
+  <div class="mb-4">
+    <%= form.label :send_points, "Points for a Send", class: "form-label" %>
+    <div class="d-flex align-items-center gap-3">
+      <%= form.range_field :send_points, min: 0, max: 50, step: 1,
+            class: "form-range flex-grow-1",
+            data: { scoring_slider: "send_points" } %>
+      <%= form.number_field :send_points, min: 0, max: 50, step: 1,
+            class: "scoring-number",
+            data: { scoring_number: "send_points" } %>
+    </div>
+    <div class="form-text">Base points for completing a problem (not on the first attempt).</div>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :flash_points, "Points for a Flash", class: "form-label" %>
+    <div class="d-flex align-items-center gap-3">
+      <%= form.range_field :flash_points, min: 0, max: 50, step: 1,
+            class: "form-range flex-grow-1",
+            data: { scoring_slider: "flash_points" } %>
+      <%= form.number_field :flash_points, min: 0, max: 50, step: 1,
+            class: "scoring-number",
+            data: { scoring_number: "flash_points" } %>
+    </div>
+    <div class="form-text">Points for completing a problem on the very first attempt.</div>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :attempt_deduction, "Points Deducted per Extra Attempt", class: "form-label" %>
+    <div class="d-flex align-items-center gap-3">
+      <%= form.range_field :attempt_deduction, min: 0, max: 10, step: 1,
+            class: "form-range flex-grow-1",
+            data: { scoring_slider: "attempt_deduction" } %>
+      <%= form.number_field :attempt_deduction, min: 0, max: 10, step: 1,
+            class: "scoring-number",
+            data: { scoring_number: "attempt_deduction" } %>
+    </div>
+    <div class="form-text">Deducted for each attempt after the first (0 = no penalty).</div>
+  </div>
+
+  <div class="scoring-preview">
+    <span>
+      Flash = <strong data-preview="flash">–</strong> pts &nbsp;|&nbsp;
+      Send on 2nd attempt = <strong data-preview="send2">–</strong> pts &nbsp;|&nbsp;
+      Send on 3rd attempt = <strong data-preview="send3">–</strong> pts
+    </span>
+  </div>
+</div>
 
   <!-- Climbs Section -->
   <div class="climbs-section mb-4">
@@ -73,7 +131,58 @@
 <% end %>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("turbo:load", function() {
+  // ── Scoring sliders ──────────────────────────────────────────────────────────
+  function getSlider(name) {
+    return document.querySelector(`[data-scoring-slider="${name}"]`);
+  }
+  function getNumber(name) {
+    return document.querySelector(`[data-scoring-number="${name}"]`);
+  }
+
+  function updateScoringPreview() {
+    const send   = parseInt(getNumber("send_points")?.value)       || 0;
+    const flash  = parseInt(getNumber("flash_points")?.value)      || 0;
+    const deduct = parseInt(getNumber("attempt_deduction")?.value) || 0;
+
+    const previewFlash = document.querySelector('[data-preview="flash"]');
+    const previewSend2 = document.querySelector('[data-preview="send2"]');
+    const previewSend3 = document.querySelector('[data-preview="send3"]');
+
+    if (previewFlash) previewFlash.textContent = flash;
+    if (previewSend2) previewSend2.textContent = Math.max(send - deduct, 0);
+    if (previewSend3) previewSend3.textContent = Math.max(send - 2 * deduct, 0);
+  }
+
+  function syncPair(name) {
+    const slider = getSlider(name);
+    const number = getNumber(name);
+    if (!slider || !number) return;
+
+    slider.value = number.value;
+
+    slider.addEventListener("input", function () {
+      number.value = slider.value;
+      updateScoringPreview();
+    });
+
+    number.addEventListener("input", function () {
+      const clamped = Math.min(
+        Math.max(parseInt(number.value) || parseInt(slider.min), parseInt(slider.min)),
+        parseInt(slider.max)
+      );
+      number.value = clamped;
+      slider.value = clamped;
+      updateScoringPreview();
+    });
+  }
+
+  syncPair("send_points");
+  syncPair("flash_points");
+  syncPair("attempt_deduction");
+  updateScoringPreview();
+  // ────────────────────────────────────────────────────────────────────────────
+
   const addClimbBtn = document.getElementById("add-climb-btn");
   const climbsContainer = document.getElementById("climbs-container");
   const submitBtn = document.getElementById("submit-btn");
@@ -99,19 +208,14 @@ document.addEventListener("DOMContentLoaded", function() {
       const destroyInput = climbField.querySelector('input[name*="_destroy"]');
       
       if (destroyInput) {
-        // Mark as destroyed so Rails knows to delete it
         destroyInput.value = "true";
       }
       
-      // Remove the climb field from the DOM
       climbField.remove();
-      
-      // Validate climb count after deletion
       validateClimbCount();
     });
   }
 
-  // Attach handlers to existing delete buttons
   document.querySelectorAll('.delete-climb-btn').forEach(btn => {
     attachDeleteHandler(btn);
   });
@@ -120,10 +224,8 @@ document.addEventListener("DOMContentLoaded", function() {
     addClimbBtn.addEventListener("click", function(e) {
       e.preventDefault();
       
-      // Get the current timestamp for unique field names
       const timestamp = Date.now();
       
-      // Create new climb field HTML with delete button
       const climbHTML = `
         <div class="climb-field mb-3 p-3 border rounded" data-climb-field>
           <div class="d-flex justify-content-between align-items-start mb-2">
@@ -143,32 +245,27 @@ document.addEventListener("DOMContentLoaded", function() {
             <input class="form-control" type="text" name="competition[climbs_attributes][${timestamp}][grading]" id="climb_grading_${timestamp}" placeholder="e.g., V4, V5" pattern="^V\\d{1,2}$" title="V-grade format: V0-V99 (e.g., V4, V7)">
           </div>
 
-          <div class="mb-0">
+          <div class="mb-0" data-controller="char-counter" data-char-counter-max-value="<%= Climb::URL_MAX_LENGTH %>">
             <label class="form-label" for="climb_url_${timestamp}">Climb Link (URL)</label>
-            <input class="form-control" type="text" name="competition[climbs_attributes][${timestamp}][url]" id="climb_url_${timestamp}" placeholder="https://...">
+            <input class="form-control" type="text" name="competition[climbs_attributes][${timestamp}][url]" id="climb_url_${timestamp}" placeholder="https://..." maxlength="<%= Climb::URL_MAX_LENGTH %>" data-char-counter-target="input" data-action="input->char-counter#update">
+            <span class="char-counter" data-char-counter-target="count"></span>
           </div>
 
           <input type="hidden" name="competition[climbs_attributes][${timestamp}][_destroy]" value="false">
         </div>
       `;
       
-      // Add the new field
       climbsContainer.insertAdjacentHTML("beforeend", climbHTML);
       
-      // Attach delete handler to the newly added button
       const newDeleteBtn = climbsContainer.querySelector(`input[name="competition[climbs_attributes][${timestamp}][_destroy]"]`).closest('[data-climb-field]').querySelector('.delete-climb-btn');
       if (newDeleteBtn) {
         attachDeleteHandler(newDeleteBtn);
       }
       
-      // Validate climb count after adding
       validateClimbCount();
     });
   }
 
-  // Initial validation on page load
   validateClimbCount();
 });
 </script>
-
-
