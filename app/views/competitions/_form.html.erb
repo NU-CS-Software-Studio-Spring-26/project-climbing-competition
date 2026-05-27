@@ -44,15 +44,6 @@
     </div>
   </div>
 
-  <div class="mb-3">
-    <%= form.label :level, "Comp Level", class: "form-label" %>
-    <%= form.select :level,
-        options_for_select(Competition::LEVELS.map { |level| [level.titleize, level] }, competition.level),
-        { prompt: "Select a level" },
-        class: "form-select",
-        required: true %>
-  </div>
-
   <div class="mb-3" data-controller="char-counter" data-char-counter-max-value="2000">
     <%= form.label :description, class: "form-label" %>
     <%= form.text_area :description, class: "form-control", placeholder: "Describe this competition...", rows: 4,
@@ -116,6 +107,7 @@
   <!-- Climbs Section -->
   <div class="climbs-section mb-4">
     <h3 class="mb-3">Climbs</h3>
+    <p class="form-text mb-3">Competition level and difficulty range are set automatically from the V-grades on your climbs.</p>
     <div id="climbs-container">
       <%= form.fields_for :climbs do |climb_form| %>
         <%= render "climb_fields", form: climb_form %>
@@ -242,7 +234,10 @@ document.addEventListener("turbo:load", function() {
 
           <div class="mb-2">
             <label class="form-label" for="climb_grading_${timestamp}">V-Grade</label>
-            <input class="form-control" type="text" name="competition[climbs_attributes][${timestamp}][grading]" id="climb_grading_${timestamp}" placeholder="e.g., V4, V5" pattern="^V\\d{1,2}$" title="V-grade format: V0-V99 (e.g., V4, V7)">
+            <select class="form-select" name="competition[climbs_attributes][${timestamp}][grading]" id="climb_grading_${timestamp}" required>
+              <option value="">Select grade</option>
+              ${[...Array(18).keys()].map(n => `<option value="V${n}">V${n}</option>`).join("")}
+            </select>
           </div>
 
           <div class="mb-0" data-controller="char-counter" data-char-counter-max-value="<%= Climb::URL_MAX_LENGTH %>">

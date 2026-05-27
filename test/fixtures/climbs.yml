@@ -3,19 +3,23 @@
 one:
   name: The Crimper
   url: https://kilterboard.com/climb/1
+  grading: V2
   competition: one
 
 one_two:
   name: The Jug
   url: https://kilterboard.com/climb/2
+  grading: V3
   competition: one
 
 two:
   name: The Sloper
   url: https://kilterboard.com/climb/3
+  grading: V8
   competition: two
 
 two_two:
   name: The Pocket
   url: https://kilterboard.com/climb/4
+  grading: V9
   competition: two

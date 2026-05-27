@@ -5,6 +5,11 @@ one:
   starts_at: 2026-05-15 09:00:00
   ends_at: 2026-05-15 17:00:00
   level: beginner
+  v_grade_min: 0
+  v_grade_max: 3
+  send_points: 25
+  flash_points: 30
+  attempt_deduction: 5
   description: Spring climbing competition
   owner: one
 
@@ -13,5 +18,10 @@ two:
   starts_at: 2026-06-20 08:00:00
   ends_at: 2026-06-20 18:00:00
   level: advanced
+  v_grade_min: 7
+  v_grade_max: 9
+  send_points: 25
+  flash_points: 30
+  attempt_deduction: 5
   description: Summer event
   owner: two

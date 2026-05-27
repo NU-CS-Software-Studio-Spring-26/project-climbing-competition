@@ -4,15 +4,38 @@ class CompetitionsController < ApplicationController
 
   # GET /competitions or /competitions.json
   def index
-    @competitions = Competition.includes(:owner, :users)
+    @competitions = Competition.includes(:owner, :users, :climbs)
 
-    # Handle sorting and filtering
-    @sort_by = params[:sort_by]
-    @sort_direction = params[:sort_direction] || "asc"
-    @selected_levels = Array(params[:level]).reject(&:blank?)
+    @sort_by = params[:sort_by].presence_in(%w[ starts_at ends_at ])
+    @sort_direction = if @sort_by
+      params[:sort_direction].presence_in(%w[ asc desc ]) || "asc"
+    end
+    @grade_range_min = params[:grade_min].present? ? params[:grade_min].to_i.clamp(0, 16) : 0
+    @grade_range_max = params[:grade_max].present? ? params[:grade_max].to_i.clamp(0, 16) : 16
+    if @grade_range_min > @grade_range_max
+      @grade_range_min, @grade_range_max = @grade_range_max, @grade_range_min
+    end
+    @grade_filter_active = @grade_range_min > 0 || @grade_range_max < 16
 
-    # Apply level filters if selected (multiple levels allowed)
-    @competitions = @competitions.where(level: @selected_levels) if @selected_levels.present?
+    @selected_status = params[:status].presence_in(%w[ upcoming ongoing past ])
+
+    case @selected_status
+    when "upcoming"
+      @competitions = @competitions.upcoming
+    when "ongoing"
+      @competitions = @competitions.active
+    when "past"
+      @competitions = @competitions.past
+    end
+
+    # Competitions whose grade range overlaps the selected difficulty range
+    if @grade_filter_active
+      @competitions = @competitions.where(
+        "v_grade_min <= ? AND v_grade_max >= ?",
+        @grade_range_max,
+        @grade_range_min
+      )
+    end
 
     # Apply sorting only if sort_by is specified
     case @sort_by
@@ -21,6 +44,14 @@ class CompetitionsController < ApplicationController
     when "ends_at"
       @competitions = @competitions.order(ends_at: @sort_direction.to_sym)
     end
+
+    @filter_params = {
+      sort_by: @sort_by,
+      sort_direction: @sort_direction,
+      status: @selected_status
+    }.compact
+    @filter_params[:grade_min] = @grade_range_min if @grade_range_min > 0
+    @filter_params[:grade_max] = @grade_range_max if @grade_range_max < 16
 
     # Apply pagination
     @competitions = @competitions.page(params[:page]).per(9)
@@ -110,12 +141,16 @@ class CompetitionsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_competition
-      @competition = Competition.find(params.expect(:id))
+      @competition = Competition.includes(:climbs).find(params.expect(:id))
     end
 
     # Only allow a list of trusted parameters through.
     def competition_params
-      params.require(:competition).permit(:name, :date, :starts_at, :ends_at, :level, :description, :send_points, :flash_points, :attempt_deduction, climbs_attributes: [ :id, :name, :url, :grading, :_destroy ])
+      params.require(:competition).permit(
+        :name, :date, :starts_at, :ends_at, :description,
+        :send_points, :flash_points, :attempt_deduction,
+        climbs_attributes: [ :id, :name, :url, :grading, :_destroy ]
+      )
     end
     def assign_combined_datetimes(competition)
       raw = params.require(:competition).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time)
