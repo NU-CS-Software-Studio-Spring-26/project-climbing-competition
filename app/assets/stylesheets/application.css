@@ -1325,24 +1325,62 @@ body.app-shell:not(.home-shell) {
   border-color: var(--card-outline, var(--border));
 }
 
-.competition-card--beginner {
+.competition-card--v0-3 {
   --card-outline: #537c51;
+  --card-top: #537c51;
 }
 
-.competition-card--intermediate {
+.competition-card--v4-6 {
   --card-outline: #bd9a28;
+  --card-top: #bd9a28;
 }
 
-.competition-card--advanced {
+.competition-card--v7-9 {
   --card-outline: #629eff;
+  --card-top: #629eff;
 }
 
-.competition-card--elite {
-  --card-outline: rgba(171, 98, 255, 0.66);
+.competition-card--v10-plus {
+  --card-outline: rgba(171, 98, 255, 0.85);
+  --card-top: #ab62ff;
 }
 
-.competition-top-border {
-  display: none;
+.competition-card--v0-3 .competition-top-border,
+.competition-card--v4-6 .competition-top-border,
+.competition-card--v7-9 .competition-top-border,
+.competition-card--v10-plus .competition-top-border {
+  display: block;
+  background: var(--card-top);
+}
+
+.competition-status-badge {
+  flex-shrink: 0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  border: 1px solid transparent;
+}
+
+.competition-status-badge--upcoming {
+  color: #b8e8b4;
+  background: rgba(90, 158, 86, 0.22);
+  border-color: rgba(90, 158, 86, 0.45);
+}
+
+.competition-status-badge--active {
+  color: #b3d4ff;
+  background: rgba(98, 158, 255, 0.2);
+  border-color: rgba(98, 158, 255, 0.45);
+}
+
+.competition-status-badge--past {
+  color: rgba(243, 241, 234, 0.62);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(150, 148, 140, 0.35);
 }
 
 .competition-body {

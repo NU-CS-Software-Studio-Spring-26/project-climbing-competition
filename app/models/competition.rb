@@ -20,6 +20,16 @@ class Competition < ApplicationRecord
     :active
   end
 
+  # Card color tier from peak grade: V0–3, V4–6, V7–9, V10+
+  def grade_range_tier
+    case v_grade_max
+    when 0..3 then :v0_3
+    when 4..6 then :v4_6
+    when 7..9 then :v7_9
+    else :v10_plus
+    end
+  end
+
   accepts_nested_attributes_for :climbs, allow_destroy: true, reject_if: :all_blank
 
   before_validation :sanitize_text_fields

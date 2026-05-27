@@ -80,7 +80,7 @@
 <div class="row gx-4 gy-5 competitions-grid">
   <% @competitions.each do |competition| %>
     <div class="col-12 col-md-6 col-xl-4">
-      <article class="competition-card h-100 d-flex flex-column">
+      <article class="competition-card competition-card--<%= competition.grade_range_tier.to_s.dasherize %> h-100 d-flex flex-column">
         <div class="competition-top-border" aria-hidden="true"></div>
         <%= link_to competition_path(competition), class: "competition-card-link-overlay" do %>
           <div class="competition-body flex-grow-1">
