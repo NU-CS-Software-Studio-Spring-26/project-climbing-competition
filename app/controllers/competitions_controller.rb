@@ -135,7 +135,11 @@ class CompetitionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def competition_params
-      params.require(:competition).permit(:name, :date, :starts_at, :ends_at, :level, :description, :send_points, :flash_points, :attempt_deduction, climbs_attributes: [ :id, :name, :url, :grading, :_destroy ])
+      params.require(:competition).permit(
+        :name, :date, :starts_at, :ends_at, :level, :description,
+        :v_grade_min, :v_grade_max, :send_points, :flash_points, :attempt_deduction,
+        climbs_attributes: [ :id, :name, :url, :grading, :_destroy ]
+      )
     end
     def assign_combined_datetimes(competition)
       raw = params.require(:competition).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time)

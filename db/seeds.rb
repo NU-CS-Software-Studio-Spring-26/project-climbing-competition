@@ -382,7 +382,7 @@ competitions = []
 competitions_data.each do |data|
   climb_grades = data.delete(:climb_grades)
   climbs = data.delete(:climbs)
-  climbs_attributes = climbs.each_with_index.to_h { |climb, i| [i.to_s, climb] }
+  climbs_attributes = climbs.each_with_index.to_h { |climb, i| [ i.to_s, climb ] }
 
   comp = users.sample.owned_competitions.create!(
     data.merge(

@@ -1,5 +1,12 @@
 class Competition < ApplicationRecord
   V_GRADES = (0..16).to_a
+  LEVEL_GRADE_RANGES = {
+    "beginner" => [ 0, 3 ],
+    "intermediate" => [ 4, 6 ],
+    "advanced" => [ 7, 9 ],
+    "elite" => [ 10, 16 ]
+  }.freeze
+  LEVELS = LEVEL_GRADE_RANGES.keys.freeze
   LeaderboardEntry = Struct.new(:user, :points, :attempts_count, keyword_init: true)
 
   belongs_to :owner, class_name: "User", optional: true
@@ -33,6 +40,7 @@ class Competition < ApplicationRecord
   accepts_nested_attributes_for :climbs, allow_destroy: true, reject_if: :all_blank
 
   before_validation :sanitize_text_fields
+  before_validation :sync_v_grades_from_level, if: -> { level.present? && level_changed? }
 
   validates :name, :starts_at, :ends_at, presence: true
   validates :name, length: { maximum: 100 }
@@ -54,7 +62,7 @@ class Competition < ApplicationRecord
     return 0 unless sent
     base      = flashed ? flash_points : send_points
     deduction = flashed ? 0 : (attempts - 1) * attempt_deduction
-    [base - deduction, 0].max
+    [ base - deduction, 0 ].max
   end
 
   def leaderboard_entries
@@ -67,7 +75,7 @@ class Competition < ApplicationRecord
         points: user_attempts.sum(&:points_awarded),
         attempts_count: user_attempts.sum { |attempt| attempt.attempt_count.to_i }
       )
-    end.sort_by { |entry| [-entry.points, entry.attempts_count, entry.user.username.downcase] }
+    end.sort_by { |entry| [ -entry.points, entry.attempts_count, entry.user.username.downcase ] }
   end
 
   private
@@ -90,5 +98,11 @@ class Competition < ApplicationRecord
   def grade_range_is_valid
     return unless v_grade_min && v_grade_max
     errors.add(:v_grade_max, "must be >= min grade") if v_grade_max < v_grade_min
+  end
+
+  def sync_v_grades_from_level
+    min, max = LEVEL_GRADE_RANGES.fetch(level)
+    self.v_grade_min = min
+    self.v_grade_max = max
   end
 end
