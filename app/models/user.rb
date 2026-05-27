@@ -31,6 +31,7 @@ class User < ApplicationRecord
   validates :email_address, uniqueness: { case_sensitive: false }
   validates :email_address, length: { maximum: EMAIL_MAX_LENGTH }
   validates :email_address, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :google_uid, uniqueness: true, allow_blank: true
   validates :password, length: { minimum: PASSWORD_MIN_LENGTH, maximum: PASSWORD_MAX_LENGTH }, allow_blank: true
   validates :password, confirmation: true, if: -> { password.present? }
   validates :bio, length: { maximum: BIO_MAX_LENGTH }, allow_blank: true
@@ -72,5 +73,10 @@ class User < ApplicationRecord
       return if name.match?(UNICODE_LETTER_PATTERN)
 
       errors.add(:name, "must include at least one letter")
+    end
+
+  public
+    def self.username_taken?(username)
+      where("lower(username) = ?", username.to_s.downcase).exists?
     end
 end

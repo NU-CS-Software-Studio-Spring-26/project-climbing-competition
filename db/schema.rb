@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_18_063022) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_27_000003) do
   create_table "attempts", force: :cascade do |t|
     t.integer "attempt_count", null: false
     t.integer "climb_id", null: false
@@ -77,11 +77,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_063022) do
     t.text "bio"
     t.datetime "created_at", null: false
     t.string "email_address", null: false
+    t.string "google_uid"
     t.string "name", null: false
     t.string "password_digest", null: false
     t.datetime "updated_at", null: false
     t.string "username", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["google_uid"], name: "index_users_on_google_uid", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
