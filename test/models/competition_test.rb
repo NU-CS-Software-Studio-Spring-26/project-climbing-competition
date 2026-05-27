@@ -1,19 +1,20 @@
 require "test_helper"
 
 class CompetitionTest < ActiveSupport::TestCase
-  test "grade_range_tier follows peak grade" do
+  test "grade_range_tier follows peak grade from climbs" do
     competition = competitions(:one)
-
-    competition.v_grade_max = 3
     assert_equal :v0_3, competition.grade_range_tier
 
-    competition.v_grade_max = 6
+    competition.climbs.each { |climb| climb.update!(grading: "V6") }
+    competition.reload
     assert_equal :v4_6, competition.grade_range_tier
 
-    competition.v_grade_max = 9
+    competition.climbs.each { |climb| climb.update!(grading: "V9") }
+    competition.reload
     assert_equal :v7_9, competition.grade_range_tier
 
-    competition.v_grade_max = 16
+    competition.climbs.each { |climb| climb.update!(grading: "V12") }
+    competition.reload
     assert_equal :v10_plus, competition.grade_range_tier
   end
 
@@ -25,9 +26,11 @@ class CompetitionTest < ActiveSupport::TestCase
   test "climb_grade_range_label shows V10+ when lowest climb is V10 or harder" do
     competition = competitions(:one)
     competition.climbs.each { |climb| climb.update!(grading: "V10") }
+    competition.reload
     assert_equal "V10+", competition.climb_grade_range_label
 
     competition.climbs.first.update!(grading: "V12")
+    competition.reload
     assert_equal "V10+", competition.climb_grade_range_label
   end
 
