@@ -70,4 +70,20 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_equal [ 30, 30 ], leaderboard.map(&:points)  # flash_points(30) for both
     assert_equal [ 1, 4 ], leaderboard.map(&:attempts_count)
   end
+
+  test "is invalid when end datetime is before start datetime" do
+    competition = Competition.new(
+      name: "Timing Check Comp",
+      starts_at: 2.days.from_now,
+      ends_at: 1.day.from_now,
+      send_points: 25,
+      flash_points: 30,
+      attempt_deduction: 5
+    )
+    competition.climbs.build(name: "A", url: "https://example.com/a", grading: "V4")
+    competition.climbs.build(name: "B", url: "https://example.com/b", grading: "V6")
+
+    assert_not competition.valid?
+    assert_includes competition.errors[:ends_at], "must be after the start date and time"
+  end
 end

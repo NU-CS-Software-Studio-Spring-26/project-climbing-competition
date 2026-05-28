@@ -1,4 +1,5 @@
 <%= form_with(model: competition, html: { class: "board-form" }) do |form| %>
+  <% input_class = ->(field_name, base = "form-control") { [ base, ("border border-danger" if competition.errors[field_name].any?) ].compact.join(" ") } %>
   <% if competition.errors.any? %>
     <div class="alert alert-danger" role="alert">
       <h2 class="h6"><%= pluralize(competition.errors.count, "error") %> prevented this competition from being saved:</h2>
@@ -12,9 +13,13 @@
 
   <div class="mb-3" data-controller="char-counter" data-char-counter-max-value="100">
     <%= form.label :name, class: "form-label" %>
-    <%= form.text_field :name, class: "form-control", placeholder: "Example: Regional Boulder Jam",
+    <%= form.text_field :name, class: input_class.call(:name), placeholder: "Example: Regional Boulder Jam",
           maxlength: 100,
+          required: true,
           data: { char_counter_target: "input", action: "input->char-counter#update" } %>
+    <% competition.errors.full_messages_for(:name).each do |message| %>
+      <div class="text-danger small mt-1"><%= message %></div>
+    <% end %>
     <span class="char-counter" data-char-counter-target="count"></span>
   </div>
 
@@ -22,26 +27,32 @@
     <div class="row">
       <div class="col">
         <%= form.label :starts_at_date, "Start Date", class: "form-label" %>
-        <%= form.date_field :starts_at_date, value: competition.starts_at&.to_date, class: "form-control" %>
+        <%= form.date_field :starts_at_date, value: competition.starts_at&.to_date, class: input_class.call(:starts_at), required: true %>
       </div>
       <div class="col">
         <%= form.label :starts_at_time, "Start Time", class: "form-label" %>
-        <%= form.time_field :starts_at_time, value: competition.starts_at&.strftime("%H:%M"), class: "form-control" %>
+        <%= form.time_field :starts_at_time, value: competition.starts_at&.strftime("%H:%M"), class: input_class.call(:starts_at), required: true %>
       </div>
     </div>
+    <% competition.errors.full_messages_for(:starts_at).each do |message| %>
+      <div class="text-danger small mt-1"><%= message %></div>
+    <% end %>
   </div>
 
   <div class="mb-3">
     <div class="row">
       <div class="col">
         <%= form.label :ends_at_date, "End Date", class: "form-label" %>
-        <%= form.date_field :ends_at_date, value: competition.ends_at&.to_date, class: "form-control" %>
+        <%= form.date_field :ends_at_date, value: competition.ends_at&.to_date, class: input_class.call(:ends_at), required: true %>
       </div>
       <div class="col">
         <%= form.label :ends_at_time, "End Time", class: "form-label" %>
-        <%= form.time_field :ends_at_time, value: competition.ends_at&.strftime("%H:%M"), class: "form-control" %>
+        <%= form.time_field :ends_at_time, value: competition.ends_at&.strftime("%H:%M"), class: input_class.call(:ends_at), required: true %>
       </div>
     </div>
+    <% competition.errors.full_messages_for(:ends_at).each do |message| %>
+      <div class="text-danger small mt-1"><%= message %></div>
+    <% end %>
   </div>
 
   <div class="mb-3" data-controller="char-counter" data-char-counter-max-value="2000">
@@ -63,9 +74,13 @@
             class: "form-range flex-grow-1",
             data: { scoring_slider: "send_points" } %>
       <%= form.number_field :send_points, min: 0, max: 50, step: 1,
-            class: "scoring-number",
+            class: [ "scoring-number", ("border border-danger" if competition.errors[:send_points].any?) ].compact.join(" "),
+            required: true,
             data: { scoring_number: "send_points" } %>
     </div>
+    <% competition.errors.full_messages_for(:send_points).each do |message| %>
+      <div class="text-danger small mt-1"><%= message %></div>
+    <% end %>
     <div class="form-text">Base points for completing a problem (not on the first attempt).</div>
   </div>
 
@@ -76,9 +91,13 @@
             class: "form-range flex-grow-1",
             data: { scoring_slider: "flash_points" } %>
       <%= form.number_field :flash_points, min: 0, max: 50, step: 1,
-            class: "scoring-number",
+            class: [ "scoring-number", ("border border-danger" if competition.errors[:flash_points].any?) ].compact.join(" "),
+            required: true,
             data: { scoring_number: "flash_points" } %>
     </div>
+    <% competition.errors.full_messages_for(:flash_points).each do |message| %>
+      <div class="text-danger small mt-1"><%= message %></div>
+    <% end %>
     <div class="form-text">Points for completing a problem on the very first attempt.</div>
   </div>
 
@@ -89,9 +108,13 @@
             class: "form-range flex-grow-1",
             data: { scoring_slider: "attempt_deduction" } %>
       <%= form.number_field :attempt_deduction, min: 0, max: 10, step: 1,
-            class: "scoring-number",
+            class: [ "scoring-number", ("border border-danger" if competition.errors[:attempt_deduction].any?) ].compact.join(" "),
+            required: true,
             data: { scoring_number: "attempt_deduction" } %>
     </div>
+    <% competition.errors.full_messages_for(:attempt_deduction).each do |message| %>
+      <div class="text-danger small mt-1"><%= message %></div>
+    <% end %>
     <div class="form-text">Deducted for each attempt after the first (0 = no penalty).</div>
   </div>
 

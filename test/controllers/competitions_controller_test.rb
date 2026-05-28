@@ -65,6 +65,33 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_url
   end
 
+  test "should re-render new with validation errors when competition is invalid" do
+    sign_in_as(@user)
+
+    assert_no_difference("Competition.count") do
+      post competitions_url, params: {
+        competition: {
+          starts_at_date: Date.current.to_s,
+          starts_at_time: "15:00",
+          ends_at_date: Date.current.to_s,
+          ends_at_time: "14:00",
+          name: "",
+          send_points: 0,
+          flash_points: 0,
+          attempt_deduction: -1,
+          climbs_attributes: {
+            "0" => { name: "Only Climb", url: "https://kilterboard.com/climb/1", grading: "V4" }
+          }
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_match "Name can&#39;t be blank", response.body
+    assert_match "Ends at must be after the start date and time", response.body
+    assert_match "Competition must have at least 2 climbs", response.body
+  end
+
   test "should show competition" do
     Attempt.create!(user: users(:one), climb: climbs(:one), attempt_count: 1, completed: true)
     Attempt.create!(user: users(:two), climb: climbs(:one), attempt_count: 1, completed: true)
