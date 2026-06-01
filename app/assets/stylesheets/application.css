@@ -866,10 +866,18 @@ body.app-shell.home-shell {
   color: var(--muted, rgba(243, 241, 234, 0.72));
 }
 
+.board-form {
+  --form-space-field: 1.25rem;
+  --form-space-section: 2rem;
+  --form-space-after-title: 0.85rem;
+  --form-space-label: 0.45rem;
+}
+
 .board-form .form-label {
   font-size: 0.92rem;
   font-weight: 600;
   color: var(--card-text);
+  margin-bottom: var(--form-space-label);
 }
 
 .board-form .form-control {
@@ -882,6 +890,45 @@ body.app-shell.home-shell {
 .board-form .form-control:focus {
   border-color: rgba(26, 26, 28, 0.46);
   box-shadow: 0 0 0 0.18rem rgba(26, 26, 28, 0.18);
+}
+
+.board-form-field {
+  margin-bottom: var(--form-space-field);
+}
+
+.board-form-field:last-child {
+  margin-bottom: 0;
+}
+
+.board-form-field--name {
+  margin-bottom: 0.65rem;
+}
+
+.board-form-block {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(243, 241, 234, 0.14);
+  border-radius: 12px;
+  padding: 1.35rem 1.5rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.board-form-block:last-of-type {
+  margin-bottom: 0;
+}
+
+.board-form-block-title {
+  margin: 0 0 1.1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(243, 241, 234, 0.1);
+  font-size: 1.12rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #eceae2;
+  line-height: 1.3;
+}
+
+.board-form-field--last {
+  margin-bottom: 0;
 }
 
 .action-row {
@@ -1730,22 +1777,39 @@ body.app-shell:not(.home-shell) {
 }
 
 .board-form .form-control,
+.board-form .form-select,
 .auth-panel .form-control,
 input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
-  background: #10110e;
+  background-color: #10110e;
   border: 1px solid rgba(243, 241, 234, 0.14);
   color: var(--text);
   border-radius: 0.45rem;
 }
 
+.board-form .form-select {
+  --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23f3f1ea' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  padding: 0.5rem 2.25rem 0.5rem 0.75rem;
+  background-color: #10110e;
+  background-image: var(--bs-form-select-bg-img);
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+}
+
+.board-form .form-select option {
+  background-color: #10110e;
+  color: var(--text);
+}
+
 .board-form .form-control:focus,
+.board-form .form-select:focus,
 .auth-panel .form-control:focus,
 input:not([type="checkbox"]):not([type="radio"]):focus,
 textarea:focus,
 select:focus {
-  background: #10110e;
+  background-color: #10110e;
   color: var(--text);
   border-color: rgba(243, 241, 234, 0.34);
   box-shadow: 0 0 0 0.18rem rgba(243, 241, 234, 0.08);
@@ -2024,7 +2088,6 @@ select:focus {
   color: #fff;
 }
 
-.kilter-board-editor,
 .kilter-board-preview {
   background: #202022;
   border: 1px solid #36363a;
@@ -2032,11 +2095,174 @@ select:focus {
   padding: 0.9rem;
 }
 
-.kilter-board-editor-title {
+.board-form .form-control::placeholder,
+.board-form .form-select:required:invalid {
+  color: rgba(243, 241, 234, 0.62);
+}
+
+.board-form .form-text,
+.board-form .board-form-hint,
+.board-form .kilter-board-field-hint {
+  color: rgba(243, 241, 234, 0.68);
   font-size: 0.86rem;
+  margin-top: 0.45rem;
+  margin-bottom: 0;
+}
+
+.board-form .char-counter {
+  color: rgba(243, 241, 234, 0.82);
+  font-size: 0.78rem;
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.board-form .char-counter.char-counter--near {
+  color: #fbbf24;
+}
+
+.board-form .char-counter.char-counter--over {
+  color: #f87171;
+}
+
+.board-form input[type="time"]::-webkit-calendar-picker-indicator,
+.board-form input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.85;
+  filter: invert(93%) sepia(8%) saturate(206%) hue-rotate(12deg) brightness(104%) contrast(92%);
+}
+
+.board-form input[type="time"]::-webkit-calendar-picker-indicator:hover,
+.board-form input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.board-form .scoring-settings .form-text {
+  margin-top: 0.45rem;
+}
+
+.board-form .scoring-settings .board-form-field:last-of-type {
+  margin-bottom: var(--form-space-field);
+}
+
+.board-form-block .board-form-hint {
+  margin-bottom: var(--form-space-field);
+}
+
+#climbs-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-space-field);
+}
+
+.climb-field {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(243, 241, 234, 0.14);
+  border-radius: 10px;
+  padding: 1.25rem 1.35rem;
+  margin-bottom: 0;
+}
+
+.climb-field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.climb-field > .board-form-field:first-of-type {
+  margin-bottom: 0.5rem;
+}
+
+.climb-field-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #e8e4d8;
+  line-height: 1.3;
+}
+
+.kilter-board-field {
+  margin-top: var(--form-space-field);
+  padding-top: var(--form-space-field);
+  border-top: 1px solid rgba(243, 241, 234, 0.1);
+}
+
+.kilter-board-field-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: var(--form-space-after-title);
+}
+
+.kilter-board-field-title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #d8d6ce;
+  line-height: 1.3;
+}
+
+.kilter-board-field-optional {
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: rgba(243, 241, 234, 0.55);
+  margin-left: 0.2rem;
+}
+
+.kilter-board-field-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: var(--form-space-after-title);
+}
+
+.kilter-board-field-hint {
+  margin-top: var(--form-space-after-title);
+  line-height: 1.45;
+}
+
+.board-form #add-climb-btn {
+  margin-top: var(--form-space-field);
+}
+
+.board-form .action-row {
+  margin-top: 1.25rem;
+}
+
+.board-form .btn-create-climb-visual {
+  background: #3a3a42;
+  border: 1px solid rgba(243, 241, 234, 0.38);
+  color: #f8f6f0;
+}
+
+.board-form .btn-create-climb-visual:hover {
+  background: #4a4a54;
+  border-color: rgba(243, 241, 234, 0.5);
+  color: #ffffff;
+}
+
+.board-form .action-row .btn-board-primary,
+.board-form #submit-btn.btn-board-primary {
+  background: #faf8f3;
+  border: 1px solid #faf8f3;
+  color: #121212;
+}
+
+.board-form .action-row .btn-board-primary:hover,
+.board-form #submit-btn.btn-board-primary:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #121212;
 }
 
 .kilter-selection-count {
@@ -2193,7 +2419,8 @@ select:focus {
   stroke-width: 6;
 }
 
-.kilter-board-editor .kilter-hold-target[data-state="off"]:hover {
+.kilter-board-field .kilter-hold-target[data-state="off"]:hover,
+.kilter-visual-modal .kilter-hold-target[data-state="off"]:hover {
   stroke: rgba(59, 130, 246, 0.65);
   stroke-width: 4;
 }
@@ -2275,9 +2502,12 @@ select:focus {
 
 @media (max-width: 640px) {
 
-  .kilter-board-editor,
   .kilter-board-preview {
     padding: 0.75rem;
+  }
+
+  .climb-field {
+    padding: 1rem;
   }
 
   .kilter-visual-modal .modal-dialog.kilter-visual-modal-dialog {

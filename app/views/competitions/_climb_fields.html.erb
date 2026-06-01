@@ -1,12 +1,12 @@
-<div class="climb-field mb-3 p-3 border rounded" data-climb-field>
-  <div class="d-flex justify-content-between align-items-start mb-2">
-    <h5 class="mb-0">Climb</h5>
+<div class="climb-field" data-climb-field>
+  <div class="climb-field-header">
+    <h5 class="climb-field-title mb-0">Climb</h5>
     <button type="button" class="btn btn-sm btn-outline-danger delete-climb-btn" data-climb-id="<%= form.object.id %>">
       <span aria-hidden="true">×</span> Remove
     </button>
   </div>
 
-  <div class="mb-2" data-controller="char-counter" data-char-counter-max-value="100">
+  <div class="board-form-field" data-controller="char-counter" data-char-counter-max-value="100">
     <%= form.label :name, "Climb Name", class: "form-label" %>
     <%= form.text_field :name, class: "form-control", placeholder: "e.g., The Crimper",
           maxlength: 100,
@@ -14,7 +14,7 @@
     <span class="char-counter" data-char-counter-target="count"></span>
   </div>
 
-  <div class="mb-2">
+  <div class="board-form-field">
     <%= form.label :grading, "V-Grade", class: "form-label" %>
     <%= form.select :grading,
         options_for_select(Climb::GRADES.map { |g| [ g, g ] }, form.object.grading),
@@ -23,26 +23,29 @@
         required: true %>
   </div>
 
-  <div class="mb-0" data-controller="char-counter" data-char-counter-max-value="<%= Climb::URL_MAX_LENGTH %>">
+  <div class="board-form-field" data-controller="char-counter" data-char-counter-max-value="<%= Climb::URL_MAX_LENGTH %>">
     <%= form.label :url, "Climb Link (URL)", class: "form-label" %>
     <%= form.text_field :url, class: "form-control", placeholder: "https://...", maxlength: Climb::URL_MAX_LENGTH,
           data: { char_counter_target: "input", action: "input->char-counter#update" } %>
     <span class="char-counter" data-char-counter-target="count"></span>
   </div>
 
-  <div class="kilter-board-editor mt-3" data-controller="kilter-board" data-kilter-board-editable-value="true" data-kilter-board-default-color-value="purple">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
-      <strong class="kilter-board-editor-title">Kilter Board Visual</strong>
-      <span class="kilter-selection-count" data-kilter-board-target="count">0 holds selected</span>
+  <div class="kilter-board-field" data-controller="kilter-board" data-kilter-board-editable-value="true" data-kilter-board-default-color-value="purple">
+    <div class="kilter-board-field-header">
+      <h6 class="kilter-board-field-title mb-0">
+        Kilter Board Visual
+        <span class="kilter-board-field-optional">(optional)</span>
+      </h6>
+      <span class="kilter-selection-count" data-kilter-board-target="count">No visual</span>
     </div>
 
-    <div class="d-flex flex-wrap gap-2 mt-2">
-      <button type="button" class="btn btn-sm btn-board-primary" data-action="kilter-board#openModal">Create Climb Visual</button>
-      <button type="button" class="btn btn-sm btn-outline-light" data-action="kilter-board#clearAll">Clear All</button>
+    <div class="kilter-board-field-actions">
+      <button type="button" class="btn btn-sm btn-board-primary btn-create-climb-visual" data-action="kilter-board#openModal">Create Climb Visual</button>
+      <button type="button" class="btn btn-sm btn-outline-light d-none" data-kilter-board-target="removeButton" data-action="kilter-board#removeVisual">Remove Visual</button>
     </div>
 
     <%= form.hidden_field :hold_assignments, value: (form.object.hold_assignments || {}).to_json, data: { kilter_board_target: "input" } %>
-    <p class="form-text mt-2 mb-0">Open the visual editor, select a color, then click holds to draw your route.</p>
+    <p class="kilter-board-field-hint mb-0">Open the visual editor, select a color, then click holds to draw your route.</p>
 
     <div class="modal fade kilter-visual-modal" tabindex="-1" aria-hidden="true" data-kilter-board-target="modal">
       <div class="modal-dialog modal-dialog-centered kilter-visual-modal-dialog">
@@ -65,8 +68,8 @@
             </div>
           </div>
           <div class="modal-footer d-flex flex-wrap gap-2 justify-content-between">
-            <button type="button" class="btn btn-outline-light" data-action="kilter-board#clearAll">Clear All</button>
-            <button type="button" class="btn btn-board-secondary" data-bs-dismiss="modal">Done</button>
+            <button type="button" class="btn btn-outline-light d-none" data-kilter-board-target="removeButton" data-action="kilter-board#removeVisual">Remove Visual</button>
+            <button type="button" class="btn btn-board-secondary ms-auto" data-bs-dismiss="modal">Done</button>
           </div>
         </div>
       </div>

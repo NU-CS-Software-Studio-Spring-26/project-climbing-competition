@@ -13,7 +13,7 @@ const VIEWBOX = { width: 1600, height: 1236 }
 const SVG_NS = "http://www.w3.org/2000/svg"
 
 export default class extends Controller {
-  static targets = ["board", "input", "colorButton", "modal", "count"]
+  static targets = ["board", "input", "colorButton", "modal", "count", "removeButton"]
   static values = {
     editable: { type: Boolean, default: true },
     viewer: { type: Boolean, default: false },
@@ -70,8 +70,18 @@ export default class extends Controller {
     this.updateSelectionCount()
   }
 
-  clearAll(event) {
-    this.clearBoard(event)
+  removeVisual(event) {
+    if (event) event.preventDefault()
+    if (!this.editableValue) return
+
+    this.state = {}
+    if (this.viewerValue) {
+      this.renderHolds()
+    } else {
+      this.refreshAllHolds()
+    }
+    this.syncInput()
+    this.updateSelectionCount()
   }
 
   loadAssignments(assignments) {
@@ -240,9 +250,20 @@ export default class extends Controller {
   }
 
   updateSelectionCount() {
-    if (!this.hasCountTarget) return
     const selectedCount = Object.keys(this.state).length
-    this.countTarget.textContent = `${selectedCount} hold${selectedCount === 1 ? "" : "s"} selected`
+    const hasVisual = selectedCount > 0
+
+    if (this.hasCountTarget) {
+      this.countTarget.textContent = hasVisual
+        ? `${selectedCount} hold${selectedCount === 1 ? "" : "s"} selected`
+        : "No visual"
+    }
+
+    if (this.hasRemoveButtonTarget) {
+      this.removeButtonTargets.forEach((button) => {
+        button.classList.toggle("d-none", !hasVisual)
+      })
+    }
   }
 
   async loadHoldMap() {
