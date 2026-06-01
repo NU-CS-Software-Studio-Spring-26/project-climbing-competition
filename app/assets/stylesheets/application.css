@@ -763,7 +763,7 @@ body.app-shell.home-shell {
   z-index: 9999;
 }
 
-.modal-content {
+.modal-overlay .modal-content {
   background: var(--card-bg);
   border: 1px solid rgba(245, 242, 230, 0.58);
   border-radius: 0.55rem;
@@ -776,7 +776,7 @@ body.app-shell.home-shell {
     0 -2px 0 rgba(0, 0, 0, 0.18) inset;
 }
 
-.modal-title {
+.modal-overlay .modal-title {
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -1499,7 +1499,7 @@ body.app-shell:not(.home-shell) {
 }
 
 .detail-panel,
-.modal-content,
+.modal-overlay .modal-content,
 .climb-card-link,
 .competition-card {
   background: var(--surface);
@@ -1715,7 +1715,7 @@ body.app-shell:not(.home-shell) {
 }
 
 .detail-panel,
-.modal-content,
+.modal-overlay .modal-content,
 .auth-panel .detail-panel,
 .auth-panel,
 .alert {
@@ -2055,10 +2055,10 @@ select:focus {
 }
 
 .kilter-palette-swatch {
-  width: 1.9rem;
-  height: 1.9rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.4);
+  border: 3px solid rgba(255, 255, 255, 0.4);
   background: #666;
   cursor: pointer;
   transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
@@ -2083,11 +2083,11 @@ select:focus {
 .kilter-palette-swatch--none {
   width: auto;
   border-radius: 999px;
-  padding: 0.28rem 0.62rem;
+  padding: 0.5rem 1rem;
   height: auto;
   background: #2b2b2f;
   color: #f5f2e6;
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -2101,33 +2101,45 @@ select:focus {
 .kilter-modal-content {
   background: #171719;
   border: 1px solid #34343a;
+  max-width: none;
+  width: 100%;
+  padding: 0;
 }
 
-.kilter-visual-modal .modal-dialog {
-  max-width: min(98vw, 1650px);
-  width: min(98vw, 1650px);
-  margin: 1rem auto;
+.kilter-visual-modal .modal-dialog.kilter-visual-modal-dialog {
+  max-width: min(96vw, 1500px);
+  width: min(96vw, 1500px);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .kilter-modal-content .modal-header,
 .kilter-modal-content .modal-footer {
   border-color: rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.25rem;
 }
 
 .kilter-modal-content .modal-body {
-  padding: 0.75rem;
+  padding: 0 1.25rem 1.25rem;
 }
 
 .kilter-modal-content .modal-title {
-  font-size: 0.95rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  margin: 0;
+}
+
+.kilter-visual-modal .kilter-board-palette {
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .kilter-board-image-wrap {
   position: relative;
   width: 100%;
-  max-width: 1480px;
+  max-width: none;
   margin: 0 auto;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -2135,59 +2147,82 @@ select:focus {
   overflow: hidden;
 }
 
-.kilter-board-image {
+.kilter-board-svg {
+  display: block;
   width: 100%;
   height: auto;
-  display: block;
 }
 
 .kilter-board-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
+  pointer-events: all;
 }
 
 .kilter-hold-target {
-  position: absolute;
-  width: var(--hit-size, 20px);
-  height: var(--hit-size, 20px);
-  border: 0;
-  background: transparent;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  padding: 0;
+  pointer-events: all;
+  cursor: pointer;
+  fill: none;
+  stroke: transparent;
+  stroke-width: 0;
+  transition: stroke 120ms ease, stroke-width 120ms ease;
 }
 
-.kilter-hold-target::after {
-  content: "";
-  position: absolute;
-  inset: 50% auto auto 50%;
-  width: var(--ring-size, 14px);
-  height: var(--ring-size, 14px);
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  border: 3px solid transparent;
+.kilter-hold-target[data-state="purple"] {
+  stroke: #7c3aed;
+  stroke-width: 5;
+}
+
+.kilter-hold-target[data-state="green"] {
+  stroke: #22c55e;
+  stroke-width: 5;
+}
+
+.kilter-hold-target[data-state="blue"] {
+  stroke: #3b82f6;
+  stroke-width: 5;
+}
+
+.kilter-hold-target[data-state="yellow"] {
+  stroke: #facc15;
+  stroke-width: 5;
+}
+
+.kilter-visual-modal .kilter-hold-target[data-state="purple"],
+.kilter-visual-modal .kilter-hold-target[data-state="green"],
+.kilter-visual-modal .kilter-hold-target[data-state="blue"],
+.kilter-visual-modal .kilter-hold-target[data-state="yellow"] {
+  stroke-width: 6;
+}
+
+.kilter-board-editor .kilter-hold-target[data-state="off"]:hover {
+  stroke: rgba(59, 130, 246, 0.65);
+  stroke-width: 4;
+}
+
+.kilter-board-preview .kilter-hold-target {
   pointer-events: none;
-}
-
-.kilter-hold-target[data-state="purple"]::after,
-.kilter-hold-target[data-state="green"]::after,
-.kilter-hold-target[data-state="blue"]::after,
-.kilter-hold-target[data-state="yellow"]::after {
-  border-color: var(--hold-color);
-}
-
-.kilter-board-editor .kilter-hold-target:hover::after {
-  border-color: rgba(59, 130, 246, 0.65);
+  cursor: default;
 }
 
 .kilter-board-preview .kilter-hold-target {
   pointer-events: none;
 }
 
-.kilter-visual-modal .kilter-board-image {
-  max-height: min(84vh, 1300px);
-  object-fit: contain;
+.kilter-visual-modal .kilter-board-stage {
+  width: 100%;
+  max-height: calc(100vh - 11rem);
+  overflow: auto;
+}
+
+.kilter-visual-modal .kilter-board-image-wrap {
+  position: relative;
+  width: min(100%, calc((100vh - 12rem) * 1600 / 1236));
+  aspect-ratio: 1600 / 1236;
+  margin: 0 auto;
+}
+
+.kilter-visual-modal .kilter-board-svg {
+  width: 100%;
+  height: 100%;
 }
 
 @media (max-width: 640px) {
@@ -2197,14 +2232,15 @@ select:focus {
     padding: 0.75rem;
   }
 
-  .kilter-visual-modal .modal-dialog {
-    margin: 0.45rem;
-    width: auto;
+  .kilter-visual-modal .modal-dialog.kilter-visual-modal-dialog {
+    margin: 0.5rem auto;
+    width: calc(100vw - 1rem);
     max-width: none;
   }
 
-  .kilter-visual-modal .kilter-board-image {
-    max-height: 72vh;
+  .kilter-palette-swatch {
+    width: 2.35rem;
+    height: 2.35rem;
   }
 }
 

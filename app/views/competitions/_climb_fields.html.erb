@@ -45,7 +45,7 @@
     <p class="form-text mt-2 mb-0">Open the visual editor, select a color, then click holds to draw your route.</p>
 
     <div class="modal fade kilter-visual-modal" tabindex="-1" aria-hidden="true" data-kilter-board-target="modal">
-      <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-dialog modal-dialog-centered kilter-visual-modal-dialog">
         <div class="modal-content kilter-modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Create Climb Visual</h5>
@@ -60,9 +60,8 @@
               <button type="button" class="kilter-palette-swatch kilter-palette-swatch--none" data-color="none" data-kilter-board-target="colorButton" data-action="kilter-board#selectColor" aria-label="Erase selected hold">Erase</button>
             </div>
 
-            <div class="kilter-board-image-wrap">
-              <img src="/kilter-board.svg" alt="Kilter board" class="kilter-board-image" data-kilter-board-target="image">
-              <div class="kilter-board-overlay" data-kilter-board-target="overlay"></div>
+            <div class="kilter-board-stage">
+              <div class="kilter-board-image-wrap" data-kilter-board-target="board"></div>
             </div>
           </div>
           <div class="modal-footer">
