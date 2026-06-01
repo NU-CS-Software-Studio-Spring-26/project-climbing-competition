@@ -1,0 +1,33 @@
+<div class="modal fade kilter-visual-modal kilter-climb-view-modal" tabindex="-1" aria-hidden="true" data-climb-visual-modal-target="modal">
+  <div class="modal-dialog modal-dialog-centered kilter-visual-modal-dialog">
+    <div class="modal-content kilter-modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" data-climb-visual-modal-target="title">Climb Visual</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="kilter-board-viewer-legend mb-3" aria-hidden="true">
+          <span class="kilter-legend-item kilter-legend-item--green">Start</span>
+          <span class="kilter-legend-item kilter-legend-item--blue">Hand &amp; foot</span>
+          <span class="kilter-legend-item kilter-legend-item--yellow">Foot only</span>
+          <span class="kilter-legend-item kilter-legend-item--purple">Finish</span>
+        </div>
+
+        <div
+          data-controller="kilter-board"
+          data-climb-visual-modal-target="kilterBoard"
+          data-kilter-board-editable-value="false"
+          data-kilter-board-viewer-value="true"
+          data-kilter-board-assignments-value="{}"
+        >
+          <div class="kilter-board-stage">
+            <div class="kilter-board-image-wrap" data-kilter-board-target="board"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-board-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

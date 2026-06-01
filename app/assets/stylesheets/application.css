@@ -2225,6 +2225,54 @@ select:focus {
   height: 100%;
 }
 
+.kilter-board-viewer-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  justify-content: center;
+}
+
+.kilter-legend-item {
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #cdc9b8;
+  padding-left: 1.1rem;
+  position: relative;
+}
+
+.kilter-legend-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: currentColor;
+}
+
+.kilter-legend-item--purple {
+  color: #7c3aed;
+}
+
+.kilter-legend-item--green {
+  color: #22c55e;
+}
+
+.kilter-legend-item--blue {
+  color: #3b82f6;
+}
+
+.kilter-legend-item--yellow {
+  color: #facc15;
+}
+
+.kilter-climb-view-modal .modal-body {
+  padding-top: 0.75rem;
+}
+
 @media (max-width: 640px) {
 
   .kilter-board-editor,

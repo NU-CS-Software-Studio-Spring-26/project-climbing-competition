@@ -38,7 +38,7 @@
 
     <div class="d-flex flex-wrap gap-2 mt-2">
       <button type="button" class="btn btn-sm btn-board-primary" data-action="kilter-board#openModal">Create Climb Visual</button>
-      <button type="button" class="btn btn-sm btn-outline-light" data-action="kilter-board#clearBoard">Clear</button>
+      <button type="button" class="btn btn-sm btn-outline-light" data-action="kilter-board#clearAll">Clear All</button>
     </div>
 
     <%= form.hidden_field :hold_assignments, value: (form.object.hold_assignments || {}).to_json, data: { kilter_board_target: "input" } %>
@@ -64,7 +64,8 @@
               <div class="kilter-board-image-wrap" data-kilter-board-target="board"></div>
             </div>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer d-flex flex-wrap gap-2 justify-content-between">
+            <button type="button" class="btn btn-outline-light" data-action="kilter-board#clearAll">Clear All</button>
             <button type="button" class="btn btn-board-secondary" data-bs-dismiss="modal">Done</button>
           </div>
         </div>

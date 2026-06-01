@@ -72,7 +72,8 @@
   </section>
 
   <% if @competition.climbs.any? %>
-    <section class="competition-section mb-4">
+    <% climbs_with_visuals = @competition.climbs.select(&:visual?) %>
+    <section class="competition-section mb-4"<% if climbs_with_visuals.any? %> data-controller="climb-visual-modal"<% end %>>
       <h2 class="competition-section-title text-center mb-4">Climbs</h2>
       <div class="climb-cards-grid <%= 'climb-cards-grid--two' if @competition.climbs.size == 2 %>">
         <% @competition.climbs.each do |climb| %>
@@ -88,6 +89,16 @@
             </span>
             <div class="climb-card-actions">
               <a href="<%= climb.url %>" target="_blank" rel="noopener noreferrer" class="btn-climb-action">OPEN ON KILTER</a>
+              <% if climb.visual? %>
+                <%= tag.button "VIEW CLIMB",
+                      type: "button",
+                      class: "btn-climb-action btn-climb-action-secondary",
+                      data: {
+                        action: "climb-visual-modal#open",
+                        climb_visual_modal_climb_name_param: climb.name,
+                        climb_visual_modal_climb_assignments_param: climb.hold_assignments
+                      } %>
+              <% end %>
               <% if authenticated? && current_user.competitions.include?(@competition) %>
                 <%= link_to(attempt.present? ? "edit attempt" : "LOG ATTEMPT", competition_climb_path(@competition, climb), class: "btn-climb-action #{attempt.present? ? 'btn-climb-action-secondary' : 'btn-climb-action-primary'}") %>
               <% end %>
@@ -95,6 +106,10 @@
           </div>
         <% end %>
       </div>
+
+      <% if climbs_with_visuals.any? %>
+        <%= render "shared/climb_visual_view_modal" %>
+      <% end %>
     </section>
   <% end %>
 

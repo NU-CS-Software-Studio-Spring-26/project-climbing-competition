@@ -16,6 +16,7 @@ export default class extends Controller {
   static targets = ["board", "input", "colorButton", "modal", "count"]
   static values = {
     editable: { type: Boolean, default: true },
+    viewer: { type: Boolean, default: false },
     assignments: { type: Object, default: {} },
     defaultColor: { type: String, default: "purple" }
   }
@@ -25,6 +26,7 @@ export default class extends Controller {
     this.holdElements = new Map()
     this.holds = []
     this.modalInstance = null
+    this.pendingAssignments = null
     this.state = this.initialState()
     this.onHoldPointerDown = this.onHoldPointerDown.bind(this)
 
@@ -55,13 +57,47 @@ export default class extends Controller {
   }
 
   clearBoard(event) {
-    event.preventDefault()
+    if (event) event.preventDefault()
     if (!this.editableValue) return
 
     this.state = {}
-    this.refreshAllHolds()
+    if (this.viewerValue) {
+      this.renderHolds()
+    } else {
+      this.refreshAllHolds()
+    }
     this.syncInput()
     this.updateSelectionCount()
+  }
+
+  clearAll(event) {
+    this.clearBoard(event)
+  }
+
+  loadAssignments(assignments) {
+    this.state = this.normalizeAssignments(assignments)
+
+    if (!this.holds.length || !this.overlayElement) {
+      this.pendingAssignments = assignments
+      return
+    }
+
+    this.pendingAssignments = null
+    this.pruneInvalidState()
+    this.renderHolds()
+    this.syncInput()
+    this.updateSelectionCount()
+  }
+
+  normalizeAssignments(assignments) {
+    const state = {}
+    Object.entries(assignments || {}).forEach(([holdId, color]) => {
+      const normalizedColor = String(color).toLowerCase()
+      if (Object.prototype.hasOwnProperty.call(COLOR_MAP, normalizedColor)) {
+        state[String(holdId)] = normalizedColor
+      }
+    })
+    return state
   }
 
   onHoldPointerDown(event) {
@@ -88,14 +124,7 @@ export default class extends Controller {
   }
 
   initialState() {
-    const state = {}
-    const fromValue = this.assignmentsValue || {}
-    Object.entries(fromValue).forEach(([holdId, color]) => {
-      const normalizedColor = String(color).toLowerCase()
-      if (Object.prototype.hasOwnProperty.call(COLOR_MAP, normalizedColor)) {
-        state[String(holdId)] = normalizedColor
-      }
-    })
+    const state = this.normalizeAssignments(this.assignmentsValue)
 
     if (!this.hasInputTarget) return state
 
@@ -150,7 +179,9 @@ export default class extends Controller {
 
     const overlay = document.createElementNS(SVG_NS, "g")
     overlay.setAttribute("class", "kilter-board-overlay")
-    overlay.addEventListener("pointerdown", this.onHoldPointerDown)
+    if (this.editableValue) {
+      overlay.addEventListener("pointerdown", this.onHoldPointerDown)
+    }
     svg.appendChild(overlay)
 
     this.boardTarget.innerHTML = ""
@@ -165,7 +196,11 @@ export default class extends Controller {
 
     const inModal = this.inModalEditor()
 
-    this.holds.forEach(({ id, cx, cy, r }) => {
+    const holdsToShow = this.viewerValue
+      ? this.holds.filter((hold) => this.state[hold.id])
+      : this.holds
+
+    holdsToShow.forEach(({ id, cx, cy, r }) => {
       const radius = inModal ? Math.max(r * 1.25, 14) : Math.max(r, 10)
       const hold = document.createElementNS(SVG_NS, "circle")
       hold.setAttribute("cx", String(cx))
@@ -232,6 +267,10 @@ export default class extends Controller {
       this.renderHolds()
       this.syncInput()
       this.updateSelectionCount()
+
+      if (this.pendingAssignments) {
+        this.loadAssignments(this.pendingAssignments)
+      }
     } catch (_error) {
       this.holds = []
       this.buildBoardSvg()

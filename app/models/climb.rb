@@ -18,6 +18,10 @@ class Climb < ApplicationRecord
   before_validation :sanitize_fields
   before_validation :sanitize_hold_assignments
 
+  def visual?
+    hold_assignments.is_a?(Hash) && hold_assignments.any?
+  end
+
   private
 
   def sanitize_fields
