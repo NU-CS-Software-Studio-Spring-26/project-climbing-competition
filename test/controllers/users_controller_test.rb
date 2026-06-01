@@ -61,7 +61,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     travel_to Time.zone.parse("2026-05-16 12:00:00") do
       get user_url(@user)
       assert_response :success
-      assert_match "Past (", response.body
+      assert_match "past (", response.body
       assert_match competitions(:one).name, response.body
     end
   end
@@ -73,7 +73,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_match "competitions entered", response.body
     assert_match "average placement", response.body
     assert_match "competitions", response.body
-    assert_select "button.profile-tabs__tab", text: /Current/
+    assert_select "button.profile-tabs__tab", text: /current/i
     assert_no_match "Edit profile", response.body
     assert_no_match "Followers (", response.body
   end

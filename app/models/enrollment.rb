@@ -15,6 +15,7 @@ class Enrollment < ApplicationRecord
   end
 
   def competition_must_be_leavable
+    return if destroyed_by_association
     return if competition.blank? || competition.leavable?
 
     errors.add(:base, "This competition has ended. You can no longer leave it.")
