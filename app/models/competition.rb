@@ -70,6 +70,7 @@ class Competition < ApplicationRecord
   validate :minimum_climbs
   validate :climbs_have_grades
   validate :grade_range_is_valid
+  validate :ends_at_after_starts_at
 
   def points_for(user)
     return 0 if user.nil?
@@ -116,6 +117,13 @@ class Competition < ApplicationRecord
   def grade_range_is_valid
     return unless v_grade_min && v_grade_max
     errors.add(:v_grade_max, "must be >= min grade") if v_grade_max < v_grade_min
+  end
+
+  def ends_at_after_starts_at
+    return if starts_at.blank? || ends_at.blank?
+    return if ends_at > starts_at
+
+    errors.add(:ends_at, "must be after the start date and time")
   end
 
   def derive_level_and_grades_from_climbs

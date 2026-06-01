@@ -13,5 +13,22 @@ module ActiveSupport
     fixtures :all
 
     # Add more helper methods to be used by all tests here...
+    def mock_omniauth(provider, **attributes)
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[provider.to_sym] = OmniAuth::AuthHash.new(
+        provider: provider.to_s,
+        uid: attributes[:uid],
+        info: {
+          email: attributes[:email],
+          name: attributes[:name],
+          nickname: attributes[:nickname]
+        }.compact
+      )
+    end
+
+    teardown do
+      OmniAuth.config.mock_auth.clear
+      OmniAuth.config.test_mode = false
+    end
   end
 end
