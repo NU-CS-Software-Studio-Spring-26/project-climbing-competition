@@ -1,7 +1,7 @@
 <section class="profile-panel profile-collapsible-panel profile-competitions-panel" data-controller="profile-tabs">
   <details class="profile-collapsible-dropdown">
     <summary class="profile-collapsible-dropdown__summary">
-      <span class="profile-collapsible-dropdown__title">Competitions</span>
+      <span class="profile-collapsible-dropdown__title">competitions</span>
       <span class="profile-collapsible-dropdown__counts"><%= enrolled_current.size %> current · <%= enrolled_past.size %> past · <%= created_competitions.size %> created</span>
     </summary>
 
@@ -16,7 +16,7 @@
                 data-profile-tabs-target="tab"
                 data-profile-tabs-tab-param="current"
                 data-action="profile-tabs#show">
-          Current (<%= enrolled_current.size %>)
+          current (<%= enrolled_current.size %>)
         </button>
         <button type="button"
                 class="profile-tabs__tab"
@@ -27,7 +27,7 @@
                 data-profile-tabs-target="tab"
                 data-profile-tabs-tab-param="past"
                 data-action="profile-tabs#show">
-          Past (<%= enrolled_past.size %>)
+          past (<%= enrolled_past.size %>)
         </button>
         <button type="button"
                 class="profile-tabs__tab"
@@ -38,7 +38,7 @@
                 data-profile-tabs-target="tab"
                 data-profile-tabs-tab-param="created"
                 data-action="profile-tabs#show">
-          Created (<%= created_competitions.size %>)
+          created (<%= created_competitions.size %>)
         </button>
       </div>
 

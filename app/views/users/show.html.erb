@@ -4,12 +4,11 @@
   <section class="profile-panel profile-panel--hero">
     <div class="profile-hero-layout">
       <div class="profile-hero-main">
-        <p class="profile-eyebrow mb-2">profile</p>
         <h1 class="profile-hero-title"><%= @user.name %></h1>
         <p class="profile-username mb-3"><%= "@#{@user.username}" %></p>
 
         <div class="profile-meta">
-          <p class="profile-meta-item mb-0"><span class="profile-meta-label">Bio</span> <%= @user.bio.presence || "No bio added yet." %></p>
+          <p class="profile-meta-item mb-0"><span class="profile-meta-label">bio</span> <%= @user.bio.presence || "No bio added yet." %></p>
         </div>
 
         <div class="profile-actions">
@@ -28,12 +27,12 @@
 
       <aside class="profile-hero-aside" aria-label="Profile details">
         <div class="profile-aside-item">
-          <span class="profile-aside-label">Member since</span>
+          <span class="profile-aside-label">member since</span>
           <span class="profile-aside-value"><%= @user.created_at.strftime("%B %Y") %></span>
         </div>
         <% if @profile_owner %>
           <div class="profile-aside-item">
-            <span class="profile-aside-label">Email</span>
+            <span class="profile-aside-label">email</span>
             <span class="profile-aside-value profile-aside-value--email"><%= @user.email_address %></span>
           </div>
         <% end %>
@@ -42,26 +41,26 @@
   </section>
 
   <section class="profile-panel profile-stats-panel" aria-label="Competition statistics">
-    <h2 class="profile-section-title">Stats</h2>
+    <h2 class="profile-section-title">stats</h2>
     <div class="profile-stats-grid">
       <div class="profile-stat">
         <p class="profile-stat-value mb-0"><%= @participated_count %></p>
-        <p class="profile-stat-label mb-0">Competitions entered</p>
+        <p class="profile-stat-label mb-0">competitions entered</p>
       </div>
       <div class="profile-stat">
         <p class="profile-stat-value mb-0"><%= format_average_placement(@average_placement) %></p>
-        <p class="profile-stat-label mb-0">Average placement</p>
-        <p class="profile-stat-hint mb-0">Past events only</p>
+        <p class="profile-stat-label mb-0">average placement</p>
+        <p class="profile-stat-hint mb-0">past events only</p>
       </div>
       <div class="profile-stat">
         <p class="profile-stat-value mb-0"><%= @created_count %></p>
-        <p class="profile-stat-label mb-0">Competitions created</p>
+        <p class="profile-stat-label mb-0">competitions created</p>
       </div>
     </div>
   </section>
 
   <% if @profile_owner %>
-    <%= render "users/profile_connections",
+    <%= render "users/profile_friends",
           following_users: @following_users,
           follower_users: @follower_users,
           following_count: @following_count,

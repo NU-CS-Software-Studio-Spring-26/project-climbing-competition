@@ -37,6 +37,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match @user.username, response.body
     assert_no_match @user.email_address, response.body
+    assert_select ".profile-eyebrow", count: 0
   end
 
   test "should show another user profile when authenticated" do
@@ -69,9 +70,9 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     get user_url(@other_user)
 
     assert_response :success
-    assert_match "Competitions entered", response.body
-    assert_match "Average placement", response.body
-    assert_match "Competitions", response.body
+    assert_match "competitions entered", response.body
+    assert_match "average placement", response.body
+    assert_match "competitions", response.body
     assert_select "button.profile-tabs__tab", text: /Current/
     assert_no_match "Edit profile", response.body
     assert_no_match "Followers (", response.body
@@ -83,12 +84,13 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     get user_url(@user)
 
     assert_response :success
-    assert_match "Connections", response.body
-    assert_select "button.profile-tabs__tab", text: "Following (1)"
+    assert_match "friends", response.body
+    assert_no_match "view friend activity", response.body
+    assert_select "button.profile-tabs__tab", text: "following (1)"
     assert_match @other_user.name, response.body
-    assert_select "button.profile-tabs__tab", text: "Followers (0)"
-    assert_select ".profile-hero-aside .profile-aside-label", text: "Member since"
-    assert_select ".profile-hero-aside .profile-aside-label", text: "Email"
+    assert_select "button.profile-tabs__tab", text: "followers (0)"
+    assert_select ".profile-hero-aside .profile-aside-label", text: "member since"
+    assert_select ".profile-hero-aside .profile-aside-label", text: "email"
     assert_select ".profile-hero-aside .profile-aside-value--email", text: @user.email_address
   end
 

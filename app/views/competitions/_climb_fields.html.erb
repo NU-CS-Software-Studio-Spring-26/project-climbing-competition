@@ -30,7 +30,8 @@
     <span class="char-counter" data-char-counter-target="count"></span>
   </div>
 
-  <div class="kilter-board-field" data-controller="kilter-board" data-kilter-board-editable-value="true" data-kilter-board-default-color-value="purple">
+  <% kilter_field_id = "kilter-board-field-#{form.index}" %>
+  <div class="kilter-board-field" id="<%= kilter_field_id %>" data-controller="kilter-board" data-kilter-board-editable-value="true" data-kilter-board-default-color-value="purple">
     <div class="kilter-board-field-header">
       <h6 class="kilter-board-field-title mb-0">
         Kilter Board Visual
@@ -47,12 +48,12 @@
     <%= form.hidden_field :hold_assignments, value: (form.object.hold_assignments || {}).to_json, data: { kilter_board_target: "input" } %>
     <p class="kilter-board-field-hint mb-0">Open the visual editor, select a color, then click holds to draw your route.</p>
 
-    <div class="modal fade kilter-visual-modal" tabindex="-1" aria-hidden="true" data-kilter-board-target="modal">
+    <div class="modal fade kilter-visual-modal" tabindex="-1" aria-hidden="true" data-kilter-board-target="modal" data-kilter-board-owner="<%= kilter_field_id %>">
       <div class="modal-dialog modal-dialog-centered kilter-visual-modal-dialog">
         <div class="modal-content kilter-modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Create Climb Visual</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="kilter-board-palette" role="group" aria-label="Hold color">

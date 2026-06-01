@@ -18,9 +18,11 @@ export default class extends Controller {
 
     board.loadAssignments(assignments)
 
-    if (!window.bootstrap) return
-    this.modalInstance ||= window.bootstrap.Modal.getOrCreateInstance(this.modalTarget)
-    this.modalInstance.show()
+    const modalEl = this.hasModalTarget ? this.modalTarget : null
+    const Modal = window.bootstrap?.Modal
+    if (!modalEl || !Modal) return
+
+    Modal.getOrCreateInstance(modalEl).show()
   }
 
   get kilterBoardController() {

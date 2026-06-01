@@ -29,11 +29,20 @@ export default class extends Controller {
     this.pendingAssignments = null
     this.state = this.initialState()
     this.onHoldPointerDown = this.onHoldPointerDown.bind(this)
+    this.beforeCache = this.restoreModalPlacement.bind(this)
+
+    document.addEventListener("turbo:before-cache", this.beforeCache)
+    this.reconcileModalPlacement()
 
     this.syncPaletteUI()
     this.syncInput()
     this.updateSelectionCount()
     this.loadHoldMap()
+  }
+
+  disconnect() {
+    document.removeEventListener("turbo:before-cache", this.beforeCache)
+    this.restoreModalPlacement()
   }
 
   selectColor(event) {
@@ -45,15 +54,49 @@ export default class extends Controller {
 
   openModal(event) {
     event.preventDefault()
-    if (!this.hasModalTarget || !window.bootstrap) return
 
-    this.modalInstance ||= new window.bootstrap.Modal(this.modalTarget)
-    this.modalInstance.show()
+    const modalEl = this.modalElement()
+    const Modal = window.bootstrap?.Modal
+    if (!modalEl || !Modal) return
+
+    Modal.getOrCreateInstance(modalEl).show()
+  }
+
+  modalElement() {
+    this.reconcileModalPlacement()
+    return this.element.querySelector("[data-kilter-board-target='modal']")
+  }
+
+  reconcileModalPlacement() {
+    const modalInField = this.element.querySelector("[data-kilter-board-target='modal']")
+    if (modalInField) return
+
+    const ownerId = this.element.id
+    if (!ownerId) return
+
+    const orphanedModal = document.querySelector(`[data-kilter-board-owner="${ownerId}"]`)
+    if (orphanedModal) {
+      this.element.appendChild(orphanedModal)
+    }
+  }
+
+  restoreModalPlacement() {
+    const modalEl = this.element.querySelector("[data-kilter-board-target='modal']")
+    if (!modalEl) return
+
+    if (modalEl.parentElement === document.body) {
+      window.bootstrap?.Modal.getInstance(modalEl)?.hide()
+      this.element.appendChild(modalEl)
+    }
   }
 
   closeModal(event) {
     if (event) event.preventDefault()
-    this.modalInstance?.hide()
+
+    const modalEl = this.modalElement()
+    if (!modalEl) return
+
+    window.bootstrap?.Modal.getInstance(modalEl)?.hide()
   }
 
   clearBoard(event) {
@@ -300,7 +343,8 @@ export default class extends Controller {
   }
 
   inModalEditor() {
-    return this.hasModalTarget && this.modalTarget.contains(this.boardTarget)
+    const modalEl = this.element.querySelector("[data-kilter-board-target='modal']")
+    return Boolean(modalEl?.contains(this.boardTarget))
   }
 
   pruneInvalidState() {

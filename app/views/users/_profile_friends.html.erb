@@ -1,12 +1,12 @@
-<section class="profile-panel profile-collapsible-panel profile-connections-panel" data-controller="profile-tabs">
+<section class="profile-panel profile-collapsible-panel profile-friends-panel" data-controller="profile-tabs">
   <details class="profile-collapsible-dropdown">
     <summary class="profile-collapsible-dropdown__summary">
-      <span class="profile-collapsible-dropdown__title">Connections</span>
+      <span class="profile-collapsible-dropdown__title">friends</span>
       <span class="profile-collapsible-dropdown__counts"><%= following_count %> following · <%= followers_count %> followers</span>
     </summary>
 
     <div class="profile-collapsible-dropdown__body">
-      <div class="profile-tabs" role="tablist" aria-label="Connections">
+      <div class="profile-tabs" role="tablist" aria-label="Friends">
         <button type="button"
                 class="profile-tabs__tab is-active"
                 role="tab"
@@ -16,7 +16,7 @@
                 data-profile-tabs-target="tab"
                 data-profile-tabs-tab-param="following"
                 data-action="profile-tabs#show">
-          Following (<%= following_count %>)
+          following (<%= following_count %>)
         </button>
         <button type="button"
                 class="profile-tabs__tab"
@@ -27,7 +27,7 @@
                 data-profile-tabs-target="tab"
                 data-profile-tabs-tab-param="followers"
                 data-action="profile-tabs#show">
-          Followers (<%= followers_count %>)
+          followers (<%= followers_count %>)
         </button>
       </div>
 
