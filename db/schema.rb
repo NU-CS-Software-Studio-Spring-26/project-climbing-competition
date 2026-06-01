@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_27_000003) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_01_000001) do
   create_table "attempts", force: :cascade do |t|
     t.integer "attempt_count", null: false
     t.integer "climb_id", null: false
@@ -28,6 +28,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_000003) do
     t.integer "competition_id", null: false
     t.datetime "created_at", null: false
     t.string "grading"
+    t.json "hold_assignments", default: {}, null: false
     t.string "name"
     t.datetime "updated_at", null: false
     t.string "url"

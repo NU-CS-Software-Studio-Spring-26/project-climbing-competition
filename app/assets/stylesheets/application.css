@@ -21,7 +21,7 @@ body.app-shell {
   line-height: 1.4;
 }
 
-body.app-shell > main {
+body.app-shell>main {
   flex: 1 0 auto;
 }
 
@@ -1168,7 +1168,7 @@ body.app-shell.home-shell {
   gap: 0.55rem;
 }
 
-.filter-menu-section + .filter-menu-section {
+.filter-menu-section+.filter-menu-section {
   margin-top: 0.85rem;
   padding-top: 0.85rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -2024,6 +2024,190 @@ select:focus {
   color: #fff;
 }
 
+.kilter-board-editor,
+.kilter-board-preview {
+  background: #202022;
+  border: 1px solid #36363a;
+  border-radius: 10px;
+  padding: 0.9rem;
+}
+
+.kilter-board-editor-title {
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #d8d6ce;
+}
+
+.kilter-selection-count {
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #cdc9b8;
+}
+
+.kilter-board-palette {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.kilter-palette-swatch {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: #666;
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.kilter-palette-swatch[data-color="purple"] {
+  background: #7c3aed;
+}
+
+.kilter-palette-swatch[data-color="green"] {
+  background: #22c55e;
+}
+
+.kilter-palette-swatch[data-color="blue"] {
+  background: #3b82f6;
+}
+
+.kilter-palette-swatch[data-color="yellow"] {
+  background: #facc15;
+}
+
+.kilter-palette-swatch--none {
+  width: auto;
+  border-radius: 999px;
+  padding: 0.28rem 0.62rem;
+  height: auto;
+  background: #2b2b2f;
+  color: #f5f2e6;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.kilter-palette-swatch.is-active {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.kilter-modal-content {
+  background: #171719;
+  border: 1px solid #34343a;
+}
+
+.kilter-visual-modal .modal-dialog {
+  max-width: min(98vw, 1650px);
+  width: min(98vw, 1650px);
+  margin: 1rem auto;
+}
+
+.kilter-modal-content .modal-header,
+.kilter-modal-content .modal-footer {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.kilter-modal-content .modal-body {
+  padding: 0.75rem;
+}
+
+.kilter-modal-content .modal-title {
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.kilter-board-image-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #eceae2;
+  overflow: hidden;
+}
+
+.kilter-board-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.kilter-board-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.kilter-hold-target {
+  position: absolute;
+  width: var(--hit-size, 20px);
+  height: var(--hit-size, 20px);
+  border: 0;
+  background: transparent;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0;
+}
+
+.kilter-hold-target::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: var(--ring-size, 14px);
+  height: var(--ring-size, 14px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 3px solid transparent;
+  pointer-events: none;
+}
+
+.kilter-hold-target[data-state="purple"]::after,
+.kilter-hold-target[data-state="green"]::after,
+.kilter-hold-target[data-state="blue"]::after,
+.kilter-hold-target[data-state="yellow"]::after {
+  border-color: var(--hold-color);
+}
+
+.kilter-board-editor .kilter-hold-target:hover::after {
+  border-color: rgba(59, 130, 246, 0.65);
+}
+
+.kilter-board-preview .kilter-hold-target {
+  pointer-events: none;
+}
+
+.kilter-visual-modal .kilter-board-image {
+  max-height: min(84vh, 1300px);
+  object-fit: contain;
+}
+
+@media (max-width: 640px) {
+
+  .kilter-board-editor,
+  .kilter-board-preview {
+    padding: 0.75rem;
+  }
+
+  .kilter-visual-modal .modal-dialog {
+    margin: 0.45rem;
+    width: auto;
+    max-width: none;
+  }
+
+  .kilter-visual-modal .kilter-board-image {
+    max-height: 72vh;
+  }
+}
+
 .about-github-link {
   display: inline-block;
   margin-top: 0.5rem;
@@ -2239,11 +2423,11 @@ body.app-shell.home-shell .app-footer-tagline {
   padding-left: 1.35rem;
 }
 
-.legal-list > li {
+.legal-list>li {
   margin-bottom: 1.35rem;
 }
 
-.legal-list > li:last-child {
+.legal-list>li:last-child {
   margin-bottom: 0;
 }
 
@@ -2266,7 +2450,7 @@ body.app-shell.home-shell .app-footer-tagline {
   padding-left: 1.2rem;
 }
 
-.legal-list ul li + li {
+.legal-list ul li+li {
   margin-top: 0.35rem;
 }
 

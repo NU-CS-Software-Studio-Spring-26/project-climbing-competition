@@ -42,7 +42,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
           flash_points: 30,
           attempt_deduction: 5,
           climbs_attributes: {
-            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1", grading: "V4" },
+            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1", grading: "V4", hold_assignments: { "r1c1" => "purple", "r2c1" => "green" }.to_json },
             "1" => { name: "Climb 2", url: "https://kilterboard.com/climb/2", grading: "V6" }
           }
         }
@@ -55,6 +55,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 4, Competition.last.v_grade_min
     assert_equal 6, Competition.last.v_grade_max
     assert_equal 2, Competition.last.climbs.count
+    assert_equal({ "r1c1" => "purple", "r2c1" => "green" }, Competition.last.climbs.first.hold_assignments)
   end
 
   test "should redirect create when unauthenticated" do

@@ -149,7 +149,7 @@ class CompetitionsController < ApplicationController
       params.require(:competition).permit(
         :name, :date, :starts_at, :ends_at, :description,
         :send_points, :flash_points, :attempt_deduction,
-        climbs_attributes: [ :id, :name, :url, :grading, :_destroy ]
+        climbs_attributes: [ :id, :name, :url, :grading, :hold_assignments, :_destroy ]
       )
     end
     def assign_combined_datetimes(competition)

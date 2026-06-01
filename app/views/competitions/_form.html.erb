@@ -136,6 +136,13 @@
         <%= render "climb_fields", form: climb_form %>
       <% end %>
     </div>
+
+    <template id="climb-template">
+      <%= form.fields_for :climbs, Climb.new, child_index: "NEW_RECORD" do |climb_form| %>
+        <%= render "climb_fields", form: climb_form %>
+      <% end %>
+    </template>
+
     <button type="button" class="btn btn-sm btn-board-secondary mt-3" id="add-climb-btn">+ Add Climb</button>
   </div>
 
@@ -204,6 +211,7 @@ function initializeCompetitionForm() {
 
   const addClimbBtn = formEl.querySelector("#add-climb-btn");
   const climbsContainer = formEl.querySelector("#climbs-container");
+  const climbTemplate = formEl.querySelector("#climb-template");
   const submitBtn = formEl.querySelector("#submit-btn");
 
   function validateClimbCount() {
@@ -243,48 +251,20 @@ function initializeCompetitionForm() {
   if (addClimbBtn) {
     addClimbBtn.addEventListener("click", function(e) {
       e.preventDefault();
-      
+
+      if (!climbTemplate || !climbsContainer) return;
+
       const timestamp = Date.now();
-      
-      const climbHTML = `
-        <div class="climb-field mb-3 p-3 border rounded" data-climb-field>
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <h5 class="mb-0">Climb</h5>
-            <button type="button" class="btn btn-sm btn-outline-danger delete-climb-btn" data-climb-id="">
-              <span aria-hidden="true">×</span> Remove
-            </button>
-          </div>
 
-          <div class="mb-2">
-            <label class="form-label" for="climb_name_${timestamp}">Climb Name</label>
-            <input class="form-control" type="text" name="competition[climbs_attributes][${timestamp}][name]" id="climb_name_${timestamp}" placeholder="e.g., The Crimper">
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label" for="climb_grading_${timestamp}">V-Grade</label>
-            <select class="form-select" name="competition[climbs_attributes][${timestamp}][grading]" id="climb_grading_${timestamp}" required>
-              <option value="">Select grade</option>
-              ${[...Array(18).keys()].map(n => `<option value="V${n}">V${n}</option>`).join("")}
-            </select>
-          </div>
-
-          <div class="mb-0" data-controller="char-counter" data-char-counter-max-value="<%= Climb::URL_MAX_LENGTH %>">
-            <label class="form-label" for="climb_url_${timestamp}">Climb Link (URL)</label>
-            <input class="form-control" type="text" name="competition[climbs_attributes][${timestamp}][url]" id="climb_url_${timestamp}" placeholder="https://..." maxlength="<%= Climb::URL_MAX_LENGTH %>" data-char-counter-target="input" data-action="input->char-counter#update">
-            <span class="char-counter" data-char-counter-target="count"></span>
-          </div>
-
-          <input type="hidden" name="competition[climbs_attributes][${timestamp}][_destroy]" value="false">
-        </div>
-      `;
-      
+      const climbHTML = climbTemplate.innerHTML.replace(/NEW_RECORD/g, String(timestamp));
       climbsContainer.insertAdjacentHTML("beforeend", climbHTML);
-      
-      const newDeleteBtn = climbsContainer.querySelector(`input[name="competition[climbs_attributes][${timestamp}][_destroy]"]`).closest('[data-climb-field]').querySelector('.delete-climb-btn');
+
+      const newDestroyInput = climbsContainer.querySelector(`input[name="competition[climbs_attributes][${timestamp}][_destroy]"]`);
+      const newDeleteBtn = newDestroyInput?.closest('[data-climb-field]')?.querySelector('.delete-climb-btn');
       if (newDeleteBtn) {
         attachDeleteHandler(newDeleteBtn);
       }
-      
+
       validateClimbCount();
     });
   }

@@ -17,6 +17,16 @@
   <p class="detail-item mb-0"><span>Open on Kilter:</span> <a href="<%= @climb.url %>" target="_blank" rel="noopener noreferrer"><%= @climb.url %></a></p>
 </div>
 
+<div class="detail-panel p-4 mb-3">
+  <h2 class="detail-heading mb-3">Climb Visual</h2>
+  <div class="kilter-board-preview" data-controller="kilter-board" data-kilter-board-editable-value="false" data-kilter-board-assignments-value="<%= @climb.hold_assignments.to_json %>">
+    <div class="kilter-board-image-wrap">
+      <img src="/kilter-board.svg" alt="Kilter board" class="kilter-board-image" data-kilter-board-target="image">
+      <div class="kilter-board-overlay" data-kilter-board-target="overlay"></div>
+    </div>
+  </div>
+</div>
+
 <% if authenticated? && current_user.competitions.include?(@competition) %>
   <div class="detail-panel p-4 mb-3">
     <h2 class="detail-heading mb-3">Log your attempt</h2>

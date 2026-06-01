@@ -30,5 +30,48 @@
     <span class="char-counter" data-char-counter-target="count"></span>
   </div>
 
+  <div class="kilter-board-editor mt-3" data-controller="kilter-board" data-kilter-board-editable-value="true" data-kilter-board-default-color-value="purple">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <strong class="kilter-board-editor-title">Kilter Board Visual</strong>
+      <span class="kilter-selection-count" data-kilter-board-target="count">0 holds selected</span>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mt-2">
+      <button type="button" class="btn btn-sm btn-board-primary" data-action="kilter-board#openModal">Create Climb Visual</button>
+      <button type="button" class="btn btn-sm btn-outline-light" data-action="kilter-board#clearBoard">Clear</button>
+    </div>
+
+    <%= form.hidden_field :hold_assignments, value: (form.object.hold_assignments || {}).to_json, data: { kilter_board_target: "input" } %>
+    <p class="form-text mt-2 mb-0">Open the visual editor, select a color, then click holds to draw your route.</p>
+
+    <div class="modal fade kilter-visual-modal" tabindex="-1" aria-hidden="true" data-kilter-board-target="modal">
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content kilter-modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create Climb Visual</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="kilter-board-palette" role="group" aria-label="Hold color">
+              <button type="button" class="kilter-palette-swatch" data-color="purple" data-kilter-board-target="colorButton" data-action="kilter-board#selectColor" aria-label="Purple hold"></button>
+              <button type="button" class="kilter-palette-swatch" data-color="green" data-kilter-board-target="colorButton" data-action="kilter-board#selectColor" aria-label="Green hold"></button>
+              <button type="button" class="kilter-palette-swatch" data-color="blue" data-kilter-board-target="colorButton" data-action="kilter-board#selectColor" aria-label="Blue hold"></button>
+              <button type="button" class="kilter-palette-swatch" data-color="yellow" data-kilter-board-target="colorButton" data-action="kilter-board#selectColor" aria-label="Yellow hold"></button>
+              <button type="button" class="kilter-palette-swatch kilter-palette-swatch--none" data-color="none" data-kilter-board-target="colorButton" data-action="kilter-board#selectColor" aria-label="Erase selected hold">Erase</button>
+            </div>
+
+            <div class="kilter-board-image-wrap">
+              <img src="/kilter-board.svg" alt="Kilter board" class="kilter-board-image" data-kilter-board-target="image">
+              <div class="kilter-board-overlay" data-kilter-board-target="overlay"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-board-secondary" data-bs-dismiss="modal">Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <%= form.hidden_field :_destroy, value: false %>
 </div>
