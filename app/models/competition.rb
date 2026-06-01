@@ -19,12 +19,41 @@ class Competition < ApplicationRecord
   scope :upcoming, -> { where("starts_at > ?", Time.current) }
   scope :active, -> { where("starts_at <= ? AND ends_at > ?", Time.current, Time.current) }
   scope :past, -> { where("ends_at <= ?", Time.current) }
+  scope :within_grade_range, ->(min_grade, max_grade) {
+    grade_int_sql = "CAST(REPLACE(climbs.grading, 'V', '') AS INTEGER)"
+    climb_bounds = joins(:climbs)
+      .where.not(climbs: { grading: [ nil, "" ] })
+      .group(:id)
+      .having("MIN(#{grade_int_sql}) >= ? AND MAX(#{grade_int_sql}) <= ?", min_grade, max_grade)
+      .select(:id)
+
+    where(id: climb_bounds)
+  }
+
+  scope :ordered_by_status, -> {
+    now = Time.current
+    order(
+      Arel.sql(sanitize_sql_array([
+        "CASE WHEN (starts_at IS NULL OR starts_at > ?) THEN 1 WHEN (ends_at IS NULL OR ends_at <= ?) THEN 2 ELSE 0 END",
+        now, now
+      ])),
+      starts_at: :asc
+    )
+  }
 
   def status
     now = Time.current
     return :upcoming if starts_at.nil? || starts_at > now
     return :past    if ends_at.nil?   || ends_at <= now
     :active
+  end
+
+  def past?
+    status == :past
+  end
+
+  def joinable?
+    !past?
   end
 
   def climb_grade_integers

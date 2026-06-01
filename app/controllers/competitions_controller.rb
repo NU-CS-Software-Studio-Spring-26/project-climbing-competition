@@ -28,21 +28,20 @@ class CompetitionsController < ApplicationController
       @competitions = @competitions.past
     end
 
-    # Competitions whose grade range overlaps the selected difficulty range
+    # Competitions whose full grade span fits inside the selected range
     if @grade_filter_active
-      @competitions = @competitions.where(
-        "v_grade_min <= ? AND v_grade_max >= ?",
-        @grade_range_max,
-        @grade_range_min
-      )
+      @competitions = @competitions.within_grade_range(@grade_range_min, @grade_range_max)
     end
 
-    # Apply sorting only if sort_by is specified
-    case @sort_by
-    when "starts_at"
-      @competitions = @competitions.order(starts_at: @sort_direction.to_sym)
-    when "ends_at"
-      @competitions = @competitions.order(ends_at: @sort_direction.to_sym)
+    if @sort_by
+      case @sort_by
+      when "starts_at"
+        @competitions = @competitions.order(starts_at: @sort_direction.to_sym)
+      when "ends_at"
+        @competitions = @competitions.order(ends_at: @sort_direction.to_sym)
+      end
+    else
+      @competitions = @competitions.ordered_by_status
     end
 
     @filter_params = {

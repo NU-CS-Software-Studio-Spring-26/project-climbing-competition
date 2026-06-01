@@ -8,38 +8,48 @@
     <% end %>
   </div>
 
-  <section class="competition-hero-panel detail-panel mb-5">
-    <div class="competition-hero-inner text-center">
-      <h1 class="competition-hero-title"><%= @competition.name %></h1>
-      <p class="competition-hero-dates mb-0">
-        <%= @competition.starts_at&.strftime("%B %-d %l:%M %p") %>
-        <span class="competition-hero-separator">-</span>
-        <%= @competition.ends_at&.strftime("%B %-d %l:%M %p") %>
-      </p>
+  <header class="competition-page-header">
+    <h1 class="competition-page-title"><%= @competition.name %></h1>
+  </header>
 
-      <div class="competition-hero-meta">
-        <span><%= @competition.climb_grade_range_label || "—" %></span>
-        <span>Climbers: <%= @competition.users.count %></span>
-        <span class="competition-status-badge competition-status-badge--<%= @competition.status %>">
-          <%= @competition.status.to_s.titleize %>
-        </span>
+  <section class="competition-section competition-hero-panel detail-panel">
+    <div class="competition-hero-inner">
+      <div class="competition-hero-top">
+        <p class="competition-hero-stat mb-0">
+          <%= competition_level_label(@competition) %>
+          <span class="competition-hero-stat-sep" aria-hidden="true">|</span>
+          Climbers: <%= @competition.users.count %>
+        </p>
+
+        <p class="competition-hero-dates mb-0">
+          <%= competition_datetime_display(@competition.starts_at) %>
+          <span class="competition-hero-separator" aria-hidden="true">–</span>
+          <%= competition_datetime_display(@competition.ends_at) %>
+        </p>
+
+        <div class="competition-hero-top-end">
+          <% if authenticated? && current_user == @competition.owner && @competition.owner_id.present? %>
+            <%= button_to "Delete competition",
+                  competition_path(@competition),
+                  method: :delete,
+                  class: "btn-competition-delete",
+                  form: { data: { turbo_confirm: "Permanently delete this competition? All enrollments and attempts will be removed." } } %>
+          <% else %>
+            <p class="competition-hero-creator mb-0">creator: <%= @competition.owner&.username %></p>
+          <% end %>
+        </div>
       </div>
-
-      <p class="competition-hero-owner mb-0">creator: <%= @competition.owner&.username %></p>
 
       <% if @competition.description.present? %>
         <p class="competition-hero-description mb-0"><%= @competition.description %></p>
       <% end %>
 
       <% if authenticated? %>
-        <div class="competition-hero-action d-flex flex-wrap gap-2 justify-content-center align-items-center">
-          <% if current_user == @competition.owner && @competition.owner_id.present? %>
-            <%= button_to "Delete competition", competition_path(@competition), method: :delete, class: "btn btn-outline-danger btn-sm", form: { data: { turbo_confirm: "Permanently delete this competition? All enrollments and attempts will be removed." } } %>
-          <% end %>
+        <div class="competition-hero-action">
           <% if current_user.competitions.include?(@competition) %>
             <% enrollment = @competition.enrollments.find_by(user: current_user) %>
             <%= button_to "LEAVE", competition_enrollment_path(@competition, enrollment), method: :delete, class: "btn-leave-competition-show" %>
-          <% else %>
+          <% elsif @competition.joinable? %>
             <%= button_to "JOIN", competition_enrollments_path(@competition), method: :post, class: "btn-join-competition-show" %>
           <% end %>
         </div>
@@ -47,7 +57,7 @@
     </div>
   </section>
 
-  <section class="competition-section competition-scoring-rules mb-5">
+  <section class="competition-section competition-scoring-rules">
     <h2 class="competition-section-title text-center mb-3">Scoring Rules</h2>
     <div class="detail-panel scoring-rules-panel">
       <ul class="scoring-rules-list mb-0">
@@ -73,21 +83,22 @@
 
   <% if @competition.climbs.any? %>
     <% climbs_with_visuals = @competition.climbs.select(&:visual?) %>
-    <section class="competition-section mb-4"<% if climbs_with_visuals.any? %> data-controller="climb-visual-modal"<% end %>>
-      <h2 class="competition-section-title text-center mb-4">Climbs</h2>
-      <div class="climb-cards-grid <%= 'climb-cards-grid--two' if @competition.climbs.size == 2 %>">
+    <section class="competition-section competition-climbs-section"<% if climbs_with_visuals.any? %> data-controller="climb-visual-modal"<% end %>>
+      <h2 class="competition-section-title text-center mb-3">Climbs</h2>
+      <div class="climb-cards-grid">
         <% @competition.climbs.each do |climb| %>
           <% attempt = @user_attempts_by_climb_id[climb.id] %>
           <div class="climb-card-link">
-            <span class="climb-card-title"><%= climb.name %></span>
-            <span class="climb-card-subtitle">
+            <div class="climb-card-grade-banner">
               <% if climb.grading.present? %>
                 <span class="grade-badge <%= grade_css_class(climb.grading) %>"><%= climb.grading %></span>
               <% else %>
                 <span class="grade-badge grade--ungraded">Ungraded</span>
               <% end %>
-            </span>
-            <div class="climb-card-actions">
+            </div>
+            <div class="climb-card-body">
+              <span class="climb-card-title"><%= climb.name %></span>
+              <div class="climb-card-actions">
               <a href="<%= climb.url %>" target="_blank" rel="noopener noreferrer" class="btn-climb-action">OPEN ON KILTER</a>
               <% if climb.visual? %>
                 <%= tag.button "VIEW CLIMB",
@@ -102,6 +113,7 @@
               <% if authenticated? && current_user.competitions.include?(@competition) %>
                 <%= link_to(attempt.present? ? "edit attempt" : "LOG ATTEMPT", competition_climb_path(@competition, climb), class: "btn-climb-action #{attempt.present? ? 'btn-climb-action-secondary' : 'btn-climb-action-primary'}") %>
               <% end %>
+              </div>
             </div>
           </div>
         <% end %>
@@ -114,8 +126,10 @@
   <% end %>
 
   <% if authenticated? && current_user.competitions.include?(@competition) %>
-    <div class="competition-points-pill mx-auto mb-5">
-      YOUR TOTAL POINTS: <%= @competition.points_for(current_user) %>
+    <div class="competition-section">
+      <div class="competition-points-pill">
+        YOUR TOTAL POINTS: <%= @competition.points_for(current_user) %>
+      </div>
     </div>
   <% end %>
 

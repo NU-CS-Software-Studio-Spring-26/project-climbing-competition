@@ -2,7 +2,7 @@
 
 <% filters_active = @sort_by.present? || @selected_status.present? || @grade_filter_active %>
 
-<div class="competitions-filter-bar mb-3">
+<div class="competitions-filter-bar">
   <div class="filter-dropdown" data-controller="filter-menu">
     <button
       type="button"
@@ -80,25 +80,36 @@
               class="grade-range-slider__control"
               data-grade-range-filter-target="control"
               style="--range-min: <%= @grade_range_min / 16.0 %>; --range-max: <%= @grade_range_max / 16.0 %>;"
+              data-action="pointerdown->grade-range-filter#controlPointerDown"
             >
               <div class="grade-range-slider__rail" aria-hidden="true"></div>
               <div class="grade-range-slider__fill" aria-hidden="true"></div>
-              <%= range_field_tag :grade_min, @grade_range_min,
-                    min: 0, max: 16, step: 1,
-                    class: "grade-range-slider__input grade-range-slider__input--min",
-                    data: {
-                      grade_range_filter_target: "min",
-                      action: "pointerdown->grade-range-filter#pointerDown input->grade-range-filter#update change->grade-range-filter#apply"
-                    },
-                    aria: { label: "Minimum difficulty" } %>
-              <%= range_field_tag :grade_max, @grade_range_max,
-                    min: 0, max: 16, step: 1,
-                    class: "grade-range-slider__input grade-range-slider__input--max",
-                    data: {
-                      grade_range_filter_target: "max",
-                      action: "pointerdown->grade-range-filter#pointerDown input->grade-range-filter#update change->grade-range-filter#apply"
-                    },
-                    aria: { label: "Maximum difficulty" } %>
+              <button
+                type="button"
+                class="grade-range-slider__thumb grade-range-slider__thumb--min"
+                data-grade-range-filter-target="minThumb"
+                data-action="pointerdown->grade-range-filter#minThumbPointerDown"
+                aria-label="Minimum difficulty"
+                role="slider"
+                aria-valuemin="0"
+                aria-valuemax="16"
+                aria-valuenow="<%= @grade_range_min %>"
+                style="left: calc(var(--grade-thumb-offset) + (100% - var(--grade-thumb-size)) * <%= @grade_range_min / 16.0 %>);"
+              ></button>
+              <button
+                type="button"
+                class="grade-range-slider__thumb grade-range-slider__thumb--max"
+                data-grade-range-filter-target="maxThumb"
+                data-action="pointerdown->grade-range-filter#maxThumbPointerDown"
+                aria-label="Maximum difficulty"
+                role="slider"
+                aria-valuemin="0"
+                aria-valuemax="16"
+                aria-valuenow="<%= @grade_range_max %>"
+                style="left: calc(var(--grade-thumb-offset) + (100% - var(--grade-thumb-size)) * <%= @grade_range_max / 16.0 %>);"
+              ></button>
+              <%= hidden_field_tag :grade_min, @grade_range_min, data: { grade_range_filter_target: "min" } %>
+              <%= hidden_field_tag :grade_max, @grade_range_max, data: { grade_range_filter_target: "max" } %>
             </div>
 
             <div class="grade-range-slider__bounds" aria-hidden="true">
@@ -122,10 +133,9 @@
   <% @competitions.each do |competition| %>
     <div class="col-12 col-md-6 col-xl-4">
       <article class="competition-card competition-card--<%= competition.grade_range_tier.to_s.dasherize %> h-100 d-flex flex-column">
-        <div class="competition-top-border" aria-hidden="true"></div>
         <%= link_to competition_path(competition), class: "competition-card-link-overlay" do %>
           <div class="competition-body flex-grow-1">
-            <div class="d-flex align-items-start justify-content-between gap-2 mb-1">
+            <div class="d-flex align-items-start justify-content-between gap-2">
               <h2 class="competition-name mb-0"><%= competition.name %></h2>
               <span class="competition-status-badge competition-status-badge--<%= competition.status %>" aria-label="Status: <%= competition.status %>">
                 <%= competition.status.to_s.titleize %>
@@ -137,15 +147,15 @@
             <p class="competition-date">Ends: <%= competition.ends_at&.strftime("%b %-d, %Y") %></p>
           </div>
         <% end %>
-        
-        <% if authenticated? %>
+
+        <% if authenticated? && (current_user.competitions.include?(competition) || competition.joinable?) %>
           <div class="competition-action-buttons">
             <% if current_user.competitions.include?(competition) %>
               <% enrollment = competition.enrollments.find_by(user: current_user) %>
               <button type="button" class="btn-leave-competition" data-competition-id="<%= competition.id %>" data-enrollment-id="<%= enrollment.id %>" data-competition-name="<%= competition.name %>">
                 LEAVE
               </button>
-            <% else %>
+            <% elsif competition.joinable? %>
               <button type="button" class="btn-join-competition" data-competition-id="<%= competition.id %>" data-competition-name="<%= competition.name %>">
                 JOIN
               </button>

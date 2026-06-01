@@ -212,73 +212,145 @@ body.app-shell.home-shell {
 }
 
 .competition-show-shell {
-  max-width: 48rem;
+  max-width: 52rem;
   margin: 0 auto;
+}
+
+.competition-show-shell .competition-section {
+  margin-bottom: 3.25rem;
+}
+
+.competition-show-shell .competition-section:last-child {
+  margin-bottom: 0;
+}
+
+.competition-show-shell .competition-section-title {
+  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(243, 241, 234, 0.92);
+}
+
+.competition-show-shell .competition-hero-panel.detail-panel,
+.competition-show-shell .scoring-rules-panel,
+.competition-show-shell .climb-card-link,
+.competition-show-shell .leaderboard-panel {
+  background: var(--surface-3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.14),
+    0 8px 22px rgba(0, 0, 0, 0.22);
+}
+
+.competition-page-header {
+  margin-bottom: 1.75rem;
+  text-align: center;
+}
+
+.competition-page-title {
+  margin: 0;
+  font-size: clamp(2rem, 4.8vw, 2.85rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text);
 }
 
 .competition-hero-panel.detail-panel {
-  padding: 1.65rem 2rem 1.5rem;
-  background: var(--surface);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 1.35rem 1.65rem 1.45rem;
 }
 
 .competition-hero-inner {
-  max-width: 36rem;
+  max-width: 100%;
   margin: 0 auto;
 }
 
-.competition-hero-title {
-  margin: 0;
-  font-size: clamp(1.8rem, 3.8vw, 2.5rem);
-  font-weight: 700;
-  line-height: 1.08;
+.competition-hero-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 0.75rem 1.25rem;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: rgba(243, 241, 234, 0.88);
+}
+
+.competition-hero-stat {
+  justify-self: start;
+  text-align: left;
+}
+
+.competition-hero-stat-sep {
+  margin: 0 0.35rem;
+  color: rgba(243, 241, 234, 0.45);
 }
 
 .competition-hero-dates {
-  margin-top: 0.35rem;
-  font-size: 0.92rem;
-  color: rgba(243, 241, 234, 0.82);
+  justify-self: center;
+  text-align: center;
+  font-size: 0.84rem;
+  color: rgba(243, 241, 234, 0.9);
 }
 
 .competition-hero-separator {
-  margin: 0 0.45rem;
+  margin: 0 0.35rem;
+  color: rgba(243, 241, 234, 0.55);
 }
 
-.competition-hero-meta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 0.95rem;
-  padding: 0.15rem 0;
-  font-size: 0.84rem;
-  color: rgba(243, 241, 234, 0.86);
+.competition-hero-top-end {
+  justify-self: end;
+  text-align: right;
 }
 
-.competition-hero-meta span+span {
-  padding-left: 1rem;
-  border-left: 1px solid rgba(243, 241, 234, 0.18);
-}
-
-.competition-hero-owner {
-  margin-top: 0.9rem;
+.competition-hero-creator {
   font-size: 0.84rem;
   text-transform: lowercase;
   color: rgba(243, 241, 234, 0.72);
 }
 
+.competition-hero-top-end form {
+  margin: 0;
+  display: inline-block;
+}
+
+.btn-competition-delete {
+  padding: 0.38rem 0.72rem;
+  border-radius: 0.3rem;
+  border: 1px solid rgba(220, 128, 128, 0.5);
+  background: rgba(220, 80, 80, 0.08);
+  color: rgba(255, 190, 190, 0.95);
+  font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.btn-competition-delete:hover {
+  background: rgba(220, 80, 80, 0.16);
+  border-color: rgba(240, 150, 150, 0.65);
+  color: #ffe8e8;
+}
+
 .competition-hero-description {
-  max-width: 27rem;
-  margin: 1.15rem auto 0;
-  font-size: 0.94rem;
+  max-width: 34rem;
+  margin: 1.35rem auto 0;
+  text-align: center;
+  font-size: 0.95rem;
   font-style: italic;
+  line-height: 1.55;
   color: rgba(243, 241, 234, 0.84);
 }
 
 .competition-hero-action {
   display: flex;
   justify-content: center;
-  margin-top: 1.35rem;
+  margin-top: 1.45rem;
 }
 
 .competition-hero-action form {
@@ -287,11 +359,12 @@ body.app-shell.home-shell {
 
 .btn-join-competition-show,
 .btn-leave-competition-show {
-  min-width: 4.4rem;
-  padding: 0.46rem 1rem;
-  border-radius: 0.28rem;
+  min-width: 5.75rem;
+  padding: 0.52rem 1.35rem;
+  border-radius: 0.35rem;
   font-size: 0.78rem;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 .btn-join-competition-show {
@@ -326,6 +399,13 @@ body.app-shell.home-shell {
   margin: 0;
 }
 
+.competition-show-shell .competition-section-caption {
+  margin-bottom: 1.25rem;
+  font-style: normal;
+  letter-spacing: 0.04em;
+  color: rgba(243, 241, 234, 0.58);
+}
+
 .competition-section-caption {
   font-size: 0.8rem;
   font-style: italic;
@@ -333,11 +413,13 @@ body.app-shell.home-shell {
 }
 
 .scoring-rules-panel {
-  max-width: 28rem;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 1.15rem 1.35rem;
-  background: var(--surface);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.25rem 1.5rem;
+  min-height: 10.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .scoring-rules-list {
@@ -383,6 +465,13 @@ body.app-shell.home-shell {
   text-align: center;
 }
 
+.competition-show-shell .climb-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14.5rem, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+
 .climb-cards-grid {
   display: flex;
   flex-wrap: wrap;
@@ -390,15 +479,60 @@ body.app-shell.home-shell {
   gap: 1.15rem;
 }
 
-.climb-cards-grid--two {
-  max-width: 34rem;
-  margin-left: auto;
-  margin-right: auto;
+.competition-show-shell .climb-card-link {
+  flex: none;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  min-height: 11.5rem;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: center;
+  justify-content: flex-start;
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms ease;
 }
 
-.climb-cards-grid--two .climb-card-link {
-  flex-basis: calc((100% - 1.15rem) / 2);
-  max-width: calc((100% - 1.15rem) / 2);
+.competition-show-shell .climb-card-grade-banner {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.competition-show-shell .climb-card-grade-banner .grade-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0.48rem 0.75rem;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.competition-show-shell .climb-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 1rem 1.1rem 1.1rem;
+}
+
+.competition-show-shell .climb-card-link:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.16),
+    0 12px 28px rgba(0, 0, 0, 0.28);
 }
 
 .climb-card-link {
@@ -412,11 +546,20 @@ body.app-shell.home-shell {
   justify-content: flex-start;
 }
 
+.competition-show-shell .climb-card-title {
+  margin-bottom: 0.85rem;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+}
+
 .climb-card-title {
   margin-bottom: 0.65rem;
   text-align: center;
-  text-decoration: underline;
-  text-underline-offset: 0.14em;
+  text-decoration: none;
 }
 
 .climb-card-subtitle {
@@ -426,6 +569,16 @@ body.app-shell.home-shell {
   text-transform: none;
 }
 
+.competition-show-shell .climb-card-actions {
+  width: 100%;
+  margin-top: 0;
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.45rem;
+}
+
 .climb-card-actions {
   display: flex;
   flex-direction: column;
@@ -433,6 +586,24 @@ body.app-shell.home-shell {
   gap: 0.42rem;
   margin-top: auto;
   padding-top: 1rem;
+}
+
+.competition-show-shell .btn-climb-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: none;
+  padding: 0.42rem 0.75rem;
+  border: 1px solid rgba(243, 241, 234, 0.88);
+  border-radius: 0.3rem;
+  color: var(--text);
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  background: transparent;
 }
 
 .btn-climb-action {
@@ -482,22 +653,45 @@ body.app-shell.home-shell {
 }
 
 .competition-points-pill {
-  width: fit-content;
-  padding: 0.42rem 1.15rem;
-  border: 1px solid rgba(243, 241, 234, 0.32);
-  border-radius: 0.28rem;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  background: var(--surface-3);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.14),
+    0 8px 22px rgba(0, 0, 0, 0.22);
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-align: center;
   text-transform: uppercase;
   color: var(--text);
 }
 
 .competition-leaderboard-section {
-  margin-top: 2.4rem;
+  margin-top: 0;
+}
+
+.competition-show-shell .leaderboard-panel {
+  overflow: hidden;
+  min-height: 10.5rem;
 }
 
 .leaderboard-panel {
   overflow: hidden;
+}
+
+.competition-show-shell .leaderboard-table thead th {
+  padding: 1rem 1.15rem 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(243, 241, 234, 0.65);
 }
 
 .leaderboard-table thead th {
@@ -594,6 +788,7 @@ body.app-shell.home-shell {
   font-size: 1.08rem;
   font-weight: 700;
   margin-bottom: 0.3rem;
+  text-decoration: none;
 }
 
 .climb-card-subtitle {
@@ -616,37 +811,32 @@ body.app-shell.home-shell {
 
 .competition-card {
   position: relative;
-  background: var(--card-bg);
-  border: 1px solid rgba(245, 242, 230, 0.58);
-  border-radius: 0.52rem;
+  background: rgba(255, 255, 255, 0.42);
+  border: 1.5px solid var(--card-accent, rgba(245, 242, 230, 0.58));
+  border-radius: 0.75rem;
   overflow: hidden;
   box-shadow:
-    0 14px 20px rgba(0, 0, 0, 0.28),
-    0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 -2px 0 rgba(0, 0, 0, 0.18) inset;
-  transition: transform 170ms ease, box-shadow 170ms ease;
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 10px 22px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms ease;
   min-height: 15.8rem;
 }
 
 .competition-card:hover {
   transform: translateY(-2px);
+  border-color: var(--card-accent-hover, var(--card-accent));
   box-shadow:
-    0 18px 24px rgba(0, 0, 0, 0.32),
-    0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 -2px 0 rgba(0, 0, 0, 0.2) inset;
-}
-
-.competition-top-border {
-  height: 0.5rem;
-  background: var(--card-top);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    0 2px 4px rgba(0, 0, 0, 0.12),
+    0 14px 28px rgba(0, 0, 0, 0.24);
 }
 
 .competition-body {
   padding: 1.05rem 0.95rem 1.05rem;
   color: var(--card-text);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.05));
+  background: transparent;
 }
 
 .competition-card-link-overlay {
@@ -692,9 +882,9 @@ body.app-shell.home-shell {
 }
 
 .competition-action-buttons {
-  padding: 0.95rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.08);
+  padding: 0.75rem 0.95rem 0.95rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: transparent;
 }
 
 .btn-join-competition,
@@ -1137,6 +1327,8 @@ body.app-shell.home-shell {
 .competitions-filter-bar {
   display: flex;
   justify-content: flex-end;
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
 }
 
 .filter-dropdown {
@@ -1249,23 +1441,27 @@ body.app-shell.home-shell {
 .grade-range-slider {
   --grade-thumb-size: 1.125rem;
   --grade-thumb-offset: calc(var(--grade-thumb-size) / 2);
-  --grade-track-height: 0.375rem;
+  --grade-rail-height: 0.125rem;
+  --grade-fill-height: 0.3125rem;
+  --grade-range-color: #3a3d4c;
 }
 
 .grade-range-slider__labels {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 0.55rem;
   font-size: 0.82rem;
   font-weight: 600;
   color: rgba(243, 241, 234, 0.92);
-  margin-bottom: 0.5rem;
   font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 .grade-range-slider__control {
   position: relative;
   height: 2rem;
-  margin: 0.15rem 0 0.35rem;
+  margin: 0.1rem 0 0.4rem;
+  touch-action: none;
+  cursor: pointer;
   --range-min: 0;
   --range-max: 1;
 }
@@ -1275,7 +1471,6 @@ body.app-shell.home-shell {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  height: var(--grade-track-height);
   border-radius: 999px;
   pointer-events: none;
 }
@@ -1283,86 +1478,48 @@ body.app-shell.home-shell {
 .grade-range-slider__rail {
   left: var(--grade-thumb-offset);
   right: var(--grade-thumb-offset);
-  background: rgba(255, 255, 255, 0.16);
+  height: var(--grade-rail-height);
+  background: rgba(210, 205, 230, 0.45);
 }
 
 .grade-range-slider__fill {
   left: calc(var(--grade-thumb-offset) + (100% - var(--grade-thumb-size)) * var(--range-min));
   width: calc((100% - var(--grade-thumb-size)) * (var(--range-max) - var(--range-min)));
-  background: linear-gradient(90deg, #8ecf9a, #c8f0d8);
+  height: var(--grade-fill-height);
+  background: var(--grade-range-color);
 }
 
-.grade-range-slider__input {
+.grade-range-slider__thumb {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 2rem;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  pointer-events: none;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.grade-range-slider__input::-webkit-slider-runnable-track {
-  height: var(--grade-track-height);
-  background: transparent;
-  border: none;
-}
-
-.grade-range-slider__input::-moz-range-track {
-  height: var(--grade-track-height);
-  background: transparent;
-  border: none;
-}
-
-.grade-range-slider__input::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
+  top: 50%;
+  z-index: 2;
   width: var(--grade-thumb-size);
   height: var(--grade-thumb-size);
-  margin-top: calc((var(--grade-track-height) - var(--grade-thumb-size)) / 2);
+  margin: 0;
+  padding: 0;
+  border: none;
   border-radius: 50%;
-  background: #f2eee6;
-  border: 2px solid #9ed4aa;
+  background: var(--grade-range-color);
+  transform: translate(-50%, -50%);
   cursor: grab;
-  pointer-events: auto;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  touch-action: none;
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
-.grade-range-slider__input::-moz-range-thumb {
-  width: var(--grade-thumb-size);
-  height: var(--grade-thumb-size);
-  border-radius: 50%;
-  background: #f2eee6;
-  border: 2px solid #9ed4aa;
-  cursor: grab;
-  pointer-events: auto;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-}
-
-.grade-range-slider__input:active::-webkit-slider-thumb,
-.grade-range-slider__input:active::-moz-range-thumb {
-  cursor: grabbing;
-  transform: scale(1.08);
-}
-
-.grade-range-slider__input--max {
-  z-index: 2;
-}
-
-.grade-range-slider__input--min {
+.grade-range-slider__thumb--max {
   z-index: 3;
 }
 
-.grade-range-slider__control.is-dragging-max .grade-range-slider__input--max {
-  z-index: 4;
+.grade-range-slider__control.is-dragging-min .grade-range-slider__thumb--min,
+.grade-range-slider__control.is-dragging-max .grade-range-slider__thumb--max {
+  z-index: 5;
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.06);
 }
 
-.grade-range-slider__control.is-dragging-min .grade-range-slider__input--min {
-  z-index: 4;
+.grade-range-slider__thumb:focus-visible {
+  outline: 2px solid rgba(243, 241, 234, 0.85);
+  outline-offset: 2px;
 }
 
 .grade-range-slider__bounds {
@@ -1547,104 +1704,97 @@ body.app-shell:not(.home-shell) {
 
 .detail-panel,
 .modal-overlay .modal-content,
-.climb-card-link,
-.competition-card {
+.climb-card-link {
   background: var(--surface);
   border-color: var(--border);
   color: var(--text);
 }
 
-.climb-card-link,
-.competition-card {
+.climb-card-link {
   box-shadow:
     0 10px 18px rgba(0, 0, 0, 0.25),
     0 0 0 1px var(--card-outline, rgba(255, 255, 255, 0.12)) inset;
 }
 
 .competition-card {
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   min-height: 11.7rem;
-  border-color: var(--card-outline, var(--border));
+  border: 1.5px solid var(--card-accent, var(--border));
+  background: var(--surface-3);
+  color: var(--text);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.14),
+    0 8px 22px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 200ms ease;
+}
+
+.competition-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--card-accent-hover, var(--card-accent));
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.16),
+    0 12px 28px rgba(0, 0, 0, 0.28);
 }
 
 .competition-card--v0-3 {
-  --card-outline: #537c51;
-  --card-top: #537c51;
+  --card-accent: rgba(83, 124, 81, 0.72);
+  --card-accent-hover: rgba(106, 159, 103, 0.95);
 }
 
 .competition-card--v4-6 {
-  --card-outline: #bd9a28;
-  --card-top: #bd9a28;
+  --card-accent: rgba(189, 154, 40, 0.72);
+  --card-accent-hover: rgba(210, 175, 58, 0.95);
 }
 
 .competition-card--v7-9 {
-  --card-outline: #629eff;
-  --card-top: #629eff;
+  --card-accent: rgba(98, 158, 255, 0.72);
+  --card-accent-hover: rgba(130, 178, 255, 0.95);
 }
 
 .competition-card--v10-plus {
-  --card-outline: rgba(171, 98, 255, 0.85);
-  --card-top: #ab62ff;
+  --card-accent: rgba(171, 98, 255, 0.72);
+  --card-accent-hover: rgba(188, 130, 255, 0.95);
 }
 
-.competition-card--v0-3 .competition-top-border,
-.competition-card--v4-6 .competition-top-border,
-.competition-card--v7-9 .competition-top-border,
-.competition-card--v10-plus .competition-top-border {
-  display: block;
-  background: var(--card-top);
-}
-
-.competition-status-badge {
-  flex-shrink: 0;
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.3rem;
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  line-height: 1.2;
-  border: 1px solid transparent;
-}
-
-.competition-status-badge--upcoming {
-  color: #b8e8b4;
-  background: rgba(90, 158, 86, 0.22);
-  border-color: rgba(90, 158, 86, 0.45);
-}
-
-.competition-status-badge--active {
-  color: #b3d4ff;
-  background: rgba(98, 158, 255, 0.2);
-  border-color: rgba(98, 158, 255, 0.45);
-}
-
-.competition-status-badge--past {
-  color: rgba(243, 241, 234, 0.62);
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(150, 148, 140, 0.35);
+body.app-shell:not(.home-shell) .competition-card-link-overlay {
+  flex: 1;
+  min-height: 0;
 }
 
 .competition-body {
-  padding: 0.82rem 1rem 0.42rem;
-  background: var(--surface);
+  padding: 1rem 1.05rem 0.5rem;
+  background: transparent;
   color: var(--text);
 }
 
+.competition-body > .d-flex {
+  margin-bottom: 1.15rem;
+}
+
 .competition-name {
-  font-size: 1.24rem;
+  font-size: 1.18rem;
   font-weight: 600;
-  margin-bottom: 0.62rem;
-  line-height: 1.08;
+  margin-bottom: 0;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
 
 .competition-date {
-  font-size: 0.86rem;
-  margin-bottom: 0.56rem;
-  letter-spacing: 0.02em;
+  font-size: 0.84rem;
+  margin-bottom: 0.42rem;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
   text-transform: none;
   font-weight: 400;
-  color: rgba(243, 241, 234, 0.84);
+  color: rgba(243, 241, 234, 0.78);
+}
+
+.competition-date:last-of-type {
+  margin-bottom: 0;
 }
 
 .competition-links {
@@ -1655,8 +1805,9 @@ body.app-shell:not(.home-shell) {
   display: flex;
   justify-content: flex-end;
   background: transparent;
-  border-top: 0;
-  padding: 0.04rem 0.9rem 0.52rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.55rem 1.05rem 0.85rem;
+  margin-top: auto;
 }
 
 .competition-action-buttons .btn-join-competition,
@@ -1947,26 +2098,42 @@ select:focus {
   }
 
   .competition-hero-panel.detail-panel {
-    padding: 1.35rem 1rem 1.2rem;
+    padding: 1.15rem 1rem 1.2rem;
   }
 
-  .competition-hero-meta {
-    flex-wrap: wrap;
-    gap: 0.5rem 0.75rem;
+  .competition-page-title {
+    font-size: clamp(1.65rem, 7vw, 2.1rem);
   }
 
-  .competition-hero-meta span+span {
-    padding-left: 0.75rem;
+  .competition-hero-top {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+    text-align: center;
+  }
+
+  .competition-hero-stat,
+  .competition-hero-dates,
+  .competition-hero-top-end {
+    justify-self: center;
+    text-align: center;
   }
 
   .climb-cards-grid {
     flex-direction: column;
   }
 
+  .competition-show-shell .climb-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
   .climb-card-link {
     flex-basis: auto;
     max-width: 100%;
     min-width: 0;
+  }
+
+  .competition-show-shell .climb-card-link {
+    min-height: 10.5rem;
   }
 
   .leaderboard-table thead th,
@@ -2593,56 +2760,41 @@ body.app-shell.home-shell .app-footer-tagline {
   color: rgba(17, 17, 17, 0.62);
 }
 
-/* ── Competition status badges ─────────────────────────────────────────── */
+/* Competition status badges — matches filter btn-level / card chrome */
 .competition-status-badge {
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
-  padding: 0.18rem 0.55rem;
-  border-radius: 999px;
-  font-size: 0.68rem;
-  font-weight: 700;
+  padding: 0.28rem 0.58rem;
+  border-radius: 0.3rem;
+  border: 1px solid var(--status-border, rgba(243, 241, 234, 0.28));
+  background: var(--status-bg, rgba(255, 255, 255, 0.06));
+  color: var(--status-text, rgba(243, 241, 234, 0.82));
+  font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.64rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  line-height: 1;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
   white-space: nowrap;
 }
 
 .competition-status-badge--active {
-  background: #dcfce7;
-  color: #166534;
-  border: 1px solid #86efac;
+  --status-border: rgba(98, 158, 255, 0.58);
+  --status-bg: rgba(98, 158, 255, 0.1);
+  --status-text: rgba(199, 218, 255, 0.95);
 }
 
 .competition-status-badge--upcoming {
-  background: #dbeafe;
-  color: #1e40af;
-  border: 1px solid #93c5fd;
+  --status-border: rgba(83, 124, 81, 0.58);
+  --status-bg: rgba(83, 124, 81, 0.1);
+  --status-text: rgba(196, 228, 194, 0.95);
 }
 
 .competition-status-badge--past {
-  background: #f3f4f6;
-  color: #6b7280;
-  border: 1px solid #d1d5db;
-}
-
-/* Hero panel — badges sit on a dark background, invert colors */
-.competition-hero-meta .competition-status-badge--active {
-  background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-  border-color: rgba(74, 222, 128, 0.35);
-}
-
-.competition-hero-meta .competition-status-badge--upcoming {
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
-  border-color: rgba(147, 197, 253, 0.35);
-}
-
-.competition-hero-meta .competition-status-badge--past {
-  background: rgba(107, 114, 128, 0.15);
-  color: #9ca3af;
-  border-color: rgba(156, 163, 175, 0.3);
+  --status-border: rgba(243, 241, 234, 0.22);
+  --status-bg: rgba(255, 255, 255, 0.04);
+  --status-text: rgba(243, 241, 234, 0.52);
 }
 
 /* ── V-grade badges ────────────────────────────────────────────────────── */

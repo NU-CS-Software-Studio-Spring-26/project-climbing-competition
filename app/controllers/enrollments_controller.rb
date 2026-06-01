@@ -3,6 +3,11 @@ class EnrollmentsController < ApplicationController
   before_action :set_competition
 
   def create
+    unless @competition.joinable?
+      redirect_to @competition, alert: "This competition has ended and is no longer open for joining."
+      return
+    end
+
     @enrollment = @competition.enrollments.build(user: current_user)
 
     if @enrollment.save
