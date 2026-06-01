@@ -1,16 +1,16 @@
 <% content_for :title, "Edit profile" %>
 
-<section class="detail-panel p-4">
-  <div class="d-flex flex-column gap-3">
-    <div>
-      <p class="eyebrow mb-1">profile settings</p>
-      <h1 class="page-title page-title-left">edit profile</h1>
-    </div>
+<div class="profile-shell">
+  <section class="profile-panel profile-panel--hero">
+    <p class="profile-eyebrow mb-2">profile settings</p>
+    <h1 class="profile-hero-title">Edit profile</h1>
+  </section>
 
+  <section class="profile-panel">
     <%= render "form", user: @user %>
+  </section>
 
-    <div class="action-row">
-      <%= link_to "Back to profile", @user, class: "back-arrow-text-link" %>
-    </div>
+  <div class="profile-actions profile-actions--standalone">
+    <%= link_to "Back to profile", @user, class: "back-arrow-text-link" %>
   </div>
-</section>
+</div>

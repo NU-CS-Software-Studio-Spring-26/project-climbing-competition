@@ -52,6 +52,31 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_equal 6, competition.v_grade_max
   end
 
+  test "placement_for returns rank for enrolled user" do
+    competition = competitions(:one)
+    user_one = users(:one)
+    user_two = users(:two)
+
+    climb_one = climbs(:one)
+    climb_two = climbs(:one_two)
+
+    Attempt.create!(user: user_one, climb: climb_one, attempt_count: 1, completed: true)
+    Attempt.create!(user: user_two, climb: climb_one, attempt_count: 1, completed: true)
+    Attempt.create!(user: user_two, climb: climb_two, attempt_count: 3, completed: false)
+
+    assert_equal 1, competition.placement_for(user_one)
+    assert_equal 2, competition.placement_for(user_two)
+
+    outsider = User.create!(
+      name: "Outside Climber",
+      username: "outsider#{SecureRandom.hex(3)}",
+      email_address: "outsider-#{SecureRandom.hex(3)}@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    )
+    assert_nil competition.placement_for(outsider)
+  end
+
   test "leaderboard sorts by points then attempts then username" do
     competition = competitions(:one)
     user_one = users(:one)
@@ -132,6 +157,23 @@ class CompetitionTest < ActiveSupport::TestCase
     competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
     assert_equal :active, competition.status
     assert competition.joinable?
+  end
+
+  test "leavable? is false when competition has ended" do
+    competition = competitions(:one)
+    competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+
+    assert competition.past?
+    assert_not competition.leavable?
+  end
+
+  test "leavable? is true for upcoming and active competitions" do
+    competition = competitions(:two)
+    competition.update!(starts_at: 1.day.from_now, ends_at: 1.week.from_now)
+    assert competition.leavable?
+
+    competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    assert competition.leavable?
   end
 
   test "is invalid when end datetime is before start datetime" do

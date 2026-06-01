@@ -35,7 +35,14 @@
                   class: "btn-competition-delete",
                   form: { data: { turbo_confirm: "Permanently delete this competition? All enrollments and attempts will be removed." } } %>
           <% else %>
-            <p class="competition-hero-creator mb-0">creator: <%= @competition.owner&.username %></p>
+            <p class="competition-hero-creator mb-0">
+              creator:
+              <% if @competition.owner %>
+                <%= link_to_user_profile(@competition.owner, label: @competition.owner.name, class_name: "competition-hero-creator-link") %>
+              <% else %>
+                —
+              <% end %>
+            </p>
           <% end %>
         </div>
       </div>
@@ -46,7 +53,7 @@
 
       <% if authenticated? %>
         <div class="competition-hero-action">
-          <% if current_user.competitions.include?(@competition) %>
+          <% if current_user.competitions.include?(@competition) && @competition.leavable? %>
             <% enrollment = @competition.enrollments.find_by(user: current_user) %>
             <%= button_to "LEAVE", competition_enrollment_path(@competition, enrollment), method: :delete, class: "btn-leave-competition-show" %>
           <% elsif @competition.joinable? %>
@@ -152,14 +159,16 @@
               <% @leaderboard_entries.each_with_index do |entry, index| %>
                 <tr class="<%= 'table-active' if authenticated? && entry.user == current_user %> leaderboard-user-row" style="cursor: pointer;" data-user-id="<%= entry.user.id %>" data-user-name="<%= entry.user.username %>" onclick="toggleLeaderboardDetails(this)">
                   <td><%= index + 1 %></td>
-                  <td><%= entry.user.username %></td>
+                  <td>
+                    <%= link_to_user_profile(entry.user, label: entry.user.name, class_name: "profile-user-link", stop_row_toggle: true) %>
+                  </td>
                   <td><%= entry.points %></td>
                   <td><%= entry.attempts_count %></td>
                 </tr>
                 <tr class="leaderboard-detail-row" style="display: none;" data-user-id="<%= entry.user.id %>">
                   <td colspan="4" class="leaderboard-detail-cell">
                     <div class="leaderboard-detail-card">
-                      <h6 class="leaderboard-detail-title"><%= entry.user.username %>'s Climb Attempts</h6>
+                      <h6 class="leaderboard-detail-title"><%= link_to_user_profile(entry.user, label: entry.user.name, class_name: "profile-user-link") %>'s Climb Attempts</h6>
                       <div class="table-responsive">
                         <table class="table table-sm table-borderless leaderboard-attempts-table mb-0">
                           <thead>

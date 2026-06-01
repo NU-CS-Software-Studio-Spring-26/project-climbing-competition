@@ -4,6 +4,7 @@ class Enrollment < ApplicationRecord
 
   validates :user_id, uniqueness: { scope: :competition_id }
   validate :competition_must_be_joinable, on: :create
+  before_destroy :competition_must_be_leavable
 
   private
 
@@ -11,5 +12,12 @@ class Enrollment < ApplicationRecord
     return if competition.blank? || competition.joinable?
 
     errors.add(:base, "This competition has ended and is no longer open for joining.")
+  end
+
+  def competition_must_be_leavable
+    return if competition.blank? || competition.leavable?
+
+    errors.add(:base, "This competition has ended. You can no longer leave it.")
+    throw(:abort)
   end
 end

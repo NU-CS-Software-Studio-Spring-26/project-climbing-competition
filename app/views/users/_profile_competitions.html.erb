@@ -1,0 +1,105 @@
+<section class="profile-panel profile-collapsible-panel profile-competitions-panel" data-controller="profile-tabs">
+  <details class="profile-collapsible-dropdown">
+    <summary class="profile-collapsible-dropdown__summary">
+      <span class="profile-collapsible-dropdown__title">Competitions</span>
+      <span class="profile-collapsible-dropdown__counts"><%= enrolled_current.size %> current · <%= enrolled_past.size %> past · <%= created_competitions.size %> created</span>
+    </summary>
+
+    <div class="profile-collapsible-dropdown__body">
+      <div class="profile-tabs" role="tablist" aria-label="Competitions">
+        <button type="button"
+                class="profile-tabs__tab is-active"
+                role="tab"
+                id="profile-tab-competitions-current"
+                aria-selected="true"
+                aria-controls="profile-panel-competitions-current"
+                data-profile-tabs-target="tab"
+                data-profile-tabs-tab-param="current"
+                data-action="profile-tabs#show">
+          Current (<%= enrolled_current.size %>)
+        </button>
+        <button type="button"
+                class="profile-tabs__tab"
+                role="tab"
+                id="profile-tab-competitions-past"
+                aria-selected="false"
+                aria-controls="profile-panel-competitions-past"
+                data-profile-tabs-target="tab"
+                data-profile-tabs-tab-param="past"
+                data-action="profile-tabs#show">
+          Past (<%= enrolled_past.size %>)
+        </button>
+        <button type="button"
+                class="profile-tabs__tab"
+                role="tab"
+                id="profile-tab-competitions-created"
+                aria-selected="false"
+                aria-controls="profile-panel-competitions-created"
+                data-profile-tabs-target="tab"
+                data-profile-tabs-tab-param="created"
+                data-action="profile-tabs#show">
+          Created (<%= created_competitions.size %>)
+        </button>
+      </div>
+
+      <div class="profile-tabs__panels">
+        <div class="profile-tabs__panel"
+             role="tabpanel"
+             id="profile-panel-competitions-current"
+             aria-labelledby="profile-tab-competitions-current"
+             data-profile-tabs-target="panel"
+             data-profile-tabs-panel-param="current">
+          <% if enrolled_current.any? %>
+            <div class="profile-competition-list">
+              <%= render collection: enrolled_current, partial: "users/profile_competition_row", as: :competition, locals: { show_delete: false } %>
+            </div>
+          <% else %>
+            <p class="profile-empty-state mb-0">No current competitions.</p>
+          <% end %>
+        </div>
+
+        <div class="profile-tabs__panel"
+             role="tabpanel"
+             id="profile-panel-competitions-past"
+             aria-labelledby="profile-tab-competitions-past"
+             hidden
+             data-profile-tabs-target="panel"
+             data-profile-tabs-panel-param="past">
+          <% if enrolled_past.any? %>
+            <div class="profile-competition-list">
+              <% enrolled_past.each do |competition| %>
+                <%= render "users/profile_competition_row",
+                      competition: competition,
+                      show_delete: false,
+                      placement: past_placements[competition] %>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="profile-empty-state mb-0">No past competitions.</p>
+          <% end %>
+        </div>
+
+        <div class="profile-tabs__panel"
+             role="tabpanel"
+             id="profile-panel-competitions-created"
+             aria-labelledby="profile-tab-competitions-created"
+             hidden
+             data-profile-tabs-target="panel"
+             data-profile-tabs-panel-param="created">
+          <% if created_competitions.any? %>
+            <div class="profile-competition-list">
+              <% created_competitions.each do |competition| %>
+                <%= render "users/profile_competition_row",
+                      competition: competition,
+                      show_delete: profile_owner,
+                      return_to: user_path(user) %>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="profile-empty-state mb-0">No created competitions.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </details>
+</section>

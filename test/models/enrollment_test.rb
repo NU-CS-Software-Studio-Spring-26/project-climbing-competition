@@ -19,4 +19,26 @@ class EnrollmentTest < ActiveSupport::TestCase
 
     assert enrollment.valid?
   end
+
+  test "cannot leave enrollment when competition has ended" do
+    competition = competitions(:one)
+    enrollment = enrollments(:one_in_one)
+    competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+
+    assert_no_difference("Enrollment.count") do
+      assert_not enrollment.destroy
+    end
+
+    assert_includes enrollment.errors[:base], "This competition has ended. You can no longer leave it."
+  end
+
+  test "can leave enrollment while competition is active" do
+    competition = competitions(:two)
+    competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    enrollment = Enrollment.create!(user: users(:one), competition: competition)
+
+    assert_difference("Enrollment.count", -1) do
+      assert enrollment.destroy
+    end
+  end
 end

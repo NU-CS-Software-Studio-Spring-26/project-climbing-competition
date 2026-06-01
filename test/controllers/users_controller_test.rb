@@ -60,9 +60,66 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     travel_to Time.zone.parse("2026-05-16 12:00:00") do
       get user_url(@user)
       assert_response :success
-      assert_match "Past competitions", response.body
+      assert_match "Past (", response.body
       assert_match competitions(:one).name, response.body
     end
+  end
+
+  test "should show public stats on another user profile" do
+    get user_url(@other_user)
+
+    assert_response :success
+    assert_match "Competitions entered", response.body
+    assert_match "Average placement", response.body
+    assert_match "Competitions", response.body
+    assert_select "button.profile-tabs__tab", text: /Current/
+    assert_no_match "Edit profile", response.body
+    assert_no_match "Followers (", response.body
+  end
+
+  test "should show followers and following on own profile" do
+    sign_in_as(@user)
+
+    get user_url(@user)
+
+    assert_response :success
+    assert_match "Connections", response.body
+    assert_select "button.profile-tabs__tab", text: "Following (1)"
+    assert_match @other_user.name, response.body
+    assert_select "button.profile-tabs__tab", text: "Followers (0)"
+    assert_select ".profile-hero-aside .profile-aside-label", text: "Member since"
+    assert_select ".profile-hero-aside .profile-aside-label", text: "Email"
+    assert_select ".profile-hero-aside .profile-aside-value--email", text: @user.email_address
+  end
+
+  test "should show follow button on another user profile when signed in" do
+    Follow.where(follower: @user, followed: @other_user).delete_all
+    sign_in_as(@user)
+
+    get user_url(@other_user)
+
+    assert_response :success
+    assert_select "form[action='#{user_follow_path(@other_user)}'] button", text: "Follow"
+  end
+
+  test "should show unfollow button when already following" do
+    Follow.find_or_create_by!(follower: @user, followed: @other_user)
+    sign_in_as(@user)
+
+    get user_url(@other_user)
+
+    assert_response :success
+    assert_select "form[action='#{user_follow_path(@other_user)}'] input[name='_method'][value='delete']"
+    assert_select "form[action='#{user_follow_path(@other_user)}'] button", text: "Unfollow"
+  end
+
+  test "competition show links creator name to profile" do
+    competition = competitions(:one)
+
+    get competition_url(competition)
+
+    assert_response :success
+    assert_select "a.competition-hero-creator-link[href='#{user_path(competition.owner)}']", text: competition.owner.name
   end
 
   test "should get own edit" do

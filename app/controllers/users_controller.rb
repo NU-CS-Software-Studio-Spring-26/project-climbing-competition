@@ -9,10 +9,21 @@ class UsersController < ApplicationController
     @user = User.find(params.expect(:id))
     @profile_owner = authenticated? && current_user == @user
 
-    @enrolled_upcoming = @user.competitions.merge(Competition.upcoming).order(:starts_at)
-    @enrolled_active = @user.competitions.merge(Competition.active).order(:starts_at)
+    @enrolled_current = @user.current_competitions
     @enrolled_past = @user.competitions.merge(Competition.past).order(ends_at: :desc)
     @created_competitions = @user.owned_competitions.order(starts_at: :desc)
+    @participated_count = @user.participated_competitions_count
+    @created_count = @user.created_competitions_count
+    @average_placement = @user.average_placement
+    @past_placements = @enrolled_past.index_with { |competition| @user.placement_in(competition) }
+    @is_following = authenticated? && !@profile_owner && current_user.following?(@user)
+
+    if @profile_owner
+      @following_users = @user.following.order(:username)
+      @follower_users = @user.followers.order(:username)
+      @following_count = @following_users.size
+      @followers_count = @follower_users.size
+    end
   end
 
   # GET /users/new

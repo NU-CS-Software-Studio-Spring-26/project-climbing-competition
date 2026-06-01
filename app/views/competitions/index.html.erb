@@ -148,9 +148,9 @@
           </div>
         <% end %>
 
-        <% if authenticated? && (current_user.competitions.include?(competition) || competition.joinable?) %>
+        <% if authenticated? && ((current_user.competitions.include?(competition) && competition.leavable?) || competition.joinable?) %>
           <div class="competition-action-buttons">
-            <% if current_user.competitions.include?(competition) %>
+            <% if current_user.competitions.include?(competition) && competition.leavable? %>
               <% enrollment = competition.enrollments.find_by(user: current_user) %>
               <button type="button" class="btn-leave-competition" data-competition-id="<%= competition.id %>" data-enrollment-id="<%= enrollment.id %>" data-competition-name="<%= competition.name %>">
                 LEAVE

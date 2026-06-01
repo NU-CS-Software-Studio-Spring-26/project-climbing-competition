@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_01_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_02_000001) do
   create_table "attempts", force: :cascade do |t|
     t.integer "attempt_count", null: false
     t.integer "climb_id", null: false
@@ -70,6 +70,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_01_000001) do
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
+  create_table "follows", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "followed_id", null: false
+    t.integer "follower_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["followed_id"], name: "index_follows_on_followed_id"
+    t.index ["follower_id", "followed_id"], name: "index_follows_on_follower_id_and_followed_id", unique: true
+    t.index ["follower_id"], name: "index_follows_on_follower_id"
+  end
+
   create_table "identities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "provider", null: false
@@ -111,6 +121,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_01_000001) do
   add_foreign_key "competitions", "users", column: "owner_id"
   add_foreign_key "enrollments", "competitions"
   add_foreign_key "enrollments", "users"
+  add_foreign_key "follows", "users", column: "followed_id"
+  add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "identities", "users"
   add_foreign_key "sessions", "users"
 end

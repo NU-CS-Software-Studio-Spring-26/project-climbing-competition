@@ -1,0 +1,3 @@
+one_follows_two:
+  follower: one
+  followed: two

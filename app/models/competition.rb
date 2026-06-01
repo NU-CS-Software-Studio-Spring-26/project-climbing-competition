@@ -56,6 +56,10 @@ class Competition < ApplicationRecord
     !past?
   end
 
+  def leavable?
+    !past?
+  end
+
   def climb_grade_integers
     climbs.reject(&:marked_for_destruction?).filter_map { |climb| grading_to_int(climb.grading) }
   end
@@ -124,6 +128,16 @@ class Competition < ApplicationRecord
         attempts_count: user_attempts.sum { |attempt| attempt.attempt_count.to_i }
       )
     end.sort_by { |entry| [ -entry.points, entry.attempts_count, entry.user.username.downcase ] }
+  end
+
+  def placement_for(user)
+    return nil if user.nil?
+
+    leaderboard_entries.each_with_index do |entry, index|
+      return index + 1 if entry.user.id == user.id
+    end
+
+    nil
   end
 
   private

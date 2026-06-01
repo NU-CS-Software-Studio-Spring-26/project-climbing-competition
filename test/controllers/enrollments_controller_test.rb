@@ -34,4 +34,33 @@ class EnrollmentsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to competition_url(@competition)
     assert_equal "You have joined the competition!", flash[:notice]
   end
+
+  test "cannot leave a past competition" do
+    @competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    sign_in_as(@user)
+    post competition_enrollments_url(@competition)
+    @competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+    enrollment = @competition.enrollments.find_by!(user: @user)
+
+    assert_no_difference("Enrollment.count") do
+      delete competition_enrollment_url(@competition, enrollment)
+    end
+
+    assert_redirected_to competition_url(@competition)
+    assert_equal "This competition has ended. You can no longer leave it.", flash[:alert]
+  end
+
+  test "can leave an active competition" do
+    @competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    sign_in_as(@user)
+    post competition_enrollments_url(@competition)
+    enrollment = @competition.enrollments.find_by!(user: @user)
+
+    assert_difference("Enrollment.count", -1) do
+      delete competition_enrollment_url(@competition, enrollment)
+    end
+
+    assert_redirected_to competition_url(@competition)
+    assert_equal "You have left the competition.", flash[:notice]
+  end
 end
