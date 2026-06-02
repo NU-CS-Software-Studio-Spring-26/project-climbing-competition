@@ -12,7 +12,7 @@
   <% end %>
 
   <div class="board-form-block">
-    <h3 class="board-form-block-title">General Information</h3>
+    <h2 class="board-form-block-title">General Information</h2>
 
     <div class="board-form-field board-form-field--name" data-controller="char-counter" data-char-counter-max-value="100">
       <%= form.label :name, class: "form-label" %>
@@ -68,7 +68,7 @@
   </div>
 
   <div class="board-form-block">
-    <h3 class="board-form-block-title">Scoring Settings</h3>
+    <h2 class="board-form-block-title">Scoring Settings</h2>
 
     <div class="board-form-field">
       <%= form.label :send_points, "Points for a Send", class: "form-label" %>
@@ -131,7 +131,7 @@
   </div>
 
   <div class="board-form-block">
-    <h3 class="board-form-block-title">Climbs</h3>
+    <h2 class="board-form-block-title">Climbs</h2>
     <p class="board-form-hint">Competition level and difficulty range are set automatically from the V-grades on your climbs.</p>
     <div id="climbs-container">
       <%= form.fields_for :climbs do |climb_form| %>
