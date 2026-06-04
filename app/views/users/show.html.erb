@@ -1,63 +1,77 @@
 <% content_for :title, @user.username %>
 
-<section class="detail-panel p-4 mb-3">
-  <div class="d-flex flex-column gap-3">
-    <div>
-      <p class="eyebrow mb-1">profile</p>
-      <h1 class="page-title page-title-left"><%= @user.name %></h1>
-      <p class="mb-0"><%= "@#{@user.username}" %></p>
+<div class="profile-shell">
+  <section class="profile-panel profile-panel--hero">
+    <div class="profile-hero-layout">
+      <div class="profile-hero-main">
+        <h1 class="profile-hero-title"><%= @user.name %></h1>
+        <p class="profile-username mb-3"><%= "@#{@user.username}" %></p>
+
+        <div class="profile-meta">
+          <p class="profile-meta-item mb-0"><span class="profile-meta-label">bio</span> <%= @user.bio.presence || "No bio added yet." %></p>
+        </div>
+
+        <div class="profile-actions">
+          <% if @profile_owner %>
+            <%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-board-primary" %>
+          <% elsif authenticated? %>
+            <% if @is_following %>
+              <%= button_to "Unfollow", user_follow_path(@user), method: :delete, class: "btn btn-board-secondary" %>
+            <% else %>
+              <%= button_to "Follow", user_follow_path(@user), method: :post, class: "btn btn-board-primary" %>
+            <% end %>
+          <% end %>
+          <%= link_to "Back to events", competitions_path, class: "btn btn-board-secondary" %>
+        </div>
+      </div>
+
+      <aside class="profile-hero-aside" aria-label="Profile details">
+        <div class="profile-aside-item">
+          <span class="profile-aside-label">member since</span>
+          <span class="profile-aside-value"><%= @user.created_at.strftime("%B %Y") %></span>
+        </div>
+        <% if @profile_owner %>
+          <div class="profile-aside-item">
+            <span class="profile-aside-label">email</span>
+            <span class="profile-aside-value profile-aside-value--email"><%= @user.email_address %></span>
+          </div>
+        <% end %>
+      </aside>
     </div>
+  </section>
 
-    <div class="d-flex flex-column gap-2">
-      <% if @profile_owner %>
-        <p class="detail-item mb-0"><span>Email:</span> <%= @user.email_address %></p>
-      <% end %>
-      <p class="detail-item mb-0"><span>Bio:</span> <%= @user.bio.presence || "No bio added yet." %></p>
+  <section class="profile-panel profile-stats-panel" aria-label="Competition statistics">
+    <h2 class="profile-section-title">stats</h2>
+    <div class="profile-stats-grid">
+      <div class="profile-stat">
+        <p class="profile-stat-value mb-0"><%= @participated_count %></p>
+        <p class="profile-stat-label mb-0">competitions entered</p>
+      </div>
+      <div class="profile-stat">
+        <p class="profile-stat-value mb-0"><%= format_average_placement(@average_placement) %></p>
+        <p class="profile-stat-label mb-0">average placement</p>
+        <p class="profile-stat-hint mb-0">past events only</p>
+      </div>
+      <div class="profile-stat">
+        <p class="profile-stat-value mb-0"><%= @created_count %></p>
+        <p class="profile-stat-label mb-0">competitions created</p>
+      </div>
     </div>
+  </section>
 
-    <div class="action-row d-flex gap-2 flex-wrap">
-      <% if @profile_owner %>
-        <%= link_to "Edit profile", edit_user_path(@user), class: "btn btn-board-primary" %>
-      <% end %>
-      <%= link_to "Back to events", competitions_path, class: "btn btn-board-secondary" %>
-    </div>
-  </div>
-</section>
-
-<section class="detail-panel p-4 mb-3">
-  <h2 class="h5 mb-3">Upcoming competitions</h2>
-  <% if @enrolled_upcoming.any? %>
-    <%= render collection: @enrolled_upcoming, partial: "users/profile_competition_row", as: :competition, locals: { show_delete: false } %>
-  <% else %>
-    <p class="mb-0 profile-empty-state">No upcoming competitions.</p>
+  <% if @profile_owner %>
+    <%= render "users/profile_friends",
+          following_users: @following_users,
+          follower_users: @follower_users,
+          following_count: @following_count,
+          followers_count: @followers_count %>
   <% end %>
-</section>
 
-<section class="detail-panel p-4 mb-3">
-  <h2 class="h5 mb-3">Active competitions</h2>
-  <% if @enrolled_active.any? %>
-    <%= render collection: @enrolled_active, partial: "users/profile_competition_row", as: :competition, locals: { show_delete: false } %>
-  <% else %>
-    <p class="mb-0 profile-empty-state">No active competitions.</p>
-  <% end %>
-</section>
-
-<section class="detail-panel p-4 mb-3">
-  <h2 class="h5 mb-3">Past competitions</h2>
-  <% if @enrolled_past.any? %>
-    <%= render collection: @enrolled_past, partial: "users/profile_competition_row", as: :competition, locals: { show_delete: false } %>
-  <% else %>
-    <p class="mb-0 profile-empty-state">No past competitions.</p>
-  <% end %>
-</section>
-
-<section class="detail-panel p-4 mb-3">
-  <h2 class="h5 mb-3">Created competitions</h2>
-  <% if @created_competitions.any? %>
-    <% @created_competitions.each do |competition| %>
-      <%= render "users/profile_competition_row", competition: competition, show_delete: @profile_owner, return_to: user_path(@user) %>
-    <% end %>
-  <% else %>
-    <p class="mb-0 profile-empty-state">No created competitions.</p>
-  <% end %>
-</section>
+  <%= render "users/profile_competitions",
+        user: @user,
+        profile_owner: @profile_owner,
+        enrolled_current: @enrolled_current,
+        enrolled_past: @enrolled_past,
+        past_placements: @past_placements,
+        created_competitions: @created_competitions %>
+</div>

@@ -1,0 +1,29 @@
+<% content_for :title, "Friends" %>
+
+<div class="profile-shell friends-shell">
+  <header class="friends-page-header">
+    <h1 class="profile-hero-title">friends</h1>
+    <p class="friends-page-caption mb-0">recent updates from climbers you follow</p>
+  </header>
+
+  <% if @following_count.zero? %>
+    <section class="profile-panel">
+      <h2 class="profile-section-title">get started</h2>
+      <p class="profile-empty-state mb-2">You are not following anyone yet.</p>
+      <p class="profile-empty-state mb-0">
+        Visit a climber’s profile from a competition leaderboard and tap <strong>Follow</strong> to see their activity here.
+      </p>
+    </section>
+  <% elsif @activities.any? %>
+    <div class="friends-feed" role="feed" aria-label="friend activity">
+      <% @activities.each do |activity| %>
+        <%= render "friends/activity", activity: activity %>
+      <% end %>
+    </div>
+  <% else %>
+    <section class="profile-panel">
+      <h2 class="profile-section-title">activity</h2>
+      <p class="profile-empty-state mb-0">No recent activity from your friends in the last 90 days.</p>
+    </section>
+  <% end %>
+</div>

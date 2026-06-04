@@ -1,0 +1,7 @@
+<article class="profile-panel friends-activity-card friends-activity-card--<%= activity.kind %>" role="article">
+  <div class="friends-activity-card__header">
+    <span class="friends-activity-kind friends-activity-kind--<%= activity.kind %>"><%= friend_activity_kind_label(activity) %></span>
+    <time class="friends-activity-time" datetime="<%= activity.occurred_at.iso8601 %>"><%= friend_activity_timestamp(activity) %></time>
+  </div>
+  <p class="friends-activity-body mb-0"><%= friend_activity_body(activity) %></p>
+</article>

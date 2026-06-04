@@ -15,6 +15,10 @@ class User < ApplicationRecord
   has_many :attempts, dependent: :destroy
   has_many :owned_competitions, class_name: "Competition", foreign_key: "owner_id", dependent: :nullify, inverse_of: :owner
   has_many :sessions, dependent: :destroy
+  has_many :active_follows, class_name: "Follow", foreign_key: :follower_id, dependent: :destroy, inverse_of: :follower
+  has_many :passive_follows, class_name: "Follow", foreign_key: :followed_id, dependent: :destroy, inverse_of: :followed
+  has_many :following, through: :active_follows, source: :followed
+  has_many :followers, through: :passive_follows, source: :follower
 
   has_secure_password
 
@@ -78,5 +82,34 @@ class User < ApplicationRecord
   public
     def self.username_taken?(username)
       where("lower(username) = ?", username.to_s.downcase).exists?
+    end
+
+    def participated_competitions_count
+      competitions.count
+    end
+
+    def created_competitions_count
+      owned_competitions.count
+    end
+
+    def current_competitions
+      competitions.merge(Competition.upcoming.or(Competition.active)).order(:starts_at)
+    end
+
+    def average_placement
+      placements = competitions.merge(Competition.past).filter_map { |competition| competition.placement_for(self) }
+      return nil if placements.empty?
+
+      (placements.sum.to_f / placements.size).round(1)
+    end
+
+    def placement_in(competition)
+      competition.placement_for(self)
+    end
+
+    def following?(other_user)
+      return false if other_user.blank? || other_user == self
+
+      active_follows.exists?(followed_id: other_user.id)
     end
 end
