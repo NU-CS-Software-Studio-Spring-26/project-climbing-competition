@@ -894,7 +894,11 @@ body.app-shell.home-shell {
 .btn-leave-competition-show {
   width: auto;
   padding: 0.65rem 1.2rem;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .btn-join-competition,
