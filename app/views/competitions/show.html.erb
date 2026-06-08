@@ -51,13 +51,17 @@
         <p class="competition-hero-description mb-0"><%= @competition.description %></p>
       <% end %>
 
-      <% if authenticated? %>
+      <% show_leave = authenticated? && current_user.competitions.include?(@competition) && @competition.leavable? %>
+      <% show_join = @competition.joinable? && (!authenticated? || !current_user.competitions.include?(@competition)) %>
+      <% if show_leave || show_join %>
         <div class="competition-hero-action">
-          <% if current_user.competitions.include?(@competition) && @competition.leavable? %>
+          <% if show_leave %>
             <% enrollment = @competition.enrollments.find_by(user: current_user) %>
             <%= button_to "LEAVE", competition_enrollment_path(@competition, enrollment), method: :delete, class: "btn-leave-competition-show" %>
-          <% elsif @competition.joinable? %>
+          <% elsif authenticated? %>
             <%= button_to "JOIN", competition_enrollments_path(@competition), method: :post, class: "btn-join-competition-show" %>
+          <% else %>
+            <%= link_to "JOIN", new_user_path, class: "btn-join-competition-show" %>
           <% end %>
         </div>
       <% end %>

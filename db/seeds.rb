@@ -5,6 +5,10 @@
 
 require Rails.root.join("db/seeds/support")
 
+# Temporary until seeds are revamped: shift fixed competition dates forward so enrollments
+# stay joinable when running db:seed through 2026-07-15.
+SEED_DATE_OFFSET = 75.days
+
 Attempt.destroy_all
 Enrollment.destroy_all
 Climb.destroy_all
@@ -382,12 +386,16 @@ competitions = []
 competitions_data.each do |data|
   climb_grades = data.delete(:climb_grades)
   climbs = data.delete(:climbs)
+  starts_at = Time.zone.parse(data.delete(:starts_at)) + SEED_DATE_OFFSET
+  ends_at = Time.zone.parse(data.delete(:ends_at)) + SEED_DATE_OFFSET
   climbs_attributes = climbs.each_with_index.to_h do |climb, i|
     [ i.to_s, climb.merge(grading: climb_grades[i % climb_grades.length]) ]
   end
 
   comp = users.sample.owned_competitions.create!(
     data.merge(
+      starts_at: starts_at,
+      ends_at: ends_at,
       climbs_attributes: climbs_attributes,
       send_points: 100,
       flash_points: 125,

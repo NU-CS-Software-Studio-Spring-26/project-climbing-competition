@@ -371,12 +371,14 @@ body.app-shell.home-shell {
   background: #f2eee6;
   color: #121212;
   border: 1px solid #f2eee6;
+  text-decoration: none;
 }
 
 .btn-join-competition-show:hover {
   background: #ffffff;
   color: #121212;
   border-color: #ffffff;
+  text-decoration: none;
 }
 
 .btn-leave-competition-show {
