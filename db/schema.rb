@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_07_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_07_090000) do
   create_table "attempts", force: :cascade do |t|
     t.integer "attempt_count", null: false
     t.integer "climb_id", null: false
@@ -52,6 +52,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_000001) do
     t.datetime "updated_at", null: false
     t.integer "v_grade_max", null: false
     t.integer "v_grade_min", null: false
+    t.boolean "video_submissions_required", default: false, null: false
     t.index ["owner_id"], name: "index_competitions_on_owner_id"
     t.check_constraint "attempt_deduction >= 0 AND attempt_deduction <= 10000", name: "attempt_deduction_range"
     t.check_constraint "flash_points > 0 AND flash_points <= 10000", name: "flash_points_range"
