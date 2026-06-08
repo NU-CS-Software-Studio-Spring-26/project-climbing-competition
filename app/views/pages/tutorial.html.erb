@@ -1,0 +1,61 @@
+<% content_for :title, "Tutorial" %>
+
+<section class="page-header tutorial-page-header">
+  <h1 class="page-title page-title-left">how to use board base</h1>
+</section>
+
+<div class="legal-document tutorial-document detail-panel p-4">
+  <p class="tutorial-intro">
+    Board Base hosts virtual Kilter Board competitions. Sign in to join or create events; anyone can browse.
+  </p>
+
+  <ol class="legal-list">
+    <li id="join">
+      <h2>Join a competition</h2>
+      <ol class="tutorial-steps">
+        <li>
+          <strong>Sign in</strong>
+          <% if authenticated? %>
+            — you're in as <%= current_user.username %>.
+          <% else %>
+            — <%= link_to "sign up", new_user_path %> or <%= link_to "sign in", new_session_path %>.
+          <% end %>
+        </li>
+        <li><strong>Browse</strong> <%= link_to "competitions", competitions_path %> and filter by status, date, or difficulty.</li>
+        <li><strong>Join</strong> an upcoming or active event — click <strong>JOIN</strong> on a card (confirm in the popup) or on the competition page.</li>
+      </ol>
+
+      <%= render "pages/tutorial_previews", preview: :cards %>
+    </li>
+
+    <li id="create">
+      <h2>Create a competition</h2>
+      <ol class="tutorial-steps">
+        <li>Click <strong>create</strong> in the nav → <%= link_to "new competition", new_competition_path %>.</li>
+        <li>Add a name, dates, optional description, and scoring (flash / send / deduction).</li>
+        <li>Add at least <strong>2 climbs</strong> — each needs a name, V-grade, and Kilter link.</li>
+        <li>Hit <strong>Create Competition</strong>. You become the owner and land on the new event page.</li>
+      </ol>
+    </li>
+
+    <li id="after-join">
+      <h2>What to do after you join</h2>
+      <ol class="tutorial-steps">
+        <li><strong>Climb</strong> each route on a Kilter Board — open it with <strong>OPEN ON KILTER</strong>.</li>
+        <li><strong>Log</strong> attempts and mark <strong>Completed</strong> when you send. One log per climb; you can edit later.</li>
+        <li><strong>Score</strong> updates on the page as <strong>YOUR TOTAL POINTS</strong>. Only completed climbs count.</li>
+        <li><strong>Leaderboard</strong> ranks by points, then attempts. Click a row for per-climb details.</li>
+      </ol>
+
+      <p class="tutorial-note mb-2">
+        Flash (1st try) earns flash points. A send on attempt <em>n</em> earns send points minus (n − 1) × deduction.
+      </p>
+
+      <%= render "pages/tutorial_previews", preview: :show %>
+    </li>
+  </ol>
+
+  <p class="tutorial-outro mt-4 mb-0">
+    <%= link_to "Browse competitions", competitions_path %><% unless authenticated? %> · <%= link_to "Sign up", new_user_path %><% end %>
+  </p>
+</div>

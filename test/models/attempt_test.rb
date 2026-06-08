@@ -5,7 +5,7 @@ class AttemptTest < ActiveSupport::TestCase
     attempt = Attempt.new(user: users(:one), climb: climbs(:one), attempt_count: 2)
 
     assert attempt.valid?
-    assert_equal 20, attempt.points_awarded  # send_points(25) - 1 extra attempt * deduction(5)
+    assert_equal 25, attempt.points_awarded  # flash_points(30) - 1 extra attempt * deduction(5)
   end
 
   test "awards bonus points for a one-attempt send" do

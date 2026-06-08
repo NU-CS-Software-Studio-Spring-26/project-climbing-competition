@@ -1,9 +1,43 @@
 <% content_for :title, "active events" %>
 
-<% filters_active = @sort_by.present? || @selected_status.present? || @grade_filter_active %>
+<% filters_active = @sort_by.present? || @selected_status.present? || @grade_filter_active || @search_query.present? %>
 
-<div class="competitions-filter-bar">
-  <div class="filter-dropdown" data-controller="filter-menu">
+<div class="row gx-4 mb-1 competitions-grid">
+  <div class="col-12">
+    <div class="competitions-toolbar">
+      <div class="competitions-search-bar">
+        <%= form_with url: competitions_path, method: :get, local: true, class: "competitions-search-form" do %>
+          <% @filter_params.except(:q).each do |key, value| %>
+            <%= hidden_field_tag key, value %>
+          <% end %>
+
+      <div class="competitions-search-input-group">
+        <%= text_field_tag :q, @search_query,
+              class: "competitions-search-input",
+              placeholder: "Search competitions…",
+              aria: { label: "Search competitions" } %>
+
+        <button type="submit" class="competitions-search-btn" aria-label="Submit search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+
+        <% if @search_query.present? %>
+          <%= link_to competitions_path(@filter_params.except(:q)), class: "competitions-search-clear", aria: { label: "Clear search" } do %>
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+        </div>
+
+      <div class="competitions-filter-bar">
+        <div class="filter-dropdown" data-controller="filter-menu">
     <button
       type="button"
       class="btn-filter<%= " btn-filter--active" if filters_active %>"
@@ -69,6 +103,7 @@
             <%= hidden_field_tag :sort_direction, @sort_direction if @sort_direction.present? %>
           <% end %>
           <%= hidden_field_tag :status, @selected_status if @selected_status.present? %>
+          <%= hidden_field_tag :q, @search_query if @search_query.present? %>
 
           <div class="grade-range-slider">
             <div class="grade-range-slider__labels">
@@ -125,51 +160,69 @@
           <%= link_to "Clear all", competitions_path, class: "btn-filter-clear" %>
         </div>
       <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="row gx-4 gy-5 competitions-grid">
-  <% @competitions.each do |competition| %>
-    <div class="col-12 col-md-6 col-xl-4">
-      <article class="competition-card competition-card--<%= competition.grade_range_tier.to_s.dasherize %> h-100 d-flex flex-column">
-        <%= link_to competition_path(competition), class: "competition-card-link-overlay" do %>
-          <div class="competition-body flex-grow-1">
-            <div class="d-flex align-items-start justify-content-between gap-2">
-              <h2 class="competition-name mb-0"><%= competition.name %></h2>
-              <span class="competition-status-badge competition-status-badge--<%= competition.status %>" aria-label="Status: <%= competition.status %>">
-                <%= competition.status.to_s.titleize %>
-              </span>
+<% if @competitions.any? %>
+  <div class="row gx-4 gy-5 competitions-grid">
+    <% @competitions.each do |competition| %>
+      <div class="col-12 col-md-6 col-xl-4">
+        <article class="competition-card competition-card--<%= competition.grade_range_tier.to_s.dasherize %> h-100 d-flex flex-column">
+          <%= link_to competition_path(competition), class: "competition-card-link-overlay" do %>
+            <div class="competition-body flex-grow-1">
+              <div class="d-flex align-items-start justify-content-between gap-2">
+                <h2 class="competition-name mb-0"><%= competition.name %></h2>
+                <span class="competition-status-badge competition-status-badge--<%= competition.status %>" aria-label="Status: <%= competition.status %>">
+                  <%= competition.status.to_s.titleize %>
+                </span>
+              </div>
+              <p class="competition-date">Difficulty: <%= competition.climb_grade_range_label || "—" %></p>
+              <p class="competition-date">Climbers: <%= competition.users.count %></p>
+              <p class="competition-date">Starts: <%= competition.starts_at&.strftime("%b %-d, %Y") %></p>
+              <p class="competition-date">Ends: <%= competition.ends_at&.strftime("%b %-d, %Y") %></p>
             </div>
-            <p class="competition-date">Difficulty: <%= competition.climb_grade_range_label || "—" %></p>
-            <p class="competition-date">Climbers: <%= competition.users.count %></p>
-            <p class="competition-date">Starts: <%= competition.starts_at&.strftime("%b %-d, %Y") %></p>
-            <p class="competition-date">Ends: <%= competition.ends_at&.strftime("%b %-d, %Y") %></p>
-          </div>
-        <% end %>
+          <% end %>
 
-        <% if authenticated? && ((current_user.competitions.include?(competition) && competition.leavable?) || competition.joinable?) %>
-          <div class="competition-action-buttons">
-            <% if current_user.competitions.include?(competition) && competition.leavable? %>
-              <% enrollment = competition.enrollments.find_by(user: current_user) %>
-              <button type="button" class="btn-leave-competition" data-competition-id="<%= competition.id %>" data-enrollment-id="<%= enrollment.id %>" data-competition-name="<%= competition.name %>">
-                LEAVE
-              </button>
-            <% elsif competition.joinable? %>
-              <button type="button" class="btn-join-competition" data-competition-id="<%= competition.id %>" data-competition-name="<%= competition.name %>">
-                JOIN
-              </button>
-            <% end %>
-          </div>
+          <% if authenticated? && ((current_user.competitions.include?(competition) && competition.leavable?) || competition.joinable?) %>
+            <div class="competition-action-buttons">
+              <% if current_user.competitions.include?(competition) && competition.leavable? %>
+                <% enrollment = competition.enrollments.find_by(user: current_user) %>
+                <button type="button" class="btn-leave-competition" data-competition-id="<%= competition.id %>" data-enrollment-id="<%= enrollment.id %>" data-competition-name="<%= competition.name %>">
+                  LEAVE
+                </button>
+              <% elsif competition.joinable? %>
+                <button type="button" class="btn-join-competition" data-competition-id="<%= competition.id %>" data-competition-name="<%= competition.name %>">
+                  JOIN
+                </button>
+              <% end %>
+            </div>
+          <% end %>
+        </article>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="pagination-container mt-5 mb-5 d-flex justify-content-center">
+    <%= paginate @competitions, params: @filter_params %>
+  </div>
+<% else %>
+  <section class="competitions-empty-state" aria-live="polite">
+    <div class="competitions-empty-state-panel">
+      <h2 class="competitions-empty-state-title">No matching results</h2>
+      <p class="competitions-empty-state-message mb-0">
+        <% if @search_query.present? %>
+          No competitions match your search for &ldquo;<%= @search_query %>&rdquo;.
+        <% else %>
+          No competitions match your current filters.
         <% end %>
-      </article>
+      </p>
+      <%= link_to "View all competitions", competitions_path, class: "btn btn-board-secondary competitions-empty-state-btn" %>
     </div>
-  <% end %>
-</div>
-
-<div class="pagination-container mt-5 mb-5 d-flex justify-content-center">
-  <%= paginate @competitions, params: @filter_params %>
-</div>
+  </section>
+<% end %>
 
 <!-- Join Confirmation Modal -->
 <div id="joinModal" class="modal-overlay" style="display: none;">

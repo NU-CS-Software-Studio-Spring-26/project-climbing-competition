@@ -68,9 +68,16 @@ body.app-shell.home-shell {
   margin: clamp(0.7rem, 1.9vh, 1.15rem) 0 0;
 }
 
+.home-primary-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.45rem, 1.1vh, 0.75rem);
+  margin-top: clamp(1rem, 2.8vh, 2.2rem);
+}
+
 .home-events-link {
   display: inline-block;
-  margin-top: clamp(1rem, 2.8vh, 2.2rem);
   font-size: clamp(1rem, 2vw, 1.85rem);
   font-weight: 700;
   text-transform: uppercase;
@@ -80,6 +87,20 @@ body.app-shell.home-shell {
 }
 
 .home-events-link:hover {
+  color: #000000;
+}
+
+.home-tutorial-link {
+  display: inline-block;
+  font-size: clamp(0.9rem, 1.45vw, 1.25rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #111111;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.home-tutorial-link:hover {
   color: #000000;
 }
 
@@ -316,6 +337,39 @@ body.app-shell.home-shell {
   display: inline-block;
 }
 
+.competition-owner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.btn-competition-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.38rem 0.72rem;
+  border: 1px solid rgba(243, 241, 234, 0.88);
+  border-radius: 0.3rem;
+  background: transparent;
+  color: #f3f1ea;
+  font-family: "Host Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.btn-competition-edit:hover,
+.btn-competition-edit:focus {
+  background: rgba(243, 241, 234, 0.08);
+  color: #ffffff;
+  border-color: rgba(243, 241, 234, 0.98);
+}
+
 .btn-competition-delete {
   padding: 0.38rem 0.72rem;
   border-radius: 0.3rem;
@@ -371,12 +425,14 @@ body.app-shell.home-shell {
   background: #f2eee6;
   color: #121212;
   border: 1px solid #f2eee6;
+  text-decoration: none;
 }
 
 .btn-join-competition-show:hover {
   background: #ffffff;
   color: #121212;
   border-color: #ffffff;
+  text-decoration: none;
 }
 
 .btn-leave-competition-show {
@@ -394,8 +450,7 @@ body.app-shell.home-shell {
 .competition-section-title {
   font-size: clamp(1.6rem, 3vw, 2rem);
   font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 0.14em;
+  text-decoration: none;
   margin: 0;
 }
 
@@ -448,6 +503,10 @@ body.app-shell.home-shell {
   font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-weight: 600;
   color: #c8f0d8;
+}
+
+.scoring-rules-value--deduction {
+  color: #f08080;
 }
 
 .scoring-rules-list li:last-child {
@@ -698,8 +757,7 @@ body.app-shell.home-shell {
   padding: 1rem 1rem 0.9rem;
   font-size: 0.82rem;
   text-transform: lowercase;
-  text-decoration: underline;
-  text-underline-offset: 0.14em;
+  text-decoration: none;
   border-bottom: 0;
   color: rgba(243, 241, 234, 0.9);
 }
@@ -809,6 +867,41 @@ body.app-shell.home-shell {
   margin: 0 auto;
 }
 
+.competitions-empty-state {
+  max-width: 1110px;
+  margin: 3rem auto 4rem;
+  padding: 0 0.5rem;
+}
+
+.competitions-empty-state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(245, 242, 230, 0.18);
+  border-radius: 0.75rem;
+}
+
+.competitions-empty-state-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.competitions-empty-state-message {
+  max-width: 28rem;
+  color: rgba(243, 241, 234, 0.72);
+  font-size: 0.95rem;
+}
+
+.competitions-empty-state-btn {
+  margin-top: 0.35rem;
+}
+
 .competition-card {
   position: relative;
   background: rgba(255, 255, 255, 0.42);
@@ -863,24 +956,6 @@ body.app-shell.home-shell {
   font-weight: 600;
 }
 
-.competition-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.66rem;
-}
-
-.competition-link {
-  color: var(--card-text);
-  font-size: 0.86rem;
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 0.16em;
-}
-
-.competition-link:hover {
-  color: #000000;
-}
-
 .competition-action-buttons {
   padding: 0.75rem 0.95rem 0.95rem;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
@@ -912,7 +987,11 @@ body.app-shell.home-shell {
 .btn-leave-competition-show {
   width: auto;
   padding: 0.65rem 1.2rem;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .btn-join-competition,
@@ -1470,25 +1549,6 @@ body.app-shell.home-shell {
   color: rgba(243, 241, 234, 0.62);
 }
 
-.profile-friends-feed-link-wrap {
-  margin: 0;
-}
-
-.profile-friends-feed-link {
-  font-size: 0.88rem;
-  font-weight: 600;
-  text-transform: lowercase;
-  color: rgba(243, 241, 234, 0.88);
-  text-decoration: underline;
-  text-underline-offset: 0.14em;
-  text-decoration-color: rgba(243, 241, 234, 0.35);
-}
-
-.profile-friends-feed-link:hover {
-  color: #ffffff;
-  text-decoration-color: rgba(243, 241, 234, 0.75);
-}
-
 .friends-shell {
   max-width: 52rem;
 }
@@ -1869,6 +1929,46 @@ body.app-shell:not(.home-shell) .profile-shell .board-form .char-counter--over {
   line-height: 1.3;
 }
 
+.competition-edit-grade-notice {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(179, 232, 197, 0.35);
+  border-radius: 0.45rem;
+  background: rgba(179, 232, 197, 0.08);
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.competition-edit-climb-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.competition-edit-climb-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid rgba(243, 241, 234, 0.12);
+}
+
+.competition-edit-climb-list__item:last-child {
+  border-bottom: none;
+}
+
+.competition-edit-climb-list__name {
+  font-weight: 600;
+}
+
+.competition-edit-climb-list__grade {
+  font-size: 0.85rem;
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+  letter-spacing: 0.04em;
+}
+
 .board-form-field--last {
   margin-bottom: 0;
 }
@@ -1979,7 +2079,7 @@ body.app-shell:not(.home-shell) .profile-shell .board-form .char-counter--over {
   }
 
   .home-events-link {
-    margin-top: 1rem;
+    margin-top: 0;
   }
 
   .home-kilter-wrap {
@@ -2040,6 +2140,23 @@ body.app-shell:not(.home-shell) .profile-shell .board-form .char-counter--over {
   font-weight: 700;
 }
 
+.auth-form-help {
+  font-size: 0.85rem;
+}
+
+.auth-inline-link {
+  color: rgba(243, 241, 234, 0.85);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-color: rgba(179, 232, 197, 0.5);
+}
+
+.auth-inline-link:hover,
+.auth-inline-link:focus {
+  color: #b3e8c5;
+  text-decoration-color: rgba(179, 232, 197, 0.9);
+}
+
 /* Sort Buttons */
 .btn-sort {
   display: inline-block;
@@ -2075,12 +2192,103 @@ body.app-shell:not(.home-shell) .profile-shell .board-form .char-counter--over {
   border-color: #98ddb8;
 }
 
+/* Competitions toolbar (search + filter) */
+.competitions-toolbar {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.competitions-search-bar {
+  width: 100%;
+}
+
+.competitions-search-form {
+  width: 100%;
+  max-width: none;
+}
+
+.competitions-search-input-group {
+  position: relative;
+  width: 100%;
+}
+
+.competitions-search-input {
+  width: 100%;
+  padding: 0.52rem 2.8rem 0.52rem 0.9rem;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text);
+  border: 1px solid rgba(243, 241, 234, 0.28);
+  border-radius: 0.45rem;
+  font-size: 0.82rem;
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  letter-spacing: 0.02em;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.competitions-search-input::placeholder {
+  color: rgba(243, 241, 234, 0.42);
+}
+
+.competitions-search-input:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(243, 241, 234, 0.6);
+}
+
+.competitions-search-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0.55rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0.15rem;
+  color: rgba(243, 241, 234, 0.55);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.competitions-search-btn:hover,
+.competitions-search-btn:focus {
+  color: var(--text);
+}
+
+.competitions-search-clear {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 2.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.15rem;
+  text-decoration: none;
+  color: rgba(243, 241, 234, 0.45);
+  transition: color 0.15s;
+}
+
+.competitions-search-clear:hover,
+.competitions-search-clear:focus {
+  color: var(--text);
+}
+
 /* Competitions filter dropdown */
 .competitions-filter-bar {
   display: flex;
   justify-content: flex-end;
-  margin-top: 0.35rem;
-  margin-bottom: 0.35rem;
+  width: 100%;
+  margin-top: 0;
 }
 
 .filter-dropdown {
@@ -2552,10 +2760,6 @@ body.app-shell:not(.home-shell) .competition-card-link-overlay {
 
 .competition-date:last-of-type {
   margin-bottom: 0;
-}
-
-.competition-links {
-  margin-top: 0.1rem;
 }
 
 .competition-action-buttons {
@@ -3738,6 +3942,121 @@ body.app-shell.home-shell .app-footer-tagline {
 
 .legal-list ul li+li {
   margin-top: 0.35rem;
+}
+
+/* Tutorial page */
+.tutorial-page-header .page-title {
+  font-size: 1.65rem;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.75rem;
+}
+
+.tutorial-document .legal-list > li > h2 {
+  font-size: 1.65rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.tutorial-document .legal-list > li {
+  margin-bottom: 2rem;
+}
+
+.tutorial-document a,
+.tutorial-figure figcaption a {
+  color: rgba(243, 241, 234, 0.9);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-color: rgba(179, 232, 197, 0.5);
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.tutorial-document a:hover,
+.tutorial-document a:focus,
+.tutorial-figure figcaption a:hover,
+.tutorial-figure figcaption a:focus {
+  color: #b3e8c5;
+  text-decoration-color: rgba(179, 232, 197, 0.9);
+}
+
+.tutorial-intro,
+.tutorial-note,
+.tutorial-outro {
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.tutorial-intro {
+  margin: 0 0 1.5rem;
+}
+
+.tutorial-note {
+  margin: 0.75rem 0 0;
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+}
+
+.tutorial-steps {
+  margin: 0.65rem 0 0;
+  padding-left: 1.35rem;
+}
+
+.tutorial-steps > li {
+  margin-bottom: 0.55rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.tutorial-steps > li:last-child {
+  margin-bottom: 0;
+}
+
+.tutorial-steps strong {
+  font-weight: 600;
+}
+
+.tutorial-figure {
+  margin: 1rem 0 0.25rem;
+}
+
+.tutorial-figure figcaption {
+  margin-top: 0.55rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+  text-align: center;
+}
+
+.tutorial-preview {
+  pointer-events: none;
+  user-select: none;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  background: var(--bg, #121212);
+}
+
+.tutorial-preview .btn-join-competition,
+.tutorial-preview .btn-join-competition-show,
+.tutorial-preview .btn-climb-action {
+  cursor: default;
+}
+
+.tutorial-preview--cards {
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+.tutorial-preview--show {
+  max-width: 52rem;
+  margin-inline: auto;
+}
+
+.tutorial-preview--show .competition-page-title {
+  font-size: clamp(1.4rem, 4vw, 1.85rem);
+}
+
+.tutorial-preview--show .competition-section-title {
+  font-size: 0.95rem;
 }
 
 .legal-table {

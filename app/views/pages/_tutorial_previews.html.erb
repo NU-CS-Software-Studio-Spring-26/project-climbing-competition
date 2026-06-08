@@ -1,0 +1,158 @@
+<%# Static UI previews for the tutorial — uses real component classes, not live data. %>
+<% preview = local_assigns.fetch(:preview, :all) %>
+
+<% if preview == :cards || preview == :all %>
+<figure class="tutorial-figure">
+  <div class="tutorial-preview tutorial-preview--cards" aria-hidden="true">
+    <div class="row gx-4 gy-4 competitions-grid m-0">
+      <div class="col-12 col-md-6">
+        <article class="competition-card competition-card--v4-6 h-100 d-flex flex-column">
+          <div class="competition-body flex-grow-1">
+            <div class="d-flex align-items-start justify-content-between gap-2">
+              <h2 class="competition-name mb-0">Spring Send Fest</h2>
+              <span class="competition-status-badge competition-status-badge--active">Active</span>
+            </div>
+            <p class="competition-date">Difficulty: V3–V6</p>
+            <p class="competition-date">Climbers: 12</p>
+            <p class="competition-date">Starts: Mar 1, 2026</p>
+            <p class="competition-date">Ends: Mar 31, 2026</p>
+          </div>
+          <div class="competition-action-buttons">
+            <span class="btn-join-competition">JOIN</span>
+          </div>
+        </article>
+      </div>
+      <div class="col-12 col-md-6">
+        <article class="competition-card competition-card--v7-9 h-100 d-flex flex-column">
+          <div class="competition-body flex-grow-1">
+            <div class="d-flex align-items-start justify-content-between gap-2">
+              <h2 class="competition-name mb-0">Campus Crux Cup</h2>
+              <span class="competition-status-badge competition-status-badge--upcoming">Upcoming</span>
+            </div>
+            <p class="competition-date">Difficulty: V7–V9</p>
+            <p class="competition-date">Climbers: 4</p>
+            <p class="competition-date">Starts: Apr 5, 2026</p>
+            <p class="competition-date">Ends: Apr 19, 2026</p>
+          </div>
+          <div class="competition-action-buttons">
+            <span class="btn-join-competition">JOIN</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+  <figcaption>Competition cards on the <%= link_to "events page", competitions_path %> — click <strong>JOIN</strong> to enroll.</figcaption>
+</figure>
+<% end %>
+
+<% if preview == :show || preview == :all %>
+<figure class="tutorial-figure">
+  <div class="tutorial-preview tutorial-preview--show competition-show-shell" aria-hidden="true">
+    <header class="competition-page-header mb-3">
+      <h2 class="competition-page-title mb-0">Spring Send Fest</h2>
+    </header>
+
+    <section class="competition-section competition-hero-panel detail-panel mb-3">
+      <div class="competition-hero-inner">
+        <div class="competition-hero-top">
+          <p class="competition-hero-stat mb-0">
+            Intermediate
+            <span class="competition-hero-stat-sep" aria-hidden="true">|</span>
+            Climbers: 12
+          </p>
+          <p class="competition-hero-dates mb-0">
+            Mar 1, 2026, 8:00 AM
+            <span class="competition-hero-separator" aria-hidden="true">–</span>
+            Mar 31, 2026, 11:59 PM
+          </p>
+          <p class="competition-hero-creator mb-0">creator: Alex Chen</p>
+        </div>
+        <div class="competition-hero-action">
+          <span class="btn-join-competition-show">JOIN</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="competition-section competition-scoring-rules mb-3">
+      <h3 class="competition-section-title text-center mb-2">Scoring Rules</h3>
+      <div class="detail-panel scoring-rules-panel">
+        <ul class="scoring-rules-list mb-0">
+          <li>
+            <span class="scoring-rules-label">Flash (1st attempt)</span>
+            <span class="scoring-rules-value">30 pts</span>
+          </li>
+          <li>
+            <span class="scoring-rules-label">Per extra attempt</span>
+            <span class="scoring-rules-value scoring-rules-value--deduction">−5 pts</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="competition-section competition-climbs-section mb-3">
+      <h3 class="competition-section-title text-center mb-2">Climbs</h3>
+      <div class="climb-cards-grid">
+        <div class="climb-card-link">
+          <div class="climb-card-grade-banner">
+            <span class="grade-badge grade--moderate">V5</span>
+          </div>
+          <div class="climb-card-body">
+            <span class="climb-card-title">Crimson Crimp</span>
+            <div class="climb-card-actions">
+              <span class="btn-climb-action">OPEN ON KILTER</span>
+              <span class="btn-climb-action btn-climb-action-primary">LOG ATTEMPT</span>
+            </div>
+          </div>
+        </div>
+        <div class="climb-card-link">
+          <div class="climb-card-grade-banner">
+            <span class="grade-badge grade--moderate">V6</span>
+          </div>
+          <div class="climb-card-body">
+            <span class="climb-card-title">Slab Sprint</span>
+            <div class="climb-card-actions">
+              <span class="btn-climb-action">OPEN ON KILTER</span>
+              <span class="btn-climb-action btn-climb-action-secondary">edit attempt</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="competition-section mb-3">
+      <div class="competition-points-pill">YOUR TOTAL POINTS: 55</div>
+    </div>
+
+    <section class="competition-section competition-leaderboard-section">
+      <h3 class="competition-section-title text-center mb-2">Leaderboard</h3>
+      <div class="detail-panel leaderboard-panel p-0">
+        <table class="table table-borderless align-middle mb-0 leaderboard-table">
+          <thead>
+            <tr>
+              <th scope="col">Rank</th>
+              <th scope="col">Climber</th>
+              <th scope="col">Points</th>
+              <th scope="col">Total Attempts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="table-active leaderboard-user-row">
+              <td>1</td>
+              <td>You</td>
+              <td>55</td>
+              <td>4</td>
+            </tr>
+            <tr class="leaderboard-user-row">
+              <td>2</td>
+              <td>Jamie Park</td>
+              <td>50</td>
+              <td>5</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  <figcaption>Competition page after joining — log attempts, track points, and check the leaderboard.</figcaption>
+</figure>
+<% end %>

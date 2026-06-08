@@ -1,5 +1,6 @@
 class Competition < ApplicationRecord
-  SCORING_MAX = 10_000
+  FLASH_POINTS_MAX = 50
+  ATTEMPT_DEDUCTION_MAX = 10
   V_GRADES = (0..16).to_a
   LEVEL_GRADE_RANGES = {
     "beginner" => [ 0, 3 ],
@@ -65,6 +66,14 @@ class Competition < ApplicationRecord
     climbs.reject(&:marked_for_destruction?).filter_map { |climb| grading_to_int(climb.grading) }
   end
 
+  def locked_grade_range_label
+    return nil if v_grade_min.nil? || v_grade_max.nil?
+
+    return format_v_grade(v_grade_min) if v_grade_min == v_grade_max
+
+    "#{format_v_grade(v_grade_min)}–#{format_v_grade(v_grade_max)}"
+  end
+
   def climb_grade_range_label
     grades = climb_grade_integers
     return nil if grades.empty?
@@ -96,17 +105,16 @@ class Competition < ApplicationRecord
   validates :name, :starts_at, :ends_at, presence: true
   validates :name, length: { maximum: 100 }
   validates :description, length: { maximum: 2000 }, allow_blank: true
-  validates :send_points, presence: true,
-            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: SCORING_MAX }
   validates :flash_points, presence: true,
-            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: SCORING_MAX }
+            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: FLASH_POINTS_MAX }
   validates :attempt_deduction, presence: true,
-            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: SCORING_MAX }
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: ATTEMPT_DEDUCTION_MAX }
   validates :v_grade_min, :v_grade_max, presence: true,
             numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 16 }
   validate :minimum_climbs
   validate :climbs_have_grades
   validate :grade_range_is_valid
+  validate :new_climbs_within_locked_grade_range, on: :update
   validate :ends_at_after_starts_at
 
   def points_for(user)
@@ -116,9 +124,8 @@ class Competition < ApplicationRecord
 
   def score_for_climb(sent:, flashed:, attempts:)
     return 0 unless sent
-    base      = flashed ? flash_points : send_points
     deduction = flashed ? 0 : (attempts - 1) * attempt_deduction
-    [ base - deduction, 0 ].max
+    [ flash_points - deduction, 0 ].max
   end
 
   def leaderboard_entries
@@ -177,9 +184,14 @@ class Competition < ApplicationRecord
     grades = climb_grade_integers
     return if grades.empty?
 
-    self.v_grade_min = grades.min
-    self.v_grade_max = grades.max
-    self.level = level_for_peak_grade(v_grade_max)
+    if persisted?
+      locked_max = attribute_in_database(:v_grade_max) || v_grade_max
+      self.level = level_for_peak_grade(locked_max)
+    else
+      self.v_grade_min = grades.min
+      self.v_grade_max = grades.max
+      self.level = level_for_peak_grade(v_grade_max)
+    end
   end
 
   def climbs_have_grades
@@ -188,6 +200,26 @@ class Competition < ApplicationRecord
 
     if active_climbs.any? { |climb| climb.grading.blank? }
       errors.add(:base, "Every climb must have a V-grade so competition difficulty can be set automatically")
+    end
+  end
+
+  def new_climbs_within_locked_grade_range
+    locked_min = attribute_in_database(:v_grade_min)
+    locked_max = attribute_in_database(:v_grade_max)
+    return if locked_min.nil? || locked_max.nil?
+
+    label = locked_grade_range_label
+
+    climbs.each do |climb|
+      next unless climb.new_record?
+      next if climb.marked_for_destruction?
+
+      grade = grading_to_int(climb.grading)
+      next if grade.nil?
+      next if grade.between?(locked_min, locked_max)
+
+      climb.errors.add(:grading, "must be within #{label}")
+      errors.add(:base, "New climbs must use grades within #{label}")
     end
   end
 

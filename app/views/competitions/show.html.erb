@@ -69,12 +69,8 @@
     <div class="detail-panel scoring-rules-panel">
       <ul class="scoring-rules-list mb-0">
         <li>
-          <span class="scoring-rules-label">Flash (1st attempt)</span>
+          <span class="scoring-rules-label">Base points</span>
           <span class="scoring-rules-value"><%= @competition.flash_points %> pts</span>
-        </li>
-        <li>
-          <span class="scoring-rules-label">Send</span>
-          <span class="scoring-rules-value"><%= @competition.send_points %> pts</span>
         </li>
         <li>
           <span class="scoring-rules-label">Per extra attempt</span>
@@ -83,7 +79,7 @@
       </ul>
       <p class="scoring-rules-hint mb-0">
         Example: sending a problem on your 3rd attempt earns
-        <%= [@competition.send_points - 2 * @competition.attempt_deduction, 0].max %> pts.
+        <%= [@competition.flash_points - 2 * @competition.attempt_deduction, 0].max %> pts.
       </p>
     </div>
   </section>
