@@ -233,5 +233,4 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_match(/only delete/i, flash[:alert].to_s)
   end
-
 end
