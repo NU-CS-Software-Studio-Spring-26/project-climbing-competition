@@ -3665,6 +3665,121 @@ body.app-shell.home-shell .app-footer-tagline {
   margin-top: 0.35rem;
 }
 
+/* Tutorial page */
+.tutorial-page-header .page-title {
+  font-size: 1.65rem;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.75rem;
+}
+
+.tutorial-document .legal-list > li > h2 {
+  font-size: 1.65rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.tutorial-document .legal-list > li {
+  margin-bottom: 2rem;
+}
+
+.tutorial-document a,
+.tutorial-figure figcaption a {
+  color: rgba(243, 241, 234, 0.9);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-color: rgba(179, 232, 197, 0.5);
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.tutorial-document a:hover,
+.tutorial-document a:focus,
+.tutorial-figure figcaption a:hover,
+.tutorial-figure figcaption a:focus {
+  color: #b3e8c5;
+  text-decoration-color: rgba(179, 232, 197, 0.9);
+}
+
+.tutorial-intro,
+.tutorial-note,
+.tutorial-outro {
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.tutorial-intro {
+  margin: 0 0 1.5rem;
+}
+
+.tutorial-note {
+  margin: 0.75rem 0 0;
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+}
+
+.tutorial-steps {
+  margin: 0.65rem 0 0;
+  padding-left: 1.35rem;
+}
+
+.tutorial-steps > li {
+  margin-bottom: 0.55rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.tutorial-steps > li:last-child {
+  margin-bottom: 0;
+}
+
+.tutorial-steps strong {
+  font-weight: 600;
+}
+
+.tutorial-figure {
+  margin: 1rem 0 0.25rem;
+}
+
+.tutorial-figure figcaption {
+  margin-top: 0.55rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--muted, rgba(243, 241, 234, 0.72));
+  text-align: center;
+}
+
+.tutorial-preview {
+  pointer-events: none;
+  user-select: none;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  background: var(--bg, #121212);
+}
+
+.tutorial-preview .btn-join-competition,
+.tutorial-preview .btn-join-competition-show,
+.tutorial-preview .btn-climb-action {
+  cursor: default;
+}
+
+.tutorial-preview--cards {
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+.tutorial-preview--show {
+  max-width: 52rem;
+  margin-inline: auto;
+}
+
+.tutorial-preview--show .competition-page-title {
+  font-size: clamp(1.4rem, 4vw, 1.85rem);
+}
+
+.tutorial-preview--show .competition-section-title {
+  font-size: 0.95rem;
+}
+
 .legal-table {
   margin: 0.75rem 0;
   font-size: 0.9rem;

@@ -21,6 +21,19 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", text: /privacy policy/i
   end
 
+  test "should get tutorial" do
+    get tutorial_url
+    assert_response :success
+    assert_select "nav.app-nav--top a.app-nav-link", text: "tutorial"
+    assert_select "h1", text: /how to use board base/i
+    assert_select "h2", text: /join a competition/i
+    assert_select "h2", text: /create a competition/i
+    assert_select "h2", text: /what to do after you join/i
+    assert_select ".tutorial-preview--cards .competition-card"
+    assert_select ".tutorial-preview--show .climb-card-link"
+    assert_select "figcaption", text: /JOIN/
+  end
+
   test "footer appears on home and legal pages" do
     get root_url
     assert_response :success
