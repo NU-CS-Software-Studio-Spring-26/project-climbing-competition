@@ -1,5 +1,4 @@
 <% content_for :title, "Sign in" %>
-
 <section class="detail-panel auth-panel p-4">
   <div class="d-flex flex-column gap-3">
     <div>
@@ -7,7 +6,6 @@
       <h1 class="page-title page-title-left">sign in</h1>
       <p class="mb-0">Use the email address from your profile to continue.</p>
     </div>
-
     <%= form_with url: session_path, scope: :session, class: "board-form" do |form| %>
       <div class="mb-3">
         <%= form.label :email_address, "Email address", class: "form-label" %>
@@ -17,18 +15,18 @@
           <div class="text-danger small mt-1"><%= @login_email_error %></div>
         <% end %>
       </div>
-
       <div class="mb-3">
         <%= form.label :password, class: "form-label" %>
         <%= form.password_field :password, class: "form-control", autocomplete: "current-password", maxlength: User::PASSWORD_MAX_LENGTH %>
+        <p class="auth-form-help mb-0 mt-2">
+          <%= link_to "Forgot password?", new_password_reset_path, class: "auth-inline-link" %>
+        </p>
       </div>
-
       <div class="action-row d-flex gap-2 flex-wrap">
         <%= form.submit "Sign in", class: "btn btn-board-primary" %>
         <%= link_to "Need an account? Sign up", new_user_path, class: "btn btn-board-secondary" %>
       </div>
     <% end %>
-
     <div class="action-row d-flex gap-2 flex-wrap">
       <%= button_to "Continue with Google", "/auth/google_oauth2", method: :post, class: "btn btn-board-secondary",
             form: { data: { turbo: false } } %>

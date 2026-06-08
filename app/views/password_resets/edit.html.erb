@@ -1,0 +1,30 @@
+<% content_for :title, "Reset password" %>
+
+<section class="detail-panel auth-panel p-4">
+  <div class="d-flex flex-column gap-3">
+    <div>
+      <p class="eyebrow mb-1">password help</p>
+      <h1 class="page-title page-title-left">choose a new password</h1>
+      <p class="mb-0">Enter a new password for <%= @user.email_address %>.</p>
+    </div>
+
+    <%= form_with url: password_reset_path(params[:token]), scope: :password_reset, method: :patch, class: "board-form" do |form| %>
+      <div class="mb-3">
+        <%= form.label :password, "New password", class: "form-label" %>
+        <%= form.password_field :password, class: "form-control", autocomplete: "new-password",
+              minlength: User::PASSWORD_MIN_LENGTH, maxlength: User::PASSWORD_MAX_LENGTH, required: true %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :password_confirmation, "Confirm new password", class: "form-label" %>
+        <%= form.password_field :password_confirmation, class: "form-control", autocomplete: "new-password",
+              minlength: User::PASSWORD_MIN_LENGTH, maxlength: User::PASSWORD_MAX_LENGTH, required: true %>
+      </div>
+
+      <div class="action-row d-flex gap-2 flex-wrap">
+        <%= form.submit "Update password", class: "btn btn-board-primary" %>
+        <%= link_to "Back to sign in", new_session_path, class: "btn btn-board-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</section>

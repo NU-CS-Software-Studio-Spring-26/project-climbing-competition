@@ -13,3 +13,11 @@ two:
   email_address: ben@example.com
   bio: Boulder specialist.
   password_digest: <%= BCrypt::Password.create("password123") %>
+
+google_only:
+  name: Google User
+  username: googleuser
+  email_address: google@example.com
+  bio: Signs in with Google only.
+  google_uid: google-only-uid
+  password_digest: <%= BCrypt::Password.create("password123") %>

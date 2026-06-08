@@ -42,6 +42,7 @@
         <nav class="app-nav app-nav--top" aria-label="Primary">
           <%= link_to "competitions", competitions_path, class: "app-nav-link #{controller_name == "competitions" && action_name == "index" ? "is-active" : ""}" %>
           <%= link_to "create", new_competition_path, class: "app-nav-link #{controller_name == "competitions" && action_name == "new" ? "is-active" : ""}" %>
+          <%= link_to "tutorial", tutorial_path, class: "app-nav-link #{controller_name == "pages" && action_name == "tutorial" ? "is-active" : ""}" %>
           <% if authenticated? %>
             <%= link_to "friends", friends_path, class: "app-nav-link #{controller_name == "friends" ? "is-active" : ""}" %>
             <%= link_to current_user.username, user_path(current_user), class: "app-nav-link #{controller_name == "users" && action_name == "show" ? "is-active" : ""}" %>

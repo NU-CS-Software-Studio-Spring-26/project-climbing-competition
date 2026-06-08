@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   match "/auth/failure", to: "sessions#omniauth_failure", via: [ :get, :post ]
 
   resource :session, only: [ :new, :create, :destroy ]
+  resources :password_resets, param: :token, only: [ :new, :create, :edit, :update ]
   get "friends", to: "friends#index", as: :friends
   resources :users, only: [ :new, :create, :show, :edit, :update ] do
     resource :follow, only: [ :create, :destroy ]
@@ -18,6 +19,7 @@ Rails.application.routes.draw do
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "about", to: "pages#about", as: :about
+  get "tutorial", to: "pages#tutorial", as: :tutorial
   get "terms", to: "pages#terms", as: :terms
   get "privacy", to: "pages#privacy", as: :privacy
 

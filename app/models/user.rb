@@ -22,6 +22,10 @@ class User < ApplicationRecord
 
   has_secure_password
 
+  generates_token_for :password_reset, expires_in: 15.minutes do
+    password_salt&.last(10)
+  end
+
   before_validation :sanitize_profile_fields
 
   normalizes :email_address, with: ->(value) { value.strip.downcase }
@@ -111,5 +115,9 @@ class User < ApplicationRecord
       return false if other_user.blank? || other_user == self
 
       active_follows.exists?(followed_id: other_user.id)
+    end
+
+    def password_resettable?
+      google_uid.blank? && password_digest.present?
     end
 end

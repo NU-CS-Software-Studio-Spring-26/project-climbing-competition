@@ -7,6 +7,15 @@ class CompetitionsController < ApplicationController
   def index
     @competitions = Competition.includes(:owner, :users, :climbs)
 
+    @search_query = params[:q].to_s.strip
+    if @search_query.present?
+      # SQLite compatibility: use LOWER(...) + LIKE instead of ILIKE.
+      @competitions = @competitions.where(
+        "LOWER(competitions.name) LIKE ?",
+        "%#{@search_query.downcase}%"
+      )
+    end
+
     @sort_by = params[:sort_by].presence_in(%w[ starts_at ends_at ])
     @sort_direction = if @sort_by
       params[:sort_direction].presence_in(%w[ asc desc ]) || "asc"
@@ -52,6 +61,7 @@ class CompetitionsController < ApplicationController
     }.compact
     @filter_params[:grade_min] = @grade_range_min if @grade_range_min > 0
     @filter_params[:grade_max] = @grade_range_max if @grade_range_max < 16
+    @filter_params[:q] = @search_query if @search_query.present?
 
     # Apply pagination
     @competitions = @competitions.page(params[:page]).per(9)
@@ -77,13 +87,11 @@ class CompetitionsController < ApplicationController
   # GET /competitions/new
   def new
     @competition = Competition.new
-    3.times { @competition.climbs.build }
+    2.times { @competition.climbs.build }
   end
 
   # GET /competitions/1/edit
   def edit
-    # Ensure at least one blank climb field for adding
-    @competition.climbs.build if @competition.climbs.empty?
   end
 
   # POST /competitions or /competitions.json
@@ -106,14 +114,14 @@ class CompetitionsController < ApplicationController
 
   # PATCH/PUT /competitions/1 or /competitions/1.json
   def update
-    @competition.assign_attributes(competition_params)
+    @competition.assign_attributes(competition_update_params)
     assign_combined_datetimes(@competition)
+
     respond_to do |format|
       if @competition.save
         format.html { redirect_to @competition, notice: "Competition was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @competition }
       else
-        ensure_minimum_climb_fields(@competition)
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @competition.errors, status: :unprocessable_entity }
       end
@@ -154,6 +162,32 @@ class CompetitionsController < ApplicationController
         :send_points, :flash_points, :attempt_deduction,
         climbs_attributes: [ :id, :name, :url, :grading, :hold_assignments, :_destroy ]
       )
+    end
+
+    def competition_update_params
+      permitted = params.require(:competition).permit(
+        :name,
+        climbs_attributes: [ :name, :url, :grading, :hold_assignments ]
+      )
+
+      if permitted[:climbs_attributes].present?
+        permitted[:climbs_attributes] = permitted[:climbs_attributes].reject do |_, attrs|
+          attrs[:id].present? || attrs[:_destroy].present?
+        end
+      end
+
+      permitted
+    end
+
+    def ensure_competition_owner
+      return if @competition.owner_id.present? && current_user == @competition.owner
+
+      respond_to do |format|
+        format.html do
+          redirect_to @competition, alert: "You can only edit competitions you created.", status: :see_other
+        end
+        format.json { head :forbidden }
+      end
     end
     def assign_combined_datetimes(competition)
       raw = params.require(:competition).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time)

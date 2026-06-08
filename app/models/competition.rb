@@ -65,6 +65,14 @@ class Competition < ApplicationRecord
     climbs.reject(&:marked_for_destruction?).filter_map { |climb| grading_to_int(climb.grading) }
   end
 
+  def locked_grade_range_label
+    return nil if v_grade_min.nil? || v_grade_max.nil?
+
+    return format_v_grade(v_grade_min) if v_grade_min == v_grade_max
+
+    "#{format_v_grade(v_grade_min)}–#{format_v_grade(v_grade_max)}"
+  end
+
   def climb_grade_range_label
     grades = climb_grade_integers
     return nil if grades.empty?
@@ -107,6 +115,7 @@ class Competition < ApplicationRecord
   validate :minimum_climbs
   validate :climbs_have_grades
   validate :grade_range_is_valid
+  validate :new_climbs_within_locked_grade_range, on: :update
   validate :ends_at_after_starts_at
 
   def points_for(user)
@@ -177,9 +186,14 @@ class Competition < ApplicationRecord
     grades = climb_grade_integers
     return if grades.empty?
 
-    self.v_grade_min = grades.min
-    self.v_grade_max = grades.max
-    self.level = level_for_peak_grade(v_grade_max)
+    if persisted?
+      locked_max = attribute_in_database(:v_grade_max) || v_grade_max
+      self.level = level_for_peak_grade(locked_max)
+    else
+      self.v_grade_min = grades.min
+      self.v_grade_max = grades.max
+      self.level = level_for_peak_grade(v_grade_max)
+    end
   end
 
   def climbs_have_grades
@@ -188,6 +202,26 @@ class Competition < ApplicationRecord
 
     if active_climbs.any? { |climb| climb.grading.blank? }
       errors.add(:base, "Every climb must have a V-grade so competition difficulty can be set automatically")
+    end
+  end
+
+  def new_climbs_within_locked_grade_range
+    locked_min = attribute_in_database(:v_grade_min)
+    locked_max = attribute_in_database(:v_grade_max)
+    return if locked_min.nil? || locked_max.nil?
+
+    label = locked_grade_range_label
+
+    climbs.each do |climb|
+      next unless climb.new_record?
+      next if climb.marked_for_destruction?
+
+      grade = grading_to_int(climb.grading)
+      next if grade.nil?
+      next if grade.between?(locked_min, locked_max)
+
+      climb.errors.add(:grading, "must be within #{label}")
+      errors.add(:base, "New climbs must use grades within #{label}")
     end
   end
 
