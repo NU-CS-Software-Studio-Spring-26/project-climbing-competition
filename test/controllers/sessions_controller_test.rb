@@ -26,6 +26,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "input[name='session[email_address]']"
     assert_select "input[name='session[password]']"
+    assert_select "a[href=?]", new_password_reset_path, text: "Forgot password?"
   end
 
   test "should sign in user" do

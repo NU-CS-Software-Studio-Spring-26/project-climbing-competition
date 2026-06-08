@@ -1,6 +1,7 @@
 class CompetitionsController < ApplicationController
-  before_action :require_authentication, only: %i[ new create destroy ]
+  before_action :require_authentication, only: %i[ new create edit update destroy ]
   before_action :set_competition, only: %i[ show edit update destroy ]
+  before_action :ensure_competition_owner, only: %i[ edit update destroy ]
 
   # GET /competitions or /competitions.json
   def index
@@ -91,8 +92,6 @@ class CompetitionsController < ApplicationController
 
   # GET /competitions/1/edit
   def edit
-    # Ensure at least one blank climb field for adding
-    @competition.climbs.build if @competition.climbs.empty?
   end
 
   # POST /competitions or /competitions.json
@@ -115,14 +114,14 @@ class CompetitionsController < ApplicationController
 
   # PATCH/PUT /competitions/1 or /competitions/1.json
   def update
-    @competition.assign_attributes(competition_params)
+    @competition.assign_attributes(competition_update_params)
     assign_combined_datetimes(@competition)
+
     respond_to do |format|
       if @competition.save
         format.html { redirect_to @competition, notice: "Competition was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @competition }
       else
-        ensure_minimum_climb_fields(@competition)
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @competition.errors, status: :unprocessable_entity }
       end
@@ -131,14 +130,6 @@ class CompetitionsController < ApplicationController
 
   # DELETE /competitions/1 or /competitions/1.json
   def destroy
-    unless @competition.owner_id.present? && current_user == @competition.owner
-      respond_to do |format|
-        format.html { redirect_to competitions_path, alert: "You can only delete competitions you created.", status: :see_other }
-        format.json { head :forbidden }
-      end
-      return
-    end
-
     @competition.destroy!
 
     respond_to do |format|
@@ -160,6 +151,32 @@ class CompetitionsController < ApplicationController
         :send_points, :flash_points, :attempt_deduction,
         climbs_attributes: [ :id, :name, :url, :grading, :hold_assignments, :_destroy ]
       )
+    end
+
+    def competition_update_params
+      permitted = params.require(:competition).permit(
+        :name,
+        climbs_attributes: [ :name, :url, :grading, :hold_assignments ]
+      )
+
+      if permitted[:climbs_attributes].present?
+        permitted[:climbs_attributes] = permitted[:climbs_attributes].reject do |_, attrs|
+          attrs[:id].present? || attrs[:_destroy].present?
+        end
+      end
+
+      permitted
+    end
+
+    def ensure_competition_owner
+      return if @competition.owner_id.present? && current_user == @competition.owner
+
+      respond_to do |format|
+        format.html do
+          redirect_to @competition, alert: "You can only edit competitions you created.", status: :see_other
+        end
+        format.json { head :forbidden }
+      end
     end
     def assign_combined_datetimes(competition)
       raw = params.require(:competition).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time)

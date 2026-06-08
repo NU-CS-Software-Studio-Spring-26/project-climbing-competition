@@ -29,11 +29,14 @@
 
         <div class="competition-hero-top-end">
           <% if authenticated? && current_user == @competition.owner && @competition.owner_id.present? %>
-            <%= button_to "Delete competition",
-                  competition_path(@competition),
-                  method: :delete,
-                  class: "btn-competition-delete",
-                  form: { data: { turbo_confirm: "Permanently delete this competition? All enrollments and attempts will be removed." } } %>
+            <div class="competition-owner-actions">
+              <%= link_to "Edit competition", edit_competition_path(@competition), class: "btn-competition-edit" %>
+              <%= button_to "Delete competition",
+                    competition_path(@competition),
+                    method: :delete,
+                    class: "btn-competition-delete",
+                    form: { data: { turbo_confirm: "Permanently delete this competition? All enrollments and attempts will be removed." } } %>
+            </div>
           <% else %>
             <p class="competition-hero-creator mb-0">
               creator:

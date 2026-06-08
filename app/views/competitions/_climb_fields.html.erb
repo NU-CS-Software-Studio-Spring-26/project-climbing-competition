@@ -1,9 +1,15 @@
+<% locked_grade_min = local_assigns[:locked_grade_min] %>
+<% locked_grade_max = local_assigns[:locked_grade_max] %>
+<% allow_remove = local_assigns.fetch(:allow_remove, true) %>
+<% grade_options = climb_grade_options(locked_grade_min: locked_grade_min, locked_grade_max: locked_grade_max) %>
 <div class="climb-field" data-climb-field>
   <div class="climb-field-header">
     <h3 class="climb-field-title mb-0">Climb</h3>
-    <button type="button" class="btn btn-sm btn-outline-danger delete-climb-btn" data-climb-id="<%= form.object.id %>">
-      <span aria-hidden="true">×</span> Remove
-    </button>
+    <% if allow_remove %>
+      <button type="button" class="btn btn-sm btn-outline-danger delete-climb-btn" data-climb-id="<%= form.object.id %>">
+        <span aria-hidden="true">×</span> Remove
+      </button>
+    <% end %>
   </div>
 
   <div class="board-form-field" data-controller="char-counter" data-char-counter-max-value="100">
@@ -17,7 +23,7 @@
   <div class="board-form-field">
     <%= form.label :grading, "V-Grade", class: "form-label" %>
     <%= form.select :grading,
-        options_for_select(Climb::GRADES.map { |g| [ g, g ] }, form.object.grading),
+        options_for_select(grade_options.map { |g| [ g, g ] }, form.object.grading),
         { prompt: "Select grade" },
         class: "form-select",
         required: true %>

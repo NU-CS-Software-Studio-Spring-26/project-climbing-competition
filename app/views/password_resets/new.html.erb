@@ -1,0 +1,26 @@
+<% content_for :title, "Forgot password" %>
+
+<section class="detail-panel auth-panel p-4">
+  <div class="d-flex flex-column gap-3">
+    <div>
+      <p class="eyebrow mb-1">password help</p>
+      <h1 class="page-title page-title-left">forgot password</h1>
+      <p class="mb-0">
+        Enter the email for your password account. Google sign-in accounts should use
+        <strong>Continue with Google</strong> instead.
+      </p>
+    </div>
+
+    <%= form_with url: password_resets_path, scope: :password_reset, class: "board-form" do |form| %>
+      <div class="mb-3">
+        <%= form.label :email_address, "Email address", class: "form-label" %>
+        <%= form.email_field :email_address, class: "form-control", autocomplete: "email", placeholder: "name@example.com", required: true %>
+      </div>
+
+      <div class="action-row d-flex gap-2 flex-wrap">
+        <%= form.submit "Send reset link", class: "btn btn-board-primary" %>
+        <%= link_to "Back to sign in", new_session_path, class: "btn btn-board-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</section>

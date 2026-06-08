@@ -191,4 +191,12 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_not competition.valid?
     assert_includes competition.errors[:ends_at], "must be after the start date and time"
   end
+
+  test "rejects new climbs outside locked grade range on update" do
+    competition = competitions(:one)
+
+    competition.climbs.build(name: "Too hard", url: "https://example.com/hard", grading: "V8")
+    assert_not competition.valid?(:update)
+    assert_includes competition.errors[:base].join, "New climbs must use grades within"
+  end
 end

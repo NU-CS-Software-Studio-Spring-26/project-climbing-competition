@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   match "/auth/failure", to: "sessions#omniauth_failure", via: [ :get, :post ]
 
   resource :session, only: [ :new, :create, :destroy ]
+  resources :password_resets, param: :token, only: [ :new, :create, :edit, :update ]
   get "friends", to: "friends#index", as: :friends
   resources :users, only: [ :new, :create, :show, :edit, :update ] do
     resource :follow, only: [ :create, :destroy ]
