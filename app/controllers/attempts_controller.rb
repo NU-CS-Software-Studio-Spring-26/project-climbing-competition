@@ -19,7 +19,7 @@ class AttemptsController < ApplicationController
     @attempt.assign_attributes(attempt_params)
 
     if @attempt.save
-      redirect_to competition_climb_path(@competition, @climb), notice: "Your attempt was saved."
+      redirect_to competition_path(@competition, anchor: "leaderboard"), notice: "Your attempt was saved."
     else
       render "climbs/show", status: :unprocessable_entity
     end

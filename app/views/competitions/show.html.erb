@@ -51,13 +51,17 @@
         <p class="competition-hero-description mb-0"><%= @competition.description %></p>
       <% end %>
 
-      <% if authenticated? %>
+      <% show_leave = authenticated? && current_user.competitions.include?(@competition) && @competition.leavable? %>
+      <% show_join = @competition.joinable? && (!authenticated? || !current_user.competitions.include?(@competition)) %>
+      <% if show_leave || show_join %>
         <div class="competition-hero-action">
-          <% if current_user.competitions.include?(@competition) && @competition.leavable? %>
+          <% if show_leave %>
             <% enrollment = @competition.enrollments.find_by(user: current_user) %>
             <%= button_to "LEAVE", competition_enrollment_path(@competition, enrollment), method: :delete, class: "btn-leave-competition-show" %>
-          <% elsif @competition.joinable? %>
+          <% elsif authenticated? %>
             <%= button_to "JOIN", competition_enrollments_path(@competition), method: :post, class: "btn-join-competition-show" %>
+          <% else %>
+            <%= link_to "JOIN", new_user_path, class: "btn-join-competition-show" %>
           <% end %>
         </div>
       <% end %>
@@ -141,7 +145,7 @@
   <% end %>
 
   <% if @leaderboard_entries.any? %>
-    <section class="competition-section competition-leaderboard-section">
+    <section id="leaderboard" class="competition-section competition-leaderboard-section">
       <h2 class="competition-section-title text-center mb-2">Leaderboard</h2>
       <p class="competition-section-caption text-center mb-4">click to see more details</p>
       <div class="detail-panel leaderboard-panel p-0">
@@ -228,5 +232,26 @@
         detailRow.style.display = 'none';
       }
     }
+
+    function revealLeaderboardFromHash() {
+      if (window.location.hash !== '#leaderboard') return;
+
+      const leaderboard = document.getElementById('leaderboard');
+      const currentUserRow = document.querySelector('.leaderboard-user-row.table-active');
+
+      if (currentUserRow) {
+        const detailRow = document.querySelector(`.leaderboard-detail-row[data-user-id="${currentUserRow.dataset.userId}"]`);
+        if (detailRow && detailRow.style.display === 'none') {
+          toggleLeaderboardDetails(currentUserRow);
+        }
+        currentUserRow.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        return;
+      }
+
+      leaderboard?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }
+
+    document.addEventListener('DOMContentLoaded', revealLeaderboardFromHash);
+    document.addEventListener('turbo:load', revealLeaderboardFromHash);
   </script>
 </div>

@@ -120,6 +120,16 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_operator response.body.index(users(:one).username), :<, response.body.index(users(:two).username)
   end
 
+  test "should show join link to sign up for unauthenticated users on joinable competition" do
+    @competition.update!(starts_at: 1.day.from_now, ends_at: 1.week.from_now)
+
+    get competition_url(@competition)
+
+    assert_response :success
+    assert_select "a.btn-join-competition-show[href='#{new_user_path}']", text: "JOIN"
+    assert_select "form[action='#{competition_enrollments_path(@competition)}'] input[value='JOIN']", count: 0
+  end
+
   test "should get edit when signed in as owner" do
     sign_in_as(@user)
     get edit_competition_url(@competition)
