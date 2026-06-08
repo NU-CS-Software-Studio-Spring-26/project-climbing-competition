@@ -92,8 +92,8 @@ class UserTest < ActiveSupport::TestCase
     climb_one = climbs(:one)
     climb_two = climbs(:one_two)
     Attempt.where(climb: [ climb_one, climb_two ]).delete_all
-    Attempt.create!(user: user, climb: climb_one, attempt_count: 1, completed: true)
-    Attempt.create!(user: users(:two), climb: climb_one, attempt_count: 2, completed: true)
+    Attempt.create!(user: user, climb: climb_one, attempt_count: 1)
+    Attempt.create!(user: users(:two), climb: climb_one, attempt_count: 2)
 
     assert_equal 1, competition.placement_for(user)
     assert_equal 1.0, user.average_placement

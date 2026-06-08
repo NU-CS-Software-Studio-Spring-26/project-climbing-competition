@@ -31,7 +31,7 @@ class FriendActivityFeedTest < ActiveSupport::TestCase
     competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
     climb = climbs(:one)
     attempt = Attempt.find_or_initialize_by(user: @friend, climb: climb)
-    attempt.update!(attempt_count: 2, completed: true, updated_at: Time.current)
+    attempt.update!(attempt_count: 2, updated_at: Time.current)
 
     activities = FriendActivityFeed.for(@viewer)
     logged = activities.find { |activity| activity.kind == :attempt && activity.user == @friend && activity.attempt == attempt }

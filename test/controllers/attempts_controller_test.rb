@@ -13,7 +13,7 @@ class AttemptsControllerTest < ActionDispatch::IntegrationTest
 
   test "should require authentication to log an attempt" do
     assert_no_difference("Attempt.count") do
-      post competition_climb_attempt_url(@competition, @climb), params: { attempt: { attempt_count: 3, completed: true } }
+      post competition_climb_attempt_url(@competition, @climb), params: { attempt: { attempt_count: 3 } }
     end
 
     assert_redirected_to new_session_url
@@ -23,14 +23,14 @@ class AttemptsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(@user)
 
     assert_difference("Attempt.count", 1) do
-      post competition_climb_attempt_url(@competition, @climb), params: { attempt: { attempt_count: 1, completed: true } }
+      post competition_climb_attempt_url(@competition, @climb), params: { attempt: { attempt_count: 1 } }
     end
 
     attempt = Attempt.last
     assert_equal @user, attempt.user
     assert_equal @climb, attempt.climb
     assert_equal 30, attempt.points_awarded  # flash_points(30)
-    assert_redirected_to competition_climb_path(@competition, @climb)
+    assert_redirected_to competition_path(@competition)
   end
 
   test "should reject attempt logging for a non enrolled user" do
@@ -39,7 +39,7 @@ class AttemptsControllerTest < ActionDispatch::IntegrationTest
     other_climb = climbs(:two)
 
     assert_no_difference("Attempt.count") do
-      post competition_climb_attempt_url(other_competition, other_climb), params: { attempt: { attempt_count: 2, completed: false } }
+      post competition_climb_attempt_url(other_competition, other_climb), params: { attempt: { attempt_count: 2 } }
     end
 
     assert_redirected_to competition_path(other_competition)

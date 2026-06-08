@@ -7,7 +7,7 @@ module ActiveSupport
     # Run tests in parallel with specified workers
     # Process-based workers get separate test DBs; thread-based workers share SQLite
     # and cause nested transaction / rollback errors with transactional fixtures.
-    parallelize(workers: :number_of_processors)
+    parallelize(workers: :number_of_processors) unless Gem.win_platform?
 
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all

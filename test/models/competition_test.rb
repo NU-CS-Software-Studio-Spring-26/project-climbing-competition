@@ -61,9 +61,9 @@ class CompetitionTest < ActiveSupport::TestCase
     climb_one = climbs(:one)
     climb_two = climbs(:one_two)
 
-    Attempt.create!(user: user_one, climb: climb_one, attempt_count: 1, completed: true)
-    Attempt.create!(user: user_two, climb: climb_one, attempt_count: 1, completed: true)
-    Attempt.create!(user: user_two, climb: climb_two, attempt_count: 3, completed: false)
+    Attempt.create!(user: user_one, climb: climb_one, attempt_count: 1)
+    Attempt.create!(user: user_two, climb: climb_one, attempt_count: 1)
+    Attempt.create!(user: user_two, climb: climb_two, attempt_count: 3, invalidated: true)
 
     assert_equal 1, competition.placement_for(user_one)
     assert_equal 2, competition.placement_for(user_two)
@@ -86,9 +86,9 @@ class CompetitionTest < ActiveSupport::TestCase
     climb_one = climbs(:one)
     climb_two = climbs(:one_two)
 
-    Attempt.create!(user: user_one, climb: climb_one, attempt_count: 1, completed: true)
-    Attempt.create!(user: user_two, climb: climb_one, attempt_count: 1, completed: true)
-    Attempt.create!(user: user_two, climb: climb_two, attempt_count: 3, completed: false)
+    Attempt.create!(user: user_one, climb: climb_one, attempt_count: 1)
+    Attempt.create!(user: user_two, climb: climb_one, attempt_count: 1)
+    Attempt.create!(user: user_two, climb: climb_two, attempt_count: 3, invalidated: true)
 
     leaderboard = competition.leaderboard_entries
 
