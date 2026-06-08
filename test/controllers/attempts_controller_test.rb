@@ -30,7 +30,7 @@ class AttemptsControllerTest < ActionDispatch::IntegrationTest
     assert_equal @user, attempt.user
     assert_equal @climb, attempt.climb
     assert_equal 30, attempt.points_awarded  # flash_points(30)
-    assert_redirected_to competition_climb_path(@competition, @climb)
+    assert_redirected_to competition_url(@competition, anchor: "leaderboard")
   end
 
   test "should reject attempt logging for a non enrolled user" do
