@@ -1208,6 +1208,75 @@ body.app-shell.home-shell {
   font-weight: 600;
 }
 
+.log-send-modal-content {
+  background: #f5f2e6;
+  color: #171614;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.log-send-modal-content .modal-header,
+.log-send-modal-content .modal-footer {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Keep log-send modal readable even with later global board-form styles. */
+.log-send-modal-content,
+.log-send-modal-content .modal-body,
+.log-send-modal-content .board-form {
+  color: #171614;
+}
+
+.log-send-modal-content .board-form .form-label {
+  color: #171614 !important;
+}
+
+.log-send-modal-content .board-form .form-control,
+.log-send-modal-content .board-form .form-select,
+.log-send-modal-content .board-form input[type="file"] {
+  background: #ffffff !important;
+  color: #171614 !important;
+  border: 1px solid rgba(0, 0, 0, 0.22) !important;
+}
+
+.log-send-modal-content .board-form .form-control:focus,
+.log-send-modal-content .board-form .form-select:focus,
+.log-send-modal-content .board-form input[type="file"]:focus {
+  background: #ffffff !important;
+  color: #171614 !important;
+  border-color: rgba(0, 0, 0, 0.35) !important;
+  box-shadow: 0 0 0 0.18rem rgba(0, 0, 0, 0.08) !important;
+}
+
+.log-send-modal-content .board-form input[type="file"]::file-selector-button {
+  background: #25211a;
+  color: #f5f2e6;
+  border: 1px solid #25211a;
+  border-radius: 0.35rem;
+}
+
+.log-send-modal-content .modal-title,
+.log-send-modal-content .form-label,
+.log-send-modal-content .form-text,
+.log-send-modal-content p,
+.log-send-modal-content a {
+  color: #171614;
+}
+
+.log-send-modal-content .board-form .form-control,
+.log-send-modal-content .board-form .form-select {
+  background-color: #ffffff;
+  color: #171614;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.log-send-modal-content .board-form .form-control:focus,
+.log-send-modal-content .board-form .form-select:focus {
+  background-color: #ffffff;
+  color: #171614;
+  border-color: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 0.18rem rgba(0, 0, 0, 0.08);
+}
+
 .profile-hero-main {
   min-width: 0;
 }
@@ -3008,6 +3077,13 @@ select:focus {
   font-size: 0.86rem;
   margin-top: 0.45rem;
   margin-bottom: 0;
+}
+
+.log-send-modal-content .board-form .form-text,
+.log-send-modal-content .board-form .board-form-hint,
+.log-send-modal-content .board-form .kilter-board-field-hint,
+.log-send-modal-content .text-muted {
+  color: #4d4639 !important;
 }
 
 .board-form .char-counter {

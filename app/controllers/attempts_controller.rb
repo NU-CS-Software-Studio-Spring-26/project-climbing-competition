@@ -49,9 +49,9 @@ class AttemptsController < ApplicationController
     attach_uploaded_video
 
     if @attempt.save
-      redirect_to competition_climb_path(@competition, @climb), notice: "Your attempt was saved."
+      redirect_to competition_path(@competition), notice: "Your send was saved."
     else
-      render "climbs/show", status: :unprocessable_entity
+      redirect_to competition_path(@competition), alert: @attempt.errors.full_messages.to_sentence
     end
   end
 
@@ -80,7 +80,7 @@ class AttemptsController < ApplicationController
   end
 
   def attempt_params
-    params.expect(attempt: [ :attempt_count, :completed ])
+    params.expect(attempt: [ :attempt_count ])
   end
 
   def attach_uploaded_video

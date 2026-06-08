@@ -34,8 +34,7 @@ RSpec.describe Attempt, type: :model do
     attempt = Attempt.create!(
       user: user,
       climb: climbs.first,
-      attempt_count: 2,
-      completed: true
+      attempt_count: 2
     )
 
     expect(attempt.points_awarded).to eq(competition.score_for_climb(sent: true, flashed: false, attempts: 2))
@@ -55,8 +54,7 @@ RSpec.describe Attempt, type: :model do
     attempt = Attempt.create!(
       user: user,
       climb: climbs.first,
-      attempt_count: 2,
-      completed: true
+      attempt_count: 2
     )
 
     expect(attempt.points_awarded).to be > 0

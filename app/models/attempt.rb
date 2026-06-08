@@ -11,7 +11,6 @@ class Attempt < ApplicationRecord
   validate :attempt_count_must_be_integer_within_bounds
 
   def points_awarded
-    return 0 unless completed?
     return 0 if invalidated?
 
     competition.score_for_climb(

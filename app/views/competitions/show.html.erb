@@ -107,9 +107,6 @@
               <span class="climb-card-title"><%= climb.name %></span>
               <div class="climb-card-actions">
               <a href="<%= climb.url %>" target="_blank" rel="noopener noreferrer" class="btn-climb-action">OPEN ON KILTER</a>
-              <% if authenticated? && current_user == @competition.owner %>
-                <%= link_to "review video submissions", competition_climb_video_reviews_path(@competition, climb), class: "btn-climb-action btn-climb-action-secondary" %>
-              <% end %>
               <% if climb.visual? %>
                 <%= tag.button "VIEW CLIMB",
                       type: "button",
@@ -120,12 +117,66 @@
                         climb_visual_modal_climb_assignments_param: climb.hold_assignments
                       } %>
               <% end %>
+              <% if authenticated? && current_user == @competition.owner %>
+                <%= link_to "review video submissions", competition_climb_video_reviews_path(@competition, climb), class: "btn-climb-action btn-climb-action-secondary" %>
+              <% end %>
               <% if authenticated? && current_user.competitions.include?(@competition) %>
-                <%= link_to(attempt.present? ? "edit attempt" : "LOG ATTEMPT", competition_climb_path(@competition, climb), class: "btn-climb-action #{attempt.present? ? 'btn-climb-action-secondary' : 'btn-climb-action-primary'}") %>
+                <button type="button" class="btn-climb-action btn-climb-action-primary" data-bs-toggle="modal" data-bs-target="#logSendModal-<%= climb.id %>">
+                  <%= attempt.present? ? "UPDATE LOG SEND" : "LOG SEND" %>
+                </button>
               <% end %>
               </div>
             </div>
           </div>
+
+          <% if authenticated? && current_user.competitions.include?(@competition) %>
+            <div class="modal fade" id="logSendModal-<%= climb.id %>" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content log-send-modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">log send - <%= climb.name %></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <%= form_with url: competition_climb_attempt_path(@competition, climb), scope: :attempt, method: attempt&.persisted? ? :patch : :post, html: { class: "board-form" } do |form| %>
+                      <div class="mb-3">
+                        <%= form.label :attempt_count, "Attempts (Max 100)", class: "form-label" %>
+                        <%= form.number_field :attempt_count,
+                              value: attempt&.attempt_count,
+                              class: "form-control",
+                              min: 1,
+                              max: Attempt::MAX_ATTEMPT_COUNT,
+                              step: 1,
+                              inputmode: "numeric",
+                              required: true,
+                              data: {
+                                controller: "attempt-count-input",
+                                action: "keydown->attempt-count-input#blockInvalidKey paste->attempt-count-input#sanitizePaste"
+                              } %>
+                      </div>
+
+                      <div class="mb-3">
+                        <%= form.label :submission_video, "Submission Video", class: "form-label" %>
+                        <%= form.file_field :submission_video,
+                              class: "form-control",
+                              accept: "video/*",
+                              required: @competition.video_submissions_required? && !attempt&.submission_video&.attached? %>
+                      </div>
+
+                      <% if attempt&.submission_video&.attached? %>
+                        <p class="form-text mb-3">
+                          current upload:
+                          <%= link_to attempt.submission_video.filename.to_s, url_for(attempt.submission_video), target: "_blank", rel: "noopener noreferrer" %>
+                        </p>
+                      <% end %>
+
+                      <%= form.submit(attempt&.persisted? ? "Update log send" : "Save log send", class: "btn btn-board-primary w-100") %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
         <% end %>
       </div>
 
@@ -178,7 +229,7 @@
                             <tr>
                               <th>Climb</th>
                               <th>Attempts</th>
-                              <th>Status</th>
+                              <th>Send Status</th>
                               <th>Points</th>
                             </tr>
                           </thead>
@@ -190,8 +241,8 @@
                                 <% if attempt %>
                                   <td><%= attempt.attempt_count %></td>
                                   <td>
-                                    <span class="<%= attempt.completed? ? 'text-success' : 'text-danger' %>">
-                                      <%= attempt.completed? ? '✓ Completed' : '✗ Not Completed' %>
+                                    <span class="<%= attempt.invalidated? ? 'text-danger' : 'text-success' %>">
+                                      <%= attempt.invalidated? ? '✗ Invalidated' : '✓ Sent' %>
                                     </span>
                                   </td>
                                   <td><strong><%= attempt.points_awarded %> pts</strong></td>

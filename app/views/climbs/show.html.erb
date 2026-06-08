@@ -17,16 +17,9 @@
   <p class="detail-item mb-0"><span>Open on Kilter:</span> <a href="<%= @climb.url %>" target="_blank" rel="noopener noreferrer"><%= @climb.url %></a></p>
 </div>
 
-<div class="detail-panel p-4 mb-3">
-  <h2 class="detail-heading mb-3">Climb Visual</h2>
-  <div class="kilter-board-preview" data-controller="kilter-board" data-kilter-board-editable-value="false" data-kilter-board-viewer-value="true" data-kilter-board-assignments-value="<%= @climb.hold_assignments.to_json %>">
-    <div class="kilter-board-image-wrap" data-kilter-board-target="board"></div>
-  </div>
-</div>
-
 <% if authenticated? && current_user.competitions.include?(@competition) %>
   <div class="detail-panel p-4 mb-3">
-    <h2 class="detail-heading mb-3">Log your attempt</h2>
+    <h2 class="detail-heading mb-3">Log your send</h2>
 
     <% if @attempt&.errors&.any? %>
       <div class="alert alert-danger" role="alert">
@@ -40,7 +33,7 @@
     <% end %>
 
     <% if @attempt&.persisted? %>
-      <p class="detail-item mb-3"><span>Your current log:</span> <%= @attempt.attempt_count %> attempts, <%= @attempt.completed? ? "completed" : "not completed" %>, <%= @attempt.points_awarded %> points</p>
+      <p class="detail-item mb-3"><span>Your current log:</span> <%= @attempt.attempt_count %> attempts, <%= @attempt.points_awarded %> points</p>
     <% end %>
 
     <% if @attempt&.submission_video&.attached? %>
@@ -51,7 +44,7 @@
     <% end %>
 
     <% if @competition.video_submissions_required? %>
-      <p class="form-text mb-3 attempt-video-requirement-note">This competition requires a video when submitting a completed send.</p>
+      <p class="form-text mb-3 attempt-video-requirement-note">This competition requires a video when submitting a send.</p>
     <% end %>
 
     <%= form_with url: competition_climb_attempt_path(@competition, @climb), scope: :attempt, method: @attempt&.persisted? ? :patch : :post, html: { class: "board-form" } do |form| %>
@@ -63,11 +56,6 @@
               oninput: "if (this.value !== '' && Number(this.value) > #{Attempt::MAX_ATTEMPT_COUNT}) this.value = #{Attempt::MAX_ATTEMPT_COUNT}" %>
       </div>
 
-      <div class="mb-3 form-check">
-        <%= form.check_box :completed, class: "form-check-input", id: "attempt_completed" %>
-        <%= form.label :completed, "Completed the climb", class: "form-check-label", for: "attempt_completed" %>
-      </div>
-
       <div class="mb-3">
         <%= form.label :submission_video, "Submission Video", class: "form-label" %>
         <%= form.file_field :submission_video,
@@ -76,7 +64,7 @@
               required: @competition.video_submissions_required? && !@attempt&.submission_video&.attached? %>
       </div>
 
-      <%= form.submit(@attempt&.persisted? ? "Update attempt" : "Save attempt", class: "btn btn-primary") %>
+      <%= form.submit(@attempt&.persisted? ? "Update send" : "Save send", class: "btn btn-primary") %>
     <% end %>
   </div>
 <% end %>
