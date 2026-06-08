@@ -3,8 +3,10 @@ require "test_helper"
 class ClimbTest < ActiveSupport::TestCase
   test "rejects climb urls longer than the allowed length" do
     climb = Climb.new(
+      competition: competitions(:one),
       name: "Test Climb",
-      url: "https://example.com/#{'a' * (Climb::URL_MAX_LENGTH + 1)}"
+      url: "https://example.com/#{'a' * (Climb::URL_MAX_LENGTH + 1)}",
+      grading: "V4"
     )
 
     assert_not climb.valid?
@@ -13,6 +15,7 @@ class ClimbTest < ActiveSupport::TestCase
 
   test "sanitizes hold assignments to supported colors and hold ids" do
     climb = Climb.new(
+      competition: competitions(:one),
       name: "Visual Route",
       url: "https://example.com/route",
       grading: "V5",
@@ -35,6 +38,7 @@ class ClimbTest < ActiveSupport::TestCase
     end
 
     climb = Climb.new(
+      competition: competitions(:one),
       name: "Too Many Holds",
       url: "https://example.com/massive",
       grading: "V6",

@@ -144,10 +144,21 @@ class CompetitionsController < ApplicationController
       @competition = Competition.includes(:climbs).find(params.expect(:id))
     end
 
+    def ensure_competition_owner
+      return if @competition.owner_id.present? && current_user == @competition.owner
+
+      message = action_name == "destroy" ? "You can only delete competitions you created." : "You can only edit competitions you created."
+
+      respond_to do |format|
+        format.html { redirect_to competitions_path, alert: message, status: :see_other }
+        format.json { head :forbidden }
+      end
+    end
+
     # Only allow a list of trusted parameters through.
     def competition_params
       params.require(:competition).permit(
-        :name, :date, :starts_at, :ends_at, :description,
+        :name, :starts_at, :ends_at, :description,
         :send_points, :flash_points, :attempt_deduction,
         climbs_attributes: [ :id, :name, :url, :grading, :hold_assignments, :_destroy ]
       )
@@ -195,11 +206,15 @@ class CompetitionsController < ApplicationController
     end
 
     def destroy_return_path
-      return competitions_path unless params[:return_to].present?
-
-      return_to = params[:return_to].to_s
+      return_to = params.permit(:return_to)[:return_to].to_s
+      return competitions_path if return_to.blank?
       return competitions_path unless return_to.start_with?("/") && !return_to.start_with?("//")
 
+      uri = URI.parse(return_to)
+      return competitions_path if uri.host.present? || uri.userinfo.present?
+
       return_to
+    rescue URI::InvalidURIError
+      competitions_path
     end
 end

@@ -23,5 +23,7 @@ module NewApp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    config.action_controller.action_on_unpermitted_parameters = :log
   end
 end

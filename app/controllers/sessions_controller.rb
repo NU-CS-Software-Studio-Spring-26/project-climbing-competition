@@ -6,9 +6,25 @@ class SessionsController < ApplicationController
 
   def create
     session_params = params.expect(session: [ :email_address, :password ])
-    user = User.find_by(email_address: session_params[:email_address].to_s.downcase)
+    email = session_params[:email_address].to_s.strip.downcase
+    password = session_params[:password].to_s
 
-    if user&.authenticate(session_params[:password])
+    if invalid_login_email?(email)
+      @login_email_error = "Please enter a valid email address."
+      flash.now[:alert] = @login_email_error
+      render :new, status: :unprocessable_entity
+      return
+    end
+
+    if password.length > User::PASSWORD_MAX_LENGTH
+      flash.now[:alert] = "The email address or password is incorrect."
+      render :new, status: :unprocessable_entity
+      return
+    end
+
+    user = User.find_by(email_address: email)
+
+    if user&.authenticate(password)
       terminate_session
       start_new_session_for(user)
       redirect_to(session.delete(:return_to) || competitions_path, notice: "Signed in successfully.", status: :see_other)
@@ -32,7 +48,12 @@ class SessionsController < ApplicationController
     terminate_session
     start_new_session_for(user)
     redirect_to(session.delete(:return_to) || competitions_path, notice: "Signed in with Google.", status: :see_other)
-  rescue StandardError
+  rescue ActiveRecord::RecordInvalid => error
+    redirect_to new_session_path, alert: error.record.errors.full_messages.to_sentence, status: :see_other
+  rescue ArgumentError => error
+    redirect_to new_session_path, alert: error.message, status: :see_other
+  rescue StandardError => error
+    Rails.logger.error("Google sign-in failed: #{error.class}: #{error.message}")
     redirect_to new_session_path, alert: "Google sign-in failed. Please try again.", status: :see_other
   end
 
@@ -76,6 +97,10 @@ class SessionsController < ApplicationController
 
     user.save!
     user
+  end
+
+  def invalid_login_email?(email)
+    email.blank? || email.length > User::EMAIL_MAX_LENGTH || !email.match?(URI::MailTo::EMAIL_REGEXP)
   end
 
   def build_unique_username(email)
