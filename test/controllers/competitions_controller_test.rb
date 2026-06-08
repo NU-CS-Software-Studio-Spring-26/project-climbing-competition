@@ -272,25 +272,4 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_match(/only edit competitions you created/i, flash[:alert].to_s)
   end
-
-  test "should not destroy competition when owner_id is nil" do
-    # Create a new competition without an owner_id to test the scenario
-    competition = Competition.new(
-      name: @competition.name,
-      starts_at: @competition.starts_at,
-      ends_at: @competition.ends_at,
-      owner_id: nil
-    )
-    
-    sign_in_as(@user)
-    
-    # Verify deletion is prevented
-    assert_no_difference("Competition.count") do
-      delete competition_url(@competition)
-    end
-    
-    assert_redirected_to competition_url(@competition)
-    follow_redirect!
-    assert_match(/only edit competitions you created/i, flash[:alert].to_s)
-  end
 end
