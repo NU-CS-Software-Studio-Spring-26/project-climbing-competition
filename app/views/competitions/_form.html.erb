@@ -30,7 +30,7 @@
       <div class="row g-3">
         <div class="col-sm-6">
           <%= form.label :starts_at_date, "Start Date", class: "form-label" %>
-          <%= form.date_field :starts_at_date, value: competition.starts_at&.to_date, class: input_class.call(:starts_at), required: true %>
+          <%= form.date_field :starts_at_date, value: competition.starts_at&.to_date, min: Date.current, class: input_class.call(:starts_at), required: true %>
         </div>
         <div class="col-sm-6">
           <%= form.label :starts_at_time, "Start Time", class: "form-label" %>
@@ -46,7 +46,7 @@
       <div class="row g-3">
         <div class="col-sm-6">
           <%= form.label :ends_at_date, "End Date", class: "form-label" %>
-          <%= form.date_field :ends_at_date, value: competition.ends_at&.to_date, class: input_class.call(:ends_at), required: true %>
+          <%= form.date_field :ends_at_date, value: competition.ends_at&.to_date, min: Date.current, class: input_class.call(:ends_at), required: true %>
         </div>
         <div class="col-sm-6">
           <%= form.label :ends_at_time, "End Time", class: "form-label" %>

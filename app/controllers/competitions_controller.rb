@@ -2,6 +2,7 @@ class CompetitionsController < ApplicationController
   before_action :require_authentication, only: %i[ new create edit update destroy ]
   before_action :set_competition, only: %i[ show edit update destroy ]
   before_action :ensure_competition_owner, only: %i[ edit update destroy ]
+  before_action :ensure_competition_editable, only: %i[ edit update ]
 
   # GET /competitions or /competitions.json
   def index
@@ -150,6 +151,15 @@ class CompetitionsController < ApplicationController
 
       respond_to do |format|
         format.html { redirect_to @competition, alert: "You can only edit competitions you created.", status: :see_other }
+        format.json { head :forbidden }
+      end
+    end
+
+    def ensure_competition_editable
+      return if @competition.editable?
+
+      respond_to do |format|
+        format.html { redirect_to @competition, alert: "Competitions cannot be edited after they have started.", status: :see_other }
         format.json { head :forbidden }
       end
     end

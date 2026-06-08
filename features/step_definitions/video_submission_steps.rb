@@ -11,8 +11,8 @@ end
 Given("a competition with at least two climbs exists") do
   @competition = Competition.create!(
     name: "Video Submission Comp",
-    starts_at: 1.day.ago,
-    ends_at: 1.day.from_now,
+    starts_at: 1.week.from_now,
+    ends_at: 2.weeks.from_now,
     flash_points: 30,
     attempt_deduction: 5,
     owner: @host,
@@ -21,6 +21,8 @@ Given("a competition with at least two climbs exists") do
       "1" => { name: "Climb B", url: "https://example.com/b", grading: "V3" }
     }
   )
+  @competition.update_columns(starts_at: 1.day.ago, ends_at: 1.day.from_now)
+  @competition.reload
   @climb = @competition.climbs.first
 end
 

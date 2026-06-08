@@ -117,15 +117,15 @@ class CompetitionTest < ActiveSupport::TestCase
 
   test "ordered_by_status lists active, then upcoming, then past" do
     active = competitions(:one)
-    active.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    set_competition_schedule(active, starts_at: 1.day.ago, ends_at: 1.week.from_now)
 
     upcoming = competitions(:two)
     upcoming.update!(starts_at: 1.week.from_now, ends_at: 2.weeks.from_now)
 
     past = Competition.create!(
       name: "Archived Comp",
-      starts_at: 3.weeks.ago,
-      ends_at: 2.weeks.ago,
+      starts_at: 1.week.from_now,
+      ends_at: 2.weeks.from_now,
       flash_points: 30,
       attempt_deduction: 5,
       owner: users(:one),
@@ -134,6 +134,7 @@ class CompetitionTest < ActiveSupport::TestCase
         "1" => { name: "B", url: "https://example.com/b", grading: "V3" }
       }
     )
+    set_competition_schedule(past, starts_at: 3.weeks.ago, ends_at: 2.weeks.ago)
 
     ordered_ids = Competition.ordered_by_status.where(id: [ active.id, upcoming.id, past.id ]).pluck(:id)
     assert_equal [ active.id, upcoming.id, past.id ], ordered_ids
@@ -141,7 +142,7 @@ class CompetitionTest < ActiveSupport::TestCase
 
   test "joinable? is false when competition has ended" do
     competition = competitions(:one)
-    competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+    set_competition_schedule(competition, starts_at: 2.weeks.ago, ends_at: 1.week.ago)
 
     assert competition.past?
     assert_not competition.joinable?
@@ -153,14 +154,14 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_not competition.past?
     assert competition.joinable?
 
-    competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    set_competition_schedule(competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
     assert_equal :active, competition.status
     assert competition.joinable?
   end
 
   test "leavable? is false when competition has ended" do
     competition = competitions(:one)
-    competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+    set_competition_schedule(competition, starts_at: 2.weeks.ago, ends_at: 1.week.ago)
 
     assert competition.past?
     assert_not competition.leavable?
@@ -171,8 +172,53 @@ class CompetitionTest < ActiveSupport::TestCase
     competition.update!(starts_at: 1.day.from_now, ends_at: 1.week.from_now)
     assert competition.leavable?
 
-    competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    set_competition_schedule(competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
     assert competition.leavable?
+  end
+
+  test "started? and climbs_visible_to? follow competition schedule" do
+    competition = competitions(:one)
+    competition.update!(starts_at: 1.day.from_now, ends_at: 1.week.from_now)
+
+    assert_not competition.started?
+    assert_not competition.climbs_visible_to?(users(:two))
+    assert competition.climbs_visible_to?(users(:one))
+
+    set_competition_schedule(competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
+
+    assert competition.started?
+    assert competition.climbs_visible_to?(users(:two))
+    assert competition.climbs_visible_to?(nil)
+  end
+
+  test "editable? is true only before competition starts" do
+    competition = competitions(:one)
+    competition.update!(starts_at: 1.day.from_now, ends_at: 1.week.from_now)
+    assert competition.editable?
+
+    set_competition_schedule(competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    assert_not competition.editable?
+
+    set_competition_schedule(competition, starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+    assert_not competition.editable?
+  end
+
+  test "rejects start date before today" do
+    competition = competitions(:one)
+    competition.starts_at = 1.day.ago
+    competition.ends_at = 1.week.from_now
+
+    assert_not competition.valid?
+    assert_includes competition.errors[:starts_at], "cannot be before today's date"
+  end
+
+  test "rejects end date before today" do
+    competition = competitions(:one)
+    competition.starts_at = 1.day.from_now
+    competition.ends_at = 1.day.ago
+
+    assert_not competition.valid?
+    assert_includes competition.errors[:ends_at], "cannot be before today's date"
   end
 
   test "rejects scoring values above the allowed maximum" do

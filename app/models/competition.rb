@@ -63,6 +63,20 @@ class Competition < ApplicationRecord
     !past?
   end
 
+  def editable?
+    starts_at.nil? || starts_at > Time.current
+  end
+
+  def started?
+    starts_at.present? && starts_at <= Time.current
+  end
+
+  def climbs_visible_to?(user)
+    return true if user.present? && owner_id.present? && user.id == owner_id
+
+    started?
+  end
+
   def climb_grade_integers
     climbs.reject(&:marked_for_destruction?).filter_map { |climb| grading_to_int(climb.grading) }
   end
@@ -117,6 +131,8 @@ class Competition < ApplicationRecord
   validate :grade_range_is_valid
   validate :new_climbs_within_locked_grade_range, on: :update
   validate :ends_at_after_starts_at
+  validate :starts_at_not_before_today, if: :will_save_change_to_starts_at?
+  validate :ends_at_not_before_today, if: :will_save_change_to_ends_at?
 
   def points_for(user)
     return 0 if user.nil?
@@ -179,6 +195,20 @@ class Competition < ApplicationRecord
     return if ends_at > starts_at
 
     errors.add(:ends_at, "must be after the start date and time")
+  end
+
+  def starts_at_not_before_today
+    return if starts_at.blank?
+    return if starts_at.to_date >= Time.zone.today
+
+    errors.add(:starts_at, "cannot be before today's date")
+  end
+
+  def ends_at_not_before_today
+    return if ends_at.blank?
+    return if ends_at.to_date >= Time.zone.today
+
+    errors.add(:ends_at, "cannot be before today's date")
   end
 
   def derive_level_and_grades_from_climbs
