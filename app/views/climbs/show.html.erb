@@ -43,6 +43,17 @@
       <p class="detail-item mb-3"><span>Your current log:</span> <%= @attempt.attempt_count %> attempts, <%= @attempt.completed? ? "completed" : "not completed" %>, <%= @attempt.points_awarded %> points</p>
     <% end %>
 
+    <% if @attempt&.submission_video&.attached? %>
+      <p class="detail-item mb-3">
+        <span>Your current video:</span>
+        <%= link_to @attempt.submission_video.filename.to_s, url_for(@attempt.submission_video), target: "_blank", rel: "noopener noreferrer" %>
+      </p>
+    <% end %>
+
+    <% if @competition.video_submissions_required? %>
+      <p class="form-text mb-3">This competition requires a video when submitting a completed send.</p>
+    <% end %>
+
     <%= form_with url: competition_climb_attempt_path(@competition, @climb), scope: :attempt, method: @attempt&.persisted? ? :patch : :post, html: { class: "board-form" } do |form| %>
       <div class="mb-3">
         <%= form.label :attempt_count, "Attempts (Max 100)", class: "form-label" %>
@@ -55,6 +66,14 @@
       <div class="mb-3 form-check">
         <%= form.check_box :completed, class: "form-check-input", id: "attempt_completed" %>
         <%= form.label :completed, "Completed the climb", class: "form-check-label", for: "attempt_completed" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :submission_video, "Submission Video", class: "form-label" %>
+        <%= form.file_field :submission_video,
+              class: "form-control",
+              accept: "video/*",
+              required: @competition.video_submissions_required? && !@attempt&.submission_video&.attached? %>
       </div>
 
       <%= form.submit(@attempt&.persisted? ? "Update attempt" : "Save attempt", class: "btn btn-primary") %>

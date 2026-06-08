@@ -1118,6 +1118,45 @@ body.app-shell.home-shell {
   align-items: start;
 }
 
+.competition-video-review-section .detail-panel {
+  background: rgba(245, 242, 230, 0.9);
+  color: #191816;
+}
+
+.video-review-climb-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.9rem;
+}
+
+.video-review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.85rem;
+}
+
+.video-review-card {
+  border: 1px solid rgba(25, 24, 22, 0.14);
+  border-radius: 0.45rem;
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.video-review-meta {
+  font-size: 0.86rem;
+}
+
+.video-review-player {
+  width: 100%;
+  border-radius: 0.35rem;
+  background: #000;
+}
+
+.video-review-actions {
+  display: flex;
+  gap: 0.55rem;
+}
+
 .profile-hero-main {
   min-width: 0;
 }

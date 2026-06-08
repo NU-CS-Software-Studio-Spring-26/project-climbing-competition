@@ -3,6 +3,8 @@ class Attempt < ApplicationRecord
 
   belongs_to :user
   belongs_to :climb
+  has_one_attached :submission_video
+  enum :review_status, { unreviewed: 0, approved: 1, invalidated: 2 }, prefix: :review
 
   delegate :competition, to: :climb
 
@@ -11,6 +13,7 @@ class Attempt < ApplicationRecord
 
   def points_awarded
     return 0 unless completed?
+    return 0 if review_invalidated?
 
     competition.score_for_climb(
       sent:     true,

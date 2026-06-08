@@ -11,6 +11,9 @@ Rails.application.routes.draw do
     resources :enrollments, only: [ :create, :destroy ]
     resources :climbs, only: [ :show ] do
       resource :attempt, only: [ :create, :update ], controller: "attempts"
+      resources :attempts, only: [] do
+        patch :review, on: :member
+      end
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

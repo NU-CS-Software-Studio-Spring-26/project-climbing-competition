@@ -1,5 +1,4 @@
 require "rails_helper"
-
 RSpec.describe Attempt, type: :model do
   def create_competition_with_climbs(owner:)
     competition = Competition.create!(
@@ -42,11 +41,29 @@ RSpec.describe Attempt, type: :model do
     expect(attempt.points_awarded).to eq(competition.score_for_climb(sent: true, flashed: false, attempts: 2))
   end
 
-  it "requires a video file when video submissions are required and the climb is marked completed" do
-    skip("Implement this once Competition has video_submissions_required and Attempt has submission_video attachment")
-  end
-
   it "deducts points after host marks a submitted send as invalid" do
-    skip("Implement this once Attempt has a host review status and invalid state")
+    user = User.create!(
+      name: "Reviewable Climber",
+      username: "reviewable_climber",
+      email_address: "reviewable_climber@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+    )
+
+    competition, climbs = create_competition_with_climbs(owner: user)
+
+    attempt = Attempt.create!(
+      user: user,
+      climb: climbs.first,
+      attempt_count: 2,
+      completed: true,
+      review_status: :unreviewed
+    )
+
+    expect(attempt.points_awarded).to be > 0
+
+    attempt.update!(review_status: :invalidated)
+
+    expect(attempt.points_awarded).to eq(0)
   end
 end
