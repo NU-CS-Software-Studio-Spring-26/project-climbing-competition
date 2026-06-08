@@ -4,7 +4,10 @@
   <div class="home-copy">
     <h1 class="home-title">board base</h1>
     <p class="home-subtitle">a virtual space for competitive climbing</p>
-    <%= link_to "FIND EVENTS", competitions_path, class: "home-events-link" %>
+    <div class="home-primary-links">
+      <%= link_to "FIND EVENTS", competitions_path, class: "home-events-link" %>
+      <%= link_to "HOW TO USE BOARDBASE", tutorial_path, class: "home-tutorial-link" %>
+    </div>
     <div class="home-actions">
       <% if authenticated? %>
         <%= link_to "VIEW PROFILE", user_path(current_user), class: "home-action-link" %>
