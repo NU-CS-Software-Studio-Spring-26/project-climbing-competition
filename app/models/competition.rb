@@ -1,6 +1,7 @@
 class Competition < ApplicationRecord
   FLASH_POINTS_MAX = 50
   ATTEMPT_DEDUCTION_MAX = 10
+  DEFAULT_TIME = "00:00"
   V_GRADES = (0..16).to_a
   LEVEL_GRADE_RANGES = {
     "beginner" => [ 0, 3 ],

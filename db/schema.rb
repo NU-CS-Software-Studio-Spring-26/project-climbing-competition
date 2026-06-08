@@ -140,7 +140,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_130000) do
     t.string "username", limit: 30
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["google_uid"], name: "index_users_on_google_uid", unique: true
-    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

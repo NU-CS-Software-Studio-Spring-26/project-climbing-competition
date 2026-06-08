@@ -34,7 +34,7 @@
         </div>
         <div class="col-sm-6">
           <%= form.label :starts_at_time, "Start Time", class: "form-label" %>
-          <%= form.time_field :starts_at_time, value: competition.starts_at&.strftime("%H:%M"), class: input_class.call(:starts_at), required: true %>
+          <%= form.time_field :starts_at_time, value: competition_time_field_value(competition.starts_at), class: input_class.call(:starts_at), required: true %>
         </div>
       </div>
       <% competition.errors.full_messages_for(:starts_at).each do |message| %>
@@ -50,7 +50,7 @@
         </div>
         <div class="col-sm-6">
           <%= form.label :ends_at_time, "End Time", class: "form-label" %>
-          <%= form.time_field :ends_at_time, value: competition.ends_at&.strftime("%H:%M"), class: input_class.call(:ends_at), required: true %>
+          <%= form.time_field :ends_at_time, value: competition_time_field_value(competition.ends_at), class: input_class.call(:ends_at), required: true %>
         </div>
       </div>
       <% competition.errors.full_messages_for(:ends_at).each do |message| %>
