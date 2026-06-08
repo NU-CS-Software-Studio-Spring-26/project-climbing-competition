@@ -7,7 +7,6 @@ RSpec.describe Attempt, type: :model do
       name: "Video Rules Cup",
       starts_at: Time.zone.now + 1.day,
       ends_at: Time.zone.now + 2.days,
-      send_points: 25,
       flash_points: 30,
       attempt_deduction: 5,
       climbs_attributes: [

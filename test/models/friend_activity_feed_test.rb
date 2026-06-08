@@ -59,7 +59,6 @@ class FriendActivityFeedTest < ActiveSupport::TestCase
         name: "Feed Comp #{index}",
         starts_at: 1.day.ago,
         ends_at: 1.week.from_now,
-        send_points: 25,
         flash_points: 30,
         attempt_deduction: 5,
         owner: @viewer,

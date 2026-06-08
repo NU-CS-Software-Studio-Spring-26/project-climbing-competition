@@ -68,9 +68,16 @@ body.app-shell.home-shell {
   margin: clamp(0.7rem, 1.9vh, 1.15rem) 0 0;
 }
 
+.home-primary-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.45rem, 1.1vh, 0.75rem);
+  margin-top: clamp(1rem, 2.8vh, 2.2rem);
+}
+
 .home-events-link {
   display: inline-block;
-  margin-top: clamp(1rem, 2.8vh, 2.2rem);
   font-size: clamp(1rem, 2vw, 1.85rem);
   font-weight: 700;
   text-transform: uppercase;
@@ -80,6 +87,20 @@ body.app-shell.home-shell {
 }
 
 .home-events-link:hover {
+  color: #000000;
+}
+
+.home-tutorial-link {
+  display: inline-block;
+  font-size: clamp(0.9rem, 1.45vw, 1.25rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #111111;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.home-tutorial-link:hover {
   color: #000000;
 }
 
@@ -484,6 +505,10 @@ body.app-shell.home-shell {
   color: #c8f0d8;
 }
 
+.scoring-rules-value--deduction {
+  color: #f08080;
+}
+
 .scoring-rules-list li:last-child {
   padding-bottom: 0;
   border-bottom: 0;
@@ -840,6 +865,41 @@ body.app-shell.home-shell {
 .competitions-grid {
   max-width: 1110px;
   margin: 0 auto;
+}
+
+.competitions-empty-state {
+  max-width: 1110px;
+  margin: 3rem auto 4rem;
+  padding: 0 0.5rem;
+}
+
+.competitions-empty-state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(245, 242, 230, 0.18);
+  border-radius: 0.75rem;
+}
+
+.competitions-empty-state-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.competitions-empty-state-message {
+  max-width: 28rem;
+  color: rgba(243, 241, 234, 0.72);
+  font-size: 0.95rem;
+}
+
+.competitions-empty-state-btn {
+  margin-top: 0.35rem;
 }
 
 .competition-card {
@@ -1860,7 +1920,7 @@ body.app-shell:not(.home-shell) .profile-shell .board-form .char-counter--over {
   }
 
   .home-events-link {
-    margin-top: 1rem;
+    margin-top: 0;
   }
 
   .home-kilter-wrap {
