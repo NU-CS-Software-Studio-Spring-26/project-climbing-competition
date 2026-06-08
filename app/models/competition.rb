@@ -1,5 +1,6 @@
 class Competition < ApplicationRecord
-  SCORING_MAX = 10_000
+  FLASH_POINTS_MAX = 50
+  ATTEMPT_DEDUCTION_MAX = 10
   V_GRADES = (0..16).to_a
   LEVEL_GRADE_RANGES = {
     "beginner" => [ 0, 3 ],
@@ -104,12 +105,10 @@ class Competition < ApplicationRecord
   validates :name, :starts_at, :ends_at, presence: true
   validates :name, length: { maximum: 100 }
   validates :description, length: { maximum: 2000 }, allow_blank: true
-  validates :send_points, presence: true,
-            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: SCORING_MAX }
   validates :flash_points, presence: true,
-            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: SCORING_MAX }
+            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: FLASH_POINTS_MAX }
   validates :attempt_deduction, presence: true,
-            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: SCORING_MAX }
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: ATTEMPT_DEDUCTION_MAX }
   validates :v_grade_min, :v_grade_max, presence: true,
             numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 16 }
   validate :minimum_climbs
@@ -125,9 +124,8 @@ class Competition < ApplicationRecord
 
   def score_for_climb(sent:, flashed:, attempts:)
     return 0 unless sent
-    base      = flashed ? flash_points : send_points
     deduction = flashed ? 0 : (attempts - 1) * attempt_deduction
-    [ base - deduction, 0 ].max
+    [ flash_points - deduction, 0 ].max
   end
 
   def leaderboard_entries

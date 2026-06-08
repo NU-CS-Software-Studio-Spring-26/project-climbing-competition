@@ -51,7 +51,6 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
           ends_at: @competition.ends_at,
           name: "Spring Send Fest",
           description: "Open event",
-          send_points: 25,
           flash_points: 30,
           attempt_deduction: 5,
           climbs_attributes: {
@@ -90,7 +89,6 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
           ends_at_date: Date.current.to_s,
           ends_at_time: "14:00",
           name: "",
-          send_points: 0,
           flash_points: 0,
           attempt_deduction: -1,
           climbs_attributes: {

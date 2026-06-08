@@ -484,6 +484,10 @@ body.app-shell.home-shell {
   color: #c8f0d8;
 }
 
+.scoring-rules-value--deduction {
+  color: #f08080;
+}
+
 .scoring-rules-list li:last-child {
   padding-bottom: 0;
   border-bottom: 0;

@@ -397,8 +397,7 @@ competitions_data.each do |data|
       starts_at: starts_at,
       ends_at: ends_at,
       climbs_attributes: climbs_attributes,
-      send_points: 100,
-      flash_points: 125,
+      flash_points: 30,
       attempt_deduction: 10
     )
   )

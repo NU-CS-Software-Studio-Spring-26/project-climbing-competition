@@ -159,7 +159,7 @@ class CompetitionsController < ApplicationController
     def competition_params
       params.require(:competition).permit(
         :name, :starts_at, :ends_at, :description,
-        :send_points, :flash_points, :attempt_deduction,
+        :flash_points, :attempt_deduction,
         climbs_attributes: [ :id, :name, :url, :grading, :hold_assignments, :_destroy ]
       )
     end
