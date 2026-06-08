@@ -12,6 +12,17 @@ See Heroku deployment here: https://climb-league-c5d605affe21.herokuapp.com/
 - `bin/rails db:seed` — small dataset for everyday dev and CI
 - `bin/rails db:seed:large` — development only; ~1000 users and competitions for UI stress-testing
 
+### Google sign-in setup
+
+1. Create OAuth credentials in Google Cloud Console and add callback URL:
+	- `http://localhost:3000/auth/google_oauth2/callback`
+2. Set environment variables before running the server:
+	- `GOOGLE_CLIENT_ID`
+	- `GOOGLE_CLIENT_SECRET`
+3. Run migrations:
+	- `bin/rails db:migrate`
+4. Start the app and use "Continue with Google" on the sign-in page.
+
 ## Description: 
 A service for virtual climbing competitions, particularly bouldering.
 

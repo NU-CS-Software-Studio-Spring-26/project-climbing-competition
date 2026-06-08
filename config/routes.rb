@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
+  match "/auth/:provider/callback", to: "sessions#google_callback", via: [ :get, :post ]
+  match "/auth/failure", to: "sessions#omniauth_failure", via: [ :get, :post ]
+
   resource :session, only: [ :new, :create, :destroy ]
-  resources :users, only: [ :new, :create, :show, :edit, :update ]
+  get "friends", to: "friends#index", as: :friends
+  resources :users, only: [ :new, :create, :show, :edit, :update ] do
+    resource :follow, only: [ :create, :destroy ]
+  end
   resources :competitions do
     resources :enrollments, only: [ :create, :destroy ]
     resources :climbs, only: [ :show ] do

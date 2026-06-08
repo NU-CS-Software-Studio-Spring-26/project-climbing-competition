@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_27_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_02_000001) do
   create_table "attempts", force: :cascade do |t|
     t.integer "attempt_count", null: false
     t.integer "climb_id", null: false
@@ -25,24 +25,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_000002) do
   end
 
   create_table "climbs", force: :cascade do |t|
-    t.integer "angle"
-    t.integer "ascents_count", default: 0
-    t.string "boardsesh_url"
     t.integer "competition_id", null: false
     t.datetime "created_at", null: false
-    t.decimal "difficulty_average", precision: 5, scale: 2
-    t.string "frames"
     t.string "grading"
-    t.string "kilter_uuid"
-    t.string "layout_slug", default: "original"
+    t.json "hold_assignments", default: {}, null: false
     t.string "name"
-    t.decimal "quality_average", precision: 3, scale: 2
-    t.string "setter_username"
-    t.string "size_slug", default: "12x12-square"
     t.datetime "updated_at", null: false
     t.string "url"
     t.index ["competition_id"], name: "index_climbs_on_competition_id"
-    t.index ["kilter_uuid"], name: "index_climbs_on_kilter_uuid", unique: true, where: "kilter_uuid IS NOT NULL"
   end
 
   create_table "competitions", force: :cascade do |t|
@@ -57,6 +47,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_000002) do
     t.string "level"
     t.string "name"
     t.integer "owner_id"
+    t.boolean "recap_summary_email_enabled", default: false, null: false
+    t.datetime "recap_summary_email_sent_at"
     t.integer "send_points", default: 25, null: false
     t.datetime "starts_at"
     t.datetime "updated_at", null: false
@@ -78,24 +70,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_000002) do
     t.index ["user_id"], name: "index_enrollments_on_user_id"
   end
 
-  create_table "kilter_placement_roles", force: :cascade do |t|
-    t.string "color_hex", null: false
+  create_table "follows", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "name", null: false
-    t.integer "role_id", null: false
+    t.integer "followed_id", null: false
+    t.integer "follower_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["role_id"], name: "index_kilter_placement_roles_on_role_id", unique: true
+    t.index ["followed_id"], name: "index_follows_on_followed_id"
+    t.index ["follower_id", "followed_id"], name: "index_follows_on_follower_id_and_followed_id", unique: true
+    t.index ["follower_id"], name: "index_follows_on_follower_id"
   end
 
-  create_table "kilter_placements", force: :cascade do |t|
+  create_table "identities", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.integer "hole_id"
-    t.string "layout_slug", default: "original", null: false
-    t.integer "placement_id", null: false
+    t.string "provider", null: false
+    t.string "uid", null: false
     t.datetime "updated_at", null: false
-    t.integer "x", null: false
-    t.integer "y", null: false
-    t.index ["layout_slug", "placement_id"], name: "index_kilter_placements_on_layout_slug_and_placement_id", unique: true
+    t.integer "user_id", null: false
+    t.index ["provider", "uid"], name: "index_identities_on_provider_and_uid", unique: true
+    t.index ["user_id"], name: "index_identities_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -113,11 +105,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_000002) do
     t.text "bio"
     t.datetime "created_at", null: false
     t.string "email_address", null: false
+    t.string "google_uid"
     t.string "name", null: false
-    t.string "password_digest", null: false
+    t.string "password_digest"
     t.datetime "updated_at", null: false
     t.string "username", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["google_uid"], name: "index_users_on_google_uid", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
@@ -127,5 +121,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_000002) do
   add_foreign_key "competitions", "users", column: "owner_id"
   add_foreign_key "enrollments", "competitions"
   add_foreign_key "enrollments", "users"
+  add_foreign_key "follows", "users", column: "followed_id"
+  add_foreign_key "follows", "users", column: "follower_id"
+  add_foreign_key "identities", "users"
   add_foreign_key "sessions", "users"
 end

@@ -19,12 +19,45 @@ class Competition < ApplicationRecord
   scope :upcoming, -> { where("starts_at > ?", Time.current) }
   scope :active, -> { where("starts_at <= ? AND ends_at > ?", Time.current, Time.current) }
   scope :past, -> { where("ends_at <= ?", Time.current) }
+  scope :within_grade_range, ->(min_grade, max_grade) {
+    grade_int_sql = "CAST(REPLACE(climbs.grading, 'V', '') AS INTEGER)"
+    climb_bounds = joins(:climbs)
+      .where.not(climbs: { grading: [ nil, "" ] })
+      .group(:id)
+      .having("MIN(#{grade_int_sql}) >= ? AND MAX(#{grade_int_sql}) <= ?", min_grade, max_grade)
+      .select(:id)
+
+    where(id: climb_bounds)
+  }
+
+  scope :ordered_by_status, -> {
+    now = Time.current
+    order(
+      Arel.sql(sanitize_sql_array([
+        "CASE WHEN (starts_at IS NULL OR starts_at > ?) THEN 1 WHEN (ends_at IS NULL OR ends_at <= ?) THEN 2 ELSE 0 END",
+        now, now
+      ])),
+      starts_at: :asc
+    )
+  }
 
   def status
     now = Time.current
     return :upcoming if starts_at.nil? || starts_at > now
     return :past    if ends_at.nil?   || ends_at <= now
     :active
+  end
+
+  def past?
+    status == :past
+  end
+
+  def joinable?
+    !past?
+  end
+
+  def leavable?
+    !past?
   end
 
   def climb_grade_integers
@@ -70,6 +103,7 @@ class Competition < ApplicationRecord
   validate :minimum_climbs
   validate :climbs_have_grades
   validate :grade_range_is_valid
+  validate :ends_at_after_starts_at
 
   def points_for(user)
     return 0 if user.nil?
@@ -96,6 +130,16 @@ class Competition < ApplicationRecord
     end.sort_by { |entry| [ -entry.points, entry.attempts_count, entry.user.username.downcase ] }
   end
 
+  def placement_for(user)
+    return nil if user.nil?
+
+    leaderboard_entries.each_with_index do |entry, index|
+      return index + 1 if entry.user.id == user.id
+    end
+
+    nil
+  end
+
   private
 
   def sanitize_text_fields
@@ -116,6 +160,13 @@ class Competition < ApplicationRecord
   def grade_range_is_valid
     return unless v_grade_min && v_grade_max
     errors.add(:v_grade_max, "must be >= min grade") if v_grade_max < v_grade_min
+  end
+
+  def ends_at_after_starts_at
+    return if starts_at.blank? || ends_at.blank?
+    return if ends_at > starts_at
+
+    errors.add(:ends_at, "must be after the start date and time")
   end
 
   def derive_level_and_grades_from_climbs

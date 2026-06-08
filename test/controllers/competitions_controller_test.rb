@@ -17,6 +17,19 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_match competitions(:one).climb_grade_range_label, response.body
   end
 
+  test "index filters competitions by climb grade range on cards" do
+    climbs(:one).update!(grading: "V1")
+    climbs(:one_two).update!(grading: "V8")
+    climbs(:two).update!(grading: "V5")
+    climbs(:two_two).update!(grading: "V7")
+
+    get competitions_url, params: { grade_min: 4, grade_max: 8 }
+
+    assert_response :success
+    assert_no_match competitions(:one).name, response.body
+    assert_match competitions(:two).name, response.body
+  end
+
   test "should get new" do
     sign_in_as(@user)
     get new_competition_url
@@ -42,7 +55,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
           flash_points: 30,
           attempt_deduction: 5,
           climbs_attributes: {
-            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1", grading: "V4" },
+            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1", grading: "V4", hold_assignments: { "r1c1" => "purple", "r2c1" => "green" }.to_json },
             "1" => { name: "Climb 2", url: "https://kilterboard.com/climb/2", grading: "V6" }
           }
         }
@@ -55,6 +68,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 4, Competition.last.v_grade_min
     assert_equal 6, Competition.last.v_grade_max
     assert_equal 2, Competition.last.climbs.count
+    assert_equal({ "r1c1" => "purple", "r2c1" => "green" }, Competition.last.climbs.first.hold_assignments)
   end
 
   test "should redirect create when unauthenticated" do
@@ -65,6 +79,33 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_url
   end
 
+  test "should re-render new with validation errors when competition is invalid" do
+    sign_in_as(@user)
+
+    assert_no_difference("Competition.count") do
+      post competitions_url, params: {
+        competition: {
+          starts_at_date: Date.current.to_s,
+          starts_at_time: "15:00",
+          ends_at_date: Date.current.to_s,
+          ends_at_time: "14:00",
+          name: "",
+          send_points: 0,
+          flash_points: 0,
+          attempt_deduction: -1,
+          climbs_attributes: {
+            "0" => { name: "Only Climb", url: "https://kilterboard.com/climb/1", grading: "V4" }
+          }
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_match "Name can&#39;t be blank", response.body
+    assert_match "Ends at must be after the start date and time", response.body
+    assert_match "Competition must have at least 2 climbs", response.body
+  end
+
   test "should show competition" do
     Attempt.create!(user: users(:one), climb: climbs(:one), attempt_count: 1, completed: true)
     Attempt.create!(user: users(:two), climb: climbs(:one), attempt_count: 1, completed: true)
@@ -72,7 +113,8 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
 
     get competition_url(@competition)
     assert_response :success
-    assert_match @competition.reload.climb_grade_range_label, response.body
+    assert_match "V2", response.body
+    assert_match "V3", response.body
     assert_match "Scoring Rules", response.body
     assert_match "Leaderboard", response.body
     assert_operator response.body.index(users(:one).username), :<, response.body.index(users(:two).username)

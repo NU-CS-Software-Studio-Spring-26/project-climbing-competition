@@ -1,0 +1,4 @@
+google_identity:
+  provider: google_oauth2
+  uid: "google-uid-1"
+  user: one

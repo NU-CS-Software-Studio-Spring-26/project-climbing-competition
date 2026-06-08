@@ -84,6 +84,21 @@ class UserTest < ActiveSupport::TestCase
     assert user.errors[:username].any?
   end
 
+  test "average_placement uses past competitions only" do
+    user = users(:one)
+    competition = competitions(:one)
+    competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+
+    climb_one = climbs(:one)
+    climb_two = climbs(:one_two)
+    Attempt.where(climb: [ climb_one, climb_two ]).delete_all
+    Attempt.create!(user: user, climb: climb_one, attempt_count: 1, completed: true)
+    Attempt.create!(user: users(:two), climb: climb_one, attempt_count: 2, completed: true)
+
+    assert_equal 1, competition.placement_for(user)
+    assert_equal 1.0, user.average_placement
+  end
+
   test "requires password confirmation when password is present" do
     user = User.new(valid_user_attributes(password_confirmation: "different-password"))
 

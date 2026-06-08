@@ -1,4 +1,5 @@
 <%= form_with(model: competition, html: { class: "board-form" }) do |form| %>
+  <% input_class = ->(field_name, base = "form-control") { [ base, ("border border-danger" if competition.errors[field_name].any?) ].compact.join(" ") } %>
   <% if competition.errors.any? %>
     <div class="alert alert-danger" role="alert">
       <h2 class="h6"><%= pluralize(competition.errors.count, "error") %> prevented this competition from being saved:</h2>
@@ -10,110 +11,141 @@
     </div>
   <% end %>
 
-  <div class="mb-3" data-controller="char-counter" data-char-counter-max-value="100">
-    <%= form.label :name, class: "form-label" %>
-    <%= form.text_field :name, class: "form-control", placeholder: "Example: Regional Boulder Jam",
-          maxlength: 100,
-          data: { char_counter_target: "input", action: "input->char-counter#update" } %>
-    <span class="char-counter" data-char-counter-target="count"></span>
-  </div>
+  <div class="board-form-block">
+    <h2 class="board-form-block-title">General Information</h2>
 
-  <div class="mb-3">
-    <div class="row">
-      <div class="col">
-        <%= form.label :starts_at_date, "Start Date", class: "form-label" %>
-        <%= form.date_field :starts_at_date, value: competition.starts_at&.to_date, class: "form-control" %>
+    <div class="board-form-field board-form-field--name" data-controller="char-counter" data-char-counter-max-value="100">
+      <%= form.label :name, class: "form-label" %>
+      <%= form.text_field :name, class: input_class.call(:name), placeholder: "Example: Regional Boulder Jam",
+            maxlength: 100,
+            required: true,
+            data: { char_counter_target: "input", action: "input->char-counter#update" } %>
+      <% competition.errors.full_messages_for(:name).each do |message| %>
+        <div class="text-danger small mt-1"><%= message %></div>
+      <% end %>
+      <span class="char-counter" data-char-counter-target="count"></span>
+    </div>
+
+    <div class="board-form-field">
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <%= form.label :starts_at_date, "Start Date", class: "form-label" %>
+          <%= form.date_field :starts_at_date, value: competition.starts_at&.to_date, class: input_class.call(:starts_at), required: true %>
+        </div>
+        <div class="col-sm-6">
+          <%= form.label :starts_at_time, "Start Time", class: "form-label" %>
+          <%= form.time_field :starts_at_time, value: competition.starts_at&.strftime("%H:%M"), class: input_class.call(:starts_at), required: true %>
+        </div>
       </div>
-      <div class="col">
-        <%= form.label :starts_at_time, "Start Time", class: "form-label" %>
-        <%= form.time_field :starts_at_time, value: competition.starts_at&.strftime("%H:%M"), class: "form-control" %>
+      <% competition.errors.full_messages_for(:starts_at).each do |message| %>
+        <div class="text-danger small mt-1"><%= message %></div>
+      <% end %>
+    </div>
+
+    <div class="board-form-field">
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <%= form.label :ends_at_date, "End Date", class: "form-label" %>
+          <%= form.date_field :ends_at_date, value: competition.ends_at&.to_date, class: input_class.call(:ends_at), required: true %>
+        </div>
+        <div class="col-sm-6">
+          <%= form.label :ends_at_time, "End Time", class: "form-label" %>
+          <%= form.time_field :ends_at_time, value: competition.ends_at&.strftime("%H:%M"), class: input_class.call(:ends_at), required: true %>
+        </div>
       </div>
+      <% competition.errors.full_messages_for(:ends_at).each do |message| %>
+        <div class="text-danger small mt-1"><%= message %></div>
+      <% end %>
+    </div>
+
+    <div class="board-form-field board-form-field--last" data-controller="char-counter" data-char-counter-max-value="2000">
+      <%= form.label :description, class: "form-label" %>
+      <%= form.text_area :description, class: "form-control", placeholder: "Describe this competition...", rows: 4,
+            maxlength: 2000,
+            data: { char_counter_target: "input", action: "input->char-counter#update" } %>
+      <span class="char-counter" data-char-counter-target="count"></span>
     </div>
   </div>
 
-  <div class="mb-3">
-    <div class="row">
-      <div class="col">
-        <%= form.label :ends_at_date, "End Date", class: "form-label" %>
-        <%= form.date_field :ends_at_date, value: competition.ends_at&.to_date, class: "form-control" %>
+  <div class="board-form-block">
+    <h2 class="board-form-block-title">Scoring Settings</h2>
+
+    <div class="board-form-field">
+      <%= form.label :send_points, "Points for a Send", class: "form-label" %>
+      <div class="d-flex align-items-center gap-3">
+        <%= form.range_field :send_points, min: 0, max: 50, step: 1,
+              class: "form-range flex-grow-1",
+              data: { scoring_slider: "send_points" } %>
+        <%= form.number_field :send_points, min: 0, max: 50, step: 1,
+              class: [ "scoring-number", ("border border-danger" if competition.errors[:send_points].any?) ].compact.join(" "),
+              required: true,
+              data: { scoring_number: "send_points" } %>
       </div>
-      <div class="col">
-        <%= form.label :ends_at_time, "End Time", class: "form-label" %>
-        <%= form.time_field :ends_at_time, value: competition.ends_at&.strftime("%H:%M"), class: "form-control" %>
+      <% competition.errors.full_messages_for(:send_points).each do |message| %>
+        <div class="text-danger small mt-1"><%= message %></div>
+      <% end %>
+      <div class="form-text">Base points for completing a problem (not on the first attempt).</div>
+    </div>
+
+    <div class="board-form-field">
+      <%= form.label :flash_points, "Points for a Flash", class: "form-label" %>
+      <div class="d-flex align-items-center gap-3">
+        <%= form.range_field :flash_points, min: 0, max: 50, step: 1,
+              class: "form-range flex-grow-1",
+              data: { scoring_slider: "flash_points" } %>
+        <%= form.number_field :flash_points, min: 0, max: 50, step: 1,
+              class: [ "scoring-number", ("border border-danger" if competition.errors[:flash_points].any?) ].compact.join(" "),
+              required: true,
+              data: { scoring_number: "flash_points" } %>
       </div>
+      <% competition.errors.full_messages_for(:flash_points).each do |message| %>
+        <div class="text-danger small mt-1"><%= message %></div>
+      <% end %>
+      <div class="form-text">Points for completing a problem on the very first attempt.</div>
+    </div>
+
+    <div class="board-form-field">
+      <%= form.label :attempt_deduction, "Points Deducted per Extra Attempt", class: "form-label" %>
+      <div class="d-flex align-items-center gap-3">
+        <%= form.range_field :attempt_deduction, min: 0, max: 10, step: 1,
+              class: "form-range flex-grow-1",
+              data: { scoring_slider: "attempt_deduction" } %>
+        <%= form.number_field :attempt_deduction, min: 0, max: 10, step: 1,
+              class: [ "scoring-number", ("border border-danger" if competition.errors[:attempt_deduction].any?) ].compact.join(" "),
+              required: true,
+              data: { scoring_number: "attempt_deduction" } %>
+      </div>
+      <% competition.errors.full_messages_for(:attempt_deduction).each do |message| %>
+        <div class="text-danger small mt-1"><%= message %></div>
+      <% end %>
+      <div class="form-text">Deducted for each attempt after the first (0 = no penalty).</div>
+    </div>
+
+    <div class="scoring-preview">
+      <span>
+        Flash = <strong data-preview="flash">–</strong> pts &nbsp;|&nbsp;
+        Send on 2nd attempt = <strong data-preview="send2">–</strong> pts &nbsp;|&nbsp;
+        Send on 3rd attempt = <strong data-preview="send3">–</strong> pts
+      </span>
     </div>
   </div>
 
-  <div class="mb-3" data-controller="char-counter" data-char-counter-max-value="2000">
-    <%= form.label :description, class: "form-label" %>
-    <%= form.text_area :description, class: "form-control", placeholder: "Describe this competition...", rows: 4,
-          maxlength: 2000,
-          data: { char_counter_target: "input", action: "input->char-counter#update" } %>
-    <span class="char-counter" data-char-counter-target="count"></span>
-  </div>
-
- <!-- Scoring Settings -->
-<div class="mb-4 scoring-settings">
-  <h3 class="mb-3">Scoring Settings</h3>
-
-  <div class="mb-4">
-    <%= form.label :send_points, "Points for a Send", class: "form-label" %>
-    <div class="d-flex align-items-center gap-3">
-      <%= form.range_field :send_points, min: 0, max: 50, step: 1,
-            class: "form-range flex-grow-1",
-            data: { scoring_slider: "send_points" } %>
-      <%= form.number_field :send_points, min: 0, max: 50, step: 1,
-            class: "scoring-number",
-            data: { scoring_number: "send_points" } %>
-    </div>
-    <div class="form-text">Base points for completing a problem (not on the first attempt).</div>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :flash_points, "Points for a Flash", class: "form-label" %>
-    <div class="d-flex align-items-center gap-3">
-      <%= form.range_field :flash_points, min: 0, max: 50, step: 1,
-            class: "form-range flex-grow-1",
-            data: { scoring_slider: "flash_points" } %>
-      <%= form.number_field :flash_points, min: 0, max: 50, step: 1,
-            class: "scoring-number",
-            data: { scoring_number: "flash_points" } %>
-    </div>
-    <div class="form-text">Points for completing a problem on the very first attempt.</div>
-  </div>
-
-  <div class="mb-4">
-    <%= form.label :attempt_deduction, "Points Deducted per Extra Attempt", class: "form-label" %>
-    <div class="d-flex align-items-center gap-3">
-      <%= form.range_field :attempt_deduction, min: 0, max: 10, step: 1,
-            class: "form-range flex-grow-1",
-            data: { scoring_slider: "attempt_deduction" } %>
-      <%= form.number_field :attempt_deduction, min: 0, max: 10, step: 1,
-            class: "scoring-number",
-            data: { scoring_number: "attempt_deduction" } %>
-    </div>
-    <div class="form-text">Deducted for each attempt after the first (0 = no penalty).</div>
-  </div>
-
-  <div class="scoring-preview">
-    <span>
-      Flash = <strong data-preview="flash">–</strong> pts &nbsp;|&nbsp;
-      Send on 2nd attempt = <strong data-preview="send2">–</strong> pts &nbsp;|&nbsp;
-      Send on 3rd attempt = <strong data-preview="send3">–</strong> pts
-    </span>
-  </div>
-</div>
-
-  <!-- Climbs Section -->
-  <div class="climbs-section mb-4">
-    <h3 class="mb-3">Climbs</h3>
-    <p class="form-text mb-3">Competition level and difficulty range are set automatically from the V-grades on your climbs.</p>
+  <div class="board-form-block">
+    <h2 class="board-form-block-title">Climbs</h2>
+    <p class="board-form-hint">Competition level and difficulty range are set automatically from the V-grades on your climbs.</p>
     <div id="climbs-container">
       <%= form.fields_for :climbs do |climb_form| %>
         <%= render "climb_fields", form: climb_form %>
       <% end %>
     </div>
-    <button type="button" class="btn btn-sm btn-board-secondary mt-3" id="add-climb-btn">+ Add Climb</button>
+
+    <template id="climb-template">
+      <%= form.fields_for :climbs, Climb.new, child_index: "NEW_RECORD" do |climb_form| %>
+        <%= render "climb_fields", form: climb_form %>
+      <% end %>
+    </template>
+
+    <button type="button" class="btn btn-sm btn-board-secondary" id="add-climb-btn">+ Add Climb</button>
   </div>
 
   <div class="action-row d-flex gap-2 flex-wrap">
@@ -123,13 +155,17 @@
 <% end %>
 
 <script>
-document.addEventListener("turbo:load", function() {
+function initializeCompetitionForm() {
+  const formEl = document.querySelector("form.board-form");
+  if (!formEl || formEl.dataset.competitionFormInitialized === "true") return;
+  formEl.dataset.competitionFormInitialized = "true";
+
   // ── Scoring sliders ──────────────────────────────────────────────────────────
   function getSlider(name) {
-    return document.querySelector(`[data-scoring-slider="${name}"]`);
+    return formEl.querySelector(`[data-scoring-slider="${name}"]`);
   }
   function getNumber(name) {
-    return document.querySelector(`[data-scoring-number="${name}"]`);
+    return formEl.querySelector(`[data-scoring-number="${name}"]`);
   }
 
   function updateScoringPreview() {
@@ -137,9 +173,9 @@ document.addEventListener("turbo:load", function() {
     const flash  = parseInt(getNumber("flash_points")?.value)      || 0;
     const deduct = parseInt(getNumber("attempt_deduction")?.value) || 0;
 
-    const previewFlash = document.querySelector('[data-preview="flash"]');
-    const previewSend2 = document.querySelector('[data-preview="send2"]');
-    const previewSend3 = document.querySelector('[data-preview="send3"]');
+    const previewFlash = formEl.querySelector('[data-preview="flash"]');
+    const previewSend2 = formEl.querySelector('[data-preview="send2"]');
+    const previewSend3 = formEl.querySelector('[data-preview="send3"]');
 
     if (previewFlash) previewFlash.textContent = flash;
     if (previewSend2) previewSend2.textContent = Math.max(send - deduct, 0);
@@ -175,11 +211,13 @@ document.addEventListener("turbo:load", function() {
   updateScoringPreview();
   // ────────────────────────────────────────────────────────────────────────────
 
-  const addClimbBtn = document.getElementById("add-climb-btn");
-  const climbsContainer = document.getElementById("climbs-container");
-  const submitBtn = document.getElementById("submit-btn");
+  const addClimbBtn = formEl.querySelector("#add-climb-btn");
+  const climbsContainer = formEl.querySelector("#climbs-container");
+  const climbTemplate = formEl.querySelector("#climb-template");
+  const submitBtn = formEl.querySelector("#submit-btn");
 
   function validateClimbCount() {
+    if (!climbsContainer) return;
     const climbCount = climbsContainer.querySelectorAll('[data-climb-field]').length;
     const hasMinimumClimbs = climbCount >= 2;
     
@@ -208,59 +246,38 @@ document.addEventListener("turbo:load", function() {
     });
   }
 
-  document.querySelectorAll('.delete-climb-btn').forEach(btn => {
+  formEl.querySelectorAll('.delete-climb-btn').forEach(btn => {
     attachDeleteHandler(btn);
   });
 
   if (addClimbBtn) {
     addClimbBtn.addEventListener("click", function(e) {
       e.preventDefault();
-      
+
+      if (!climbTemplate || !climbsContainer) return;
+
       const timestamp = Date.now();
-      
-      const climbHTML = `
-        <div class="climb-field mb-3 p-3 border rounded" data-climb-field>
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <h5 class="mb-0">Climb</h5>
-            <button type="button" class="btn btn-sm btn-outline-danger delete-climb-btn" data-climb-id="">
-              <span aria-hidden="true">×</span> Remove
-            </button>
-          </div>
 
-          <div class="mb-2">
-            <label class="form-label" for="climb_name_${timestamp}">Climb Name</label>
-            <input class="form-control" type="text" name="competition[climbs_attributes][${timestamp}][name]" id="climb_name_${timestamp}" placeholder="e.g., The Crimper">
-          </div>
-
-          <div class="mb-2">
-            <label class="form-label" for="climb_grading_${timestamp}">V-Grade</label>
-            <select class="form-select" name="competition[climbs_attributes][${timestamp}][grading]" id="climb_grading_${timestamp}" required>
-              <option value="">Select grade</option>
-              ${[...Array(18).keys()].map(n => `<option value="V${n}">V${n}</option>`).join("")}
-            </select>
-          </div>
-
-          <div class="mb-0" data-controller="char-counter" data-char-counter-max-value="<%= Climb::URL_MAX_LENGTH %>">
-            <label class="form-label" for="climb_url_${timestamp}">Climb Link (URL)</label>
-            <input class="form-control" type="text" name="competition[climbs_attributes][${timestamp}][url]" id="climb_url_${timestamp}" placeholder="https://..." maxlength="<%= Climb::URL_MAX_LENGTH %>" data-char-counter-target="input" data-action="input->char-counter#update">
-            <span class="char-counter" data-char-counter-target="count"></span>
-          </div>
-
-          <input type="hidden" name="competition[climbs_attributes][${timestamp}][_destroy]" value="false">
-        </div>
-      `;
-      
+      const climbHTML = climbTemplate.innerHTML.replace(/NEW_RECORD/g, String(timestamp));
       climbsContainer.insertAdjacentHTML("beforeend", climbHTML);
-      
-      const newDeleteBtn = climbsContainer.querySelector(`input[name="competition[climbs_attributes][${timestamp}][_destroy]"]`).closest('[data-climb-field]').querySelector('.delete-climb-btn');
+
+      const newDestroyInput = climbsContainer.querySelector(`input[name="competition[climbs_attributes][${timestamp}][_destroy]"]`);
+      const newDeleteBtn = newDestroyInput?.closest('[data-climb-field]')?.querySelector('.delete-climb-btn');
       if (newDeleteBtn) {
         attachDeleteHandler(newDeleteBtn);
       }
-      
+
       validateClimbCount();
     });
   }
 
   validateClimbCount();
-});
+}
+
+if (!window.__competitionFormListenerBound) {
+  document.addEventListener("turbo:load", initializeCompetitionForm);
+  window.__competitionFormListenerBound = true;
+}
+
+initializeCompetitionForm();
 </script>

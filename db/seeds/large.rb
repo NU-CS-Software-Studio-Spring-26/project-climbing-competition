@@ -50,6 +50,7 @@ puts "Building #{COMPETITION_COUNT} competitions..."
 competition_records = []
 COMPETITION_COUNT.times do |index|
   level = Competition::LEVELS[index % Competition::LEVELS.length]
+  min_grade, max_grade = Competition::LEVEL_GRADE_RANGES.fetch(level)
   starts_at, ends_at = SeedSupport.competition_window(index, total: COMPETITION_COUNT)
   year = starts_at.year
 
@@ -63,6 +64,8 @@ COMPETITION_COUNT.times do |index|
     send_points: 100,
     flash_points: 125,
     attempt_deduction: 10,
+    v_grade_min: min_grade,
+    v_grade_max: max_grade,
     created_at: now,
     updated_at: now
   }

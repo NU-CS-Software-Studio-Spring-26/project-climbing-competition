@@ -15,6 +15,10 @@ class User < ApplicationRecord
   has_many :attempts, dependent: :destroy
   has_many :owned_competitions, class_name: "Competition", foreign_key: "owner_id", dependent: :nullify, inverse_of: :owner
   has_many :sessions, dependent: :destroy
+  has_many :active_follows, class_name: "Follow", foreign_key: :follower_id, dependent: :destroy, inverse_of: :follower
+  has_many :passive_follows, class_name: "Follow", foreign_key: :followed_id, dependent: :destroy, inverse_of: :followed
+  has_many :following, through: :active_follows, source: :followed
+  has_many :followers, through: :passive_follows, source: :follower
 
   has_secure_password
 
@@ -31,6 +35,7 @@ class User < ApplicationRecord
   validates :email_address, uniqueness: { case_sensitive: false }
   validates :email_address, length: { maximum: EMAIL_MAX_LENGTH }
   validates :email_address, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :google_uid, uniqueness: true, allow_blank: true
   validates :password, length: { minimum: PASSWORD_MIN_LENGTH, maximum: PASSWORD_MAX_LENGTH }, allow_blank: true
   validates :password, confirmation: true, if: -> { password.present? }
   validates :bio, length: { maximum: BIO_MAX_LENGTH }, allow_blank: true
@@ -72,5 +77,39 @@ class User < ApplicationRecord
       return if name.match?(UNICODE_LETTER_PATTERN)
 
       errors.add(:name, "must include at least one letter")
+    end
+
+  public
+    def self.username_taken?(username)
+      where("lower(username) = ?", username.to_s.downcase).exists?
+    end
+
+    def participated_competitions_count
+      competitions.count
+    end
+
+    def created_competitions_count
+      owned_competitions.count
+    end
+
+    def current_competitions
+      competitions.merge(Competition.upcoming.or(Competition.active)).order(:starts_at)
+    end
+
+    def average_placement
+      placements = competitions.merge(Competition.past).filter_map { |competition| competition.placement_for(self) }
+      return nil if placements.empty?
+
+      (placements.sum.to_f / placements.size).round(1)
+    end
+
+    def placement_in(competition)
+      competition.placement_for(self)
+    end
+
+    def following?(other_user)
+      return false if other_user.blank? || other_user == self
+
+      active_follows.exists?(followed_id: other_user.id)
     end
 end

@@ -4,9 +4,7 @@
   <h1 class="page-title page-title-left">edit competition</h1>
 </section>
 
-<div class="detail-panel p-4 mb-3">
-  <%= render "form", competition: @competition %>
-</div>
+<%= render "form", competition: @competition %>
 
 <div class="action-row d-flex gap-2 flex-wrap">
   <%= link_to "Show Competition", @competition, class: "btn btn-board-primary" %>

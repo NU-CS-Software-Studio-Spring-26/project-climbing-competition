@@ -1,0 +1,14 @@
+<% if oauth_providers_available? %>
+  <div class="d-flex flex-column gap-2">
+    <% ApplicationHelper::OAUTH_PROVIDERS.each do |provider, label| %>
+      <% next unless oauth_provider_available?(provider) %>
+      <%= button_to "Continue with #{label}",
+            "/auth/#{provider}",
+            method: :post,
+            class: "btn btn-board-secondary w-100",
+            form: { data: { turbo: false } } %>
+    <% end %>
+  </div>
+
+  <div class="text-center text-muted small my-2">Or continue with email</div>
+<% end %>
