@@ -75,7 +75,6 @@ group :test do
   gem "rspec-rails"
   gem "cucumber-rails", require: false
   gem "database_cleaner-active_record"
-
 end
 
 # to make db work on heroku
