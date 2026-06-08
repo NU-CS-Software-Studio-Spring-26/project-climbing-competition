@@ -87,7 +87,7 @@ class CompetitionsController < ApplicationController
   # GET /competitions/new
   def new
     @competition = Competition.new
-    3.times { @competition.climbs.build }
+    2.times { @competition.climbs.build }
   end
 
   # GET /competitions/1/edit
