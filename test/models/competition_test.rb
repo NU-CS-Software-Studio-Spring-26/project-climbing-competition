@@ -44,8 +44,8 @@ class CompetitionTest < ActiveSupport::TestCase
       attempt_deduction: 5,
       owner: users(:one)
     )
-    competition.climbs.build(name: "A", url: "https://example.com/a", grading: "V4")
-    competition.climbs.build(name: "B", url: "https://example.com/b", grading: "V6")
+    competition.climbs.build(name: "A", url: "https://www.boardsesh.com/a", grading: "V4")
+    competition.climbs.build(name: "B", url: "https://www.boardsesh.com/b", grading: "V6")
 
     assert competition.valid?
     assert_equal "intermediate", competition.level
@@ -132,8 +132,8 @@ class CompetitionTest < ActiveSupport::TestCase
       attempt_deduction: 5,
       owner: users(:one),
       climbs_attributes: {
-        "0" => { name: "A", url: "https://example.com/a", grading: "V2" },
-        "1" => { name: "B", url: "https://example.com/b", grading: "V3" }
+        "0" => { name: "A", url: "https://www.boardsesh.com/a", grading: "V2" },
+        "1" => { name: "B", url: "https://www.boardsesh.com/b", grading: "V3" }
       }
     )
 
@@ -195,8 +195,8 @@ class CompetitionTest < ActiveSupport::TestCase
       attempt_deduction: 5,
       owner: users(:one)
     )
-    competition.climbs.build(name: "A", url: "https://example.com/a", grading: "V4")
-    competition.climbs.build(name: "B", url: "https://example.com/b", grading: "V6")
+    competition.climbs.build(name: "A", url: "https://www.boardsesh.com/a", grading: "V4")
+    competition.climbs.build(name: "B", url: "https://www.boardsesh.com/b", grading: "V6")
 
     assert_not competition.valid?
     assert_includes competition.errors[:ends_at], "must be after the start date and time"
@@ -212,8 +212,8 @@ class CompetitionTest < ActiveSupport::TestCase
       attempt_deduction: 5,
       owner: users(:one)
     )
-    competition.climbs.build(name: "A", url: "https://example.com/a", grading: "V2")
-    competition.climbs.build(name: "B", url: "https://example.com/b", grading: "V3")
+    competition.climbs.build(name: "A", url: "https://www.boardsesh.com/a", grading: "V2")
+    competition.climbs.build(name: "B", url: "https://www.boardsesh.com/b", grading: "V3")
 
     assert_not competition.valid?
     assert_includes competition.errors[:name], "contains inappropriate language"
@@ -230,7 +230,7 @@ class CompetitionTest < ActiveSupport::TestCase
   test "rejects new climbs outside locked grade range on update" do
     competition = competitions(:one)
 
-    competition.climbs.build(name: "Too hard", url: "https://example.com/hard", grading: "V8")
+    competition.climbs.build(name: "Too hard", url: "https://www.boardsesh.com/hard", grading: "V8")
     assert_not competition.valid?(:update)
     assert_includes competition.errors[:base].join, "New climbs must use grades within"
   end

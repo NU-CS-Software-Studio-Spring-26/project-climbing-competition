@@ -55,8 +55,8 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
           flash_points: 30,
           attempt_deduction: 5,
           climbs_attributes: {
-            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1", grading: "V4", hold_assignments: { "r1c1" => "purple", "r2c1" => "green" }.to_json },
-            "1" => { name: "Climb 2", url: "https://kilterboard.com/climb/2", grading: "V6" }
+            "0" => { name: "Climb 1", url: "https://www.boardsesh.com/climb/1", grading: "V4", hold_assignments: { "r1c1" => "purple", "r2c1" => "green" }.to_json },
+            "1" => { name: "Climb 2", url: "https://www.boardsesh.com/climb/2", grading: "V6" }
           }
         }
       }
@@ -94,7 +94,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
           flash_points: 0,
           attempt_deduction: -1,
           climbs_attributes: {
-            "0" => { name: "Only Climb", url: "https://kilterboard.com/climb/1", grading: "V4" }
+            "0" => { name: "Only Climb", url: "https://www.boardsesh.com/climb/1", grading: "V4" }
           }
         }
       }
@@ -190,7 +190,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
           ends_at_date: @competition.ends_at.to_date.to_s,
           ends_at_time: @competition.ends_at.strftime("%H:%M"),
           climbs_attributes: {
-            "0" => { name: "New Beginner Climb", url: "https://kilterboard.com/climb/new", grading: "V1" }
+            "0" => { name: "New Beginner Climb", url: "https://www.boardsesh.com/climb/new", grading: "V1" }
           }
         }
       }
@@ -212,7 +212,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
           ends_at_date: @competition.ends_at.to_date.to_s,
           ends_at_time: @competition.ends_at.strftime("%H:%M"),
           climbs_attributes: {
-            "0" => { name: "Too Hard", url: "https://kilterboard.com/climb/hard", grading: "V8" }
+            "0" => { name: "Too Hard", url: "https://www.boardsesh.com/climb/hard", grading: "V8" }
           }
         }
       }

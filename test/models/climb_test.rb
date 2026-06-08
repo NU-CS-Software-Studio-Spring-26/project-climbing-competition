@@ -5,7 +5,7 @@ class ClimbTest < ActiveSupport::TestCase
     climb = Climb.new(
       competition: competitions(:one),
       name: "Hell Hard Problem",
-      url: "https://example.com/route",
+      url: "https://www.boardsesh.com/route/hell-hard",
       grading: "V4"
     )
 
@@ -13,11 +13,57 @@ class ClimbTest < ActiveSupport::TestCase
     assert_includes climb.errors[:name], "contains inappropriate language"
   end
 
+  test "accepts a boardsesh URL with www subdomain" do
+    climb = Climb.new(
+      competition: competitions(:one),
+      name: "Boardsesh Route",
+      url: "https://www.boardsesh.com/route/123",
+      grading: "V4"
+    )
+
+    assert climb.valid?
+  end
+
+  test "rejects a boardsesh URL without www subdomain" do
+    climb = Climb.new(
+      competition: competitions(:one),
+      name: "Boardsesh Route",
+      url: "https://boardsesh.com/route/123",
+      grading: "V4"
+    )
+
+    assert_not climb.valid?
+    assert_includes climb.errors[:url], "must be a link from www.boardsesh.com or app.kiltergrips.com"
+  end
+
+  test "accepts a kiltergrips URL with app subdomain" do
+    climb = Climb.new(
+      competition: competitions(:one),
+      name: "Kilter Route",
+      url: "https://app.kiltergrips.com/beta/route/123",
+      grading: "V4"
+    )
+
+    assert climb.valid?
+  end
+
+  test "rejects a kiltergrips URL without app subdomain" do
+    climb = Climb.new(
+      competition: competitions(:one),
+      name: "Kilter Route",
+      url: "https://kiltergrips.com/beta/route/123",
+      grading: "V4"
+    )
+
+    assert_not climb.valid?
+    assert_includes climb.errors[:url], "must be a link from www.boardsesh.com or app.kiltergrips.com"
+  end
+
   test "rejects climb urls longer than the allowed length" do
     climb = Climb.new(
       competition: competitions(:one),
       name: "Test Climb",
-      url: "https://example.com/#{'a' * (Climb::URL_MAX_LENGTH + 1)}",
+      url: "https://www.boardsesh.com/#{'a' * (Climb::URL_MAX_LENGTH + 1)}",
       grading: "V4"
     )
 
@@ -29,7 +75,7 @@ class ClimbTest < ActiveSupport::TestCase
     climb = Climb.new(
       competition: competitions(:one),
       name: "Visual Route",
-      url: "https://example.com/route",
+      url: "https://www.boardsesh.com/route/visual",
       grading: "V5",
       hold_assignments: {
         "r1c1" => "purple",
@@ -52,7 +98,7 @@ class ClimbTest < ActiveSupport::TestCase
     climb = Climb.new(
       competition: competitions(:one),
       name: "Too Many Holds",
-      url: "https://example.com/massive",
+      url: "https://www.boardsesh.com/massive",
       grading: "V6",
       hold_assignments: assignments
     )
