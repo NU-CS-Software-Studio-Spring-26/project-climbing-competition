@@ -22,11 +22,30 @@
           Climbers: <%= @competition.users.count %>
         </p>
 
-        <p class="competition-hero-dates mb-0">
-          <%= competition_datetime_display(@competition.starts_at) %>
-          <span class="competition-hero-separator" aria-hidden="true">–</span>
-          <%= competition_datetime_display(@competition.ends_at) %>
-        </p>
+        <div class="competition-hero-dates-wrap">
+          <p class="competition-hero-dates mb-0">
+            <%= competition_datetime_display(@competition.starts_at) %>
+            <span class="competition-hero-separator" aria-hidden="true">–</span>
+            <%= competition_datetime_display(@competition.ends_at) %>
+          </p>
+          <% if authenticated? && current_user == @competition.owner && @competition.status == :upcoming %>
+            <p class="competition-hero-time-left mb-0"
+               data-controller="competition-countdown"
+               data-competition-countdown-target-at-value="<%= @competition.starts_at.iso8601 %>"
+               data-competition-countdown-expired-label-value="started">
+              starts in:
+              <span data-competition-countdown-target="display" aria-live="polite"><%= competition_time_until_start_label(@competition) %></span>
+            </p>
+          <% elsif authenticated? && current_user.competitions.include?(@competition) && @competition.status == :active %>
+            <p class="competition-hero-time-left mb-0"
+               data-controller="competition-countdown"
+               data-competition-countdown-target-at-value="<%= @competition.ends_at.iso8601 %>"
+               data-competition-countdown-expired-label-value="ended">
+              time left:
+              <span data-competition-countdown-target="display" aria-live="polite"><%= competition_time_remaining_label(@competition) %></span>
+            </p>
+          <% end %>
+        </div>
 
         <div class="competition-hero-top-end">
           <% if authenticated? && current_user == @competition.owner && @competition.owner_id.present? %>
@@ -94,14 +113,20 @@
     </div>
   </section>
 
-  <% if @competition.climbs.any? && climbs_visible %>
-    <% climbs_with_visuals = @competition.climbs.select(&:visual?) %>
-    <section class="competition-section competition-climbs-section"<% if climbs_with_visuals.any? %> data-controller="climb-visual-modal"<% end %>>
+  <% if @competition.climbs.any? %>
+    <% climbs_with_visuals = climbs_visible ? @competition.climbs.select(&:visual?) : [] %>
+    <section class="competition-section competition-climbs-section<%= " competition-climbs-section--grades-only" unless climbs_visible %>"<% if climbs_with_visuals.any? %> data-controller="climb-visual-modal"<% end %>>
       <h2 class="competition-section-title text-center mb-3">Climbs</h2>
+      <% unless climbs_visible %>
+        <p class="competition-climbs-preview-caption text-center mb-4">
+          Grades only until the competition starts on <%= competition_datetime_display(@competition.starts_at) %>.
+          Names and Kilter links unlock at start time.
+        </p>
+      <% end %>
       <div class="climb-cards-grid">
         <% @competition.climbs.each do |climb| %>
           <% attempt = @user_attempts_by_climb_id[climb.id] %>
-          <div class="climb-card-link">
+          <div class="climb-card-link<%= " climb-card-link--grades-only" unless climbs_visible %>">
             <div class="climb-card-grade-banner">
               <% if climb.grading.present? %>
                 <span class="grade-badge <%= grade_css_class(climb.grading) %>"><%= climb.grading %></span>
@@ -109,33 +134,35 @@
                 <span class="grade-badge grade--ungraded">Ungraded</span>
               <% end %>
             </div>
-            <div class="climb-card-body">
-              <span class="climb-card-title"><%= climb.name %></span>
-              <div class="climb-card-actions">
-              <a href="<%= climb.url %>" target="_blank" rel="noopener noreferrer" class="btn-climb-action">OPEN ON KILTER</a>
-              <% if climb.visual? %>
-                <%= tag.button "VIEW CLIMB",
-                      type: "button",
-                      class: "btn-climb-action btn-climb-action-secondary",
-                      data: {
-                        action: "climb-visual-modal#open",
-                        climb_visual_modal_climb_name_param: climb.name,
-                        climb_visual_modal_climb_assignments_param: climb.hold_assignments
-                      } %>
-              <% end %>
-              <% if authenticated? && current_user == @competition.owner %>
-                <%= link_to "review video submissions", competition_climb_video_reviews_path(@competition, climb), class: "btn-climb-action btn-climb-action-secondary" %>
-              <% end %>
-              <% if authenticated? && current_user.competitions.include?(@competition) %>
-                <button type="button" class="btn-climb-action btn-climb-action-primary" data-bs-toggle="modal" data-bs-target="#logSendModal-<%= climb.id %>">
-                  <%= attempt.present? ? "UPDATE LOG SEND" : "LOG SEND" %>
-                </button>
-              <% end %>
+            <% if climbs_visible %>
+              <div class="climb-card-body">
+                <span class="climb-card-title"><%= climb.name %></span>
+                <div class="climb-card-actions">
+                <a href="<%= climb.url %>" target="_blank" rel="noopener noreferrer" class="btn-climb-action">OPEN ON KILTER</a>
+                <% if climb.visual? %>
+                  <%= tag.button "VIEW CLIMB",
+                        type: "button",
+                        class: "btn-climb-action btn-climb-action-secondary",
+                        data: {
+                          action: "climb-visual-modal#open",
+                          climb_visual_modal_climb_name_param: climb.name,
+                          climb_visual_modal_climb_assignments_param: climb.hold_assignments
+                        } %>
+                <% end %>
+                <% if authenticated? && current_user == @competition.owner %>
+                  <%= link_to "review video submissions", competition_climb_video_reviews_path(@competition, climb), class: "btn-climb-action btn-climb-action-secondary" %>
+                <% end %>
+                <% if authenticated? && current_user.competitions.include?(@competition) %>
+                  <button type="button" class="btn-climb-action btn-climb-action-primary" data-bs-toggle="modal" data-bs-target="#logSendModal-<%= climb.id %>">
+                    <%= attempt.present? ? "UPDATE LOG SEND" : "LOG SEND" %>
+                  </button>
+                <% end %>
+                </div>
               </div>
-            </div>
+            <% end %>
           </div>
 
-          <% if authenticated? && current_user.competitions.include?(@competition) %>
+          <% if climbs_visible && authenticated? && current_user.competitions.include?(@competition) %>
             <div class="modal fade" id="logSendModal-<%= climb.id %>" tabindex="-1" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content log-send-modal-content">
@@ -189,16 +216,6 @@
       <% if climbs_with_visuals.any? %>
         <%= render "shared/climb_visual_view_modal" %>
       <% end %>
-    </section>
-  <% elsif @competition.climbs.any? %>
-    <section class="competition-section competition-climbs-section">
-      <h2 class="competition-section-title text-center mb-3">Climbs</h2>
-      <div class="detail-panel scoring-rules-panel">
-        <p class="scoring-rules-hint mb-0">
-          Climbs will be revealed when the competition starts on
-          <%= competition_datetime_display(@competition.starts_at) %>.
-        </p>
-      </div>
     </section>
   <% end %>
 

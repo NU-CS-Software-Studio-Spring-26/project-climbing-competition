@@ -309,11 +309,23 @@ body.app-shell.home-shell {
   color: rgba(243, 241, 234, 0.45);
 }
 
-.competition-hero-dates {
+.competition-hero-dates-wrap {
   justify-self: center;
   text-align: center;
+}
+
+.competition-hero-dates {
   font-size: 0.84rem;
   color: rgba(243, 241, 234, 0.9);
+}
+
+.competition-hero-time-left {
+  margin-top: 0.45rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: lowercase;
+  color: #f87171;
 }
 
 .competition-hero-separator {
@@ -602,6 +614,25 @@ body.app-shell.home-shell {
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.16),
     0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
+.competition-climbs-preview-caption {
+  max-width: 34rem;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: rgba(243, 241, 234, 0.68);
+}
+
+.competition-show-shell .climb-card-link--grades-only {
+  min-height: auto;
+  cursor: default;
+}
+
+.competition-show-shell .climb-card-link--grades-only:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 .climb-card-link {

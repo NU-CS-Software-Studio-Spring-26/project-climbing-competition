@@ -13,6 +13,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   test "should get new" do
     get new_user_url
     assert_response :success
+    assert_select "form[action='/auth/google_oauth2'] button", text: "Continue with Google"
   end
 
   test "should create user" do

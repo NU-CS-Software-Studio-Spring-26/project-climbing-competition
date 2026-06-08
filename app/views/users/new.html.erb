@@ -3,12 +3,13 @@
 <section class="detail-panel auth-panel p-4">
   <div class="d-flex flex-column gap-3">
     <div>
-      <p class="eyebrow mb-1">join the board</p>
       <h1 class="page-title page-title-left">create your profile</h1>
-      <p class="mb-0">Set up your climbing profile and sign in right away.</p>
+      <p class="mb-0">Set up your climbing profile through email or continue with google</p>
     </div>
 
     <%= render "form", user: @user %>
+
+    <%= render "shared/google_oauth_button" %>
 
     <div class="action-row">
       <%= link_to "Already have an account? Sign in", new_session_path, class: "back-arrow-text-link" %>

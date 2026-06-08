@@ -130,15 +130,29 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_operator response.body.index(users(:one).username), :<, response.body.index(users(:two).username)
   end
 
-  test "should hide climbs from enrolled climbers before competition starts" do
+  test "should show climb grades but hide names and links before competition starts" do
     sign_in_as(users(:two))
 
     get competition_url(@competition)
 
     assert_response :success
+    assert_match "V2", response.body
+    assert_match "V3", response.body
+    assert_match "Grades only until the competition starts", response.body
+    assert_no_match climbs(:one).name, response.body
+    assert_no_match climbs(:one_two).name, response.body
+    assert_no_match "OPEN ON KILTER", response.body
+    assert_no_match "LOG SEND", response.body
+  end
+
+  test "should show climb grades but hide names for guests before competition starts" do
+    get competition_url(@competition)
+
+    assert_response :success
+    assert_match "V2", response.body
+    assert_match "V3", response.body
     assert_no_match climbs(:one).name, response.body
     assert_no_match "OPEN ON KILTER", response.body
-    assert_match "Climbs will be revealed when the competition starts", response.body
   end
 
   test "should show climbs to owner before competition starts" do
@@ -160,6 +174,45 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match climbs(:one).name, response.body
     assert_match "OPEN ON KILTER", response.body
+  end
+
+  test "should show time left for enrolled climbers during active competition" do
+    set_competition_schedule(@competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    sign_in_as(users(:two))
+
+    get competition_url(@competition)
+
+    assert_response :success
+    assert_match "time left:", response.body
+    assert_match "competition-countdown", response.body
+  end
+
+  test "should not show time left before competition starts" do
+    sign_in_as(users(:two))
+
+    get competition_url(@competition)
+
+    assert_response :success
+    assert_no_match "time left:", response.body
+  end
+
+  test "should show starts in countdown for owner before competition starts" do
+    sign_in_as(@user)
+
+    get competition_url(@competition)
+
+    assert_response :success
+    assert_match "starts in:", response.body
+    assert_match "competition-countdown", response.body
+  end
+
+  test "should not show starts in countdown for non-owners before competition starts" do
+    sign_in_as(users(:two))
+
+    get competition_url(@competition)
+
+    assert_response :success
+    assert_no_match "starts in:", response.body
   end
 
   test "should show join link to sign up for unauthenticated users on joinable competition" do
