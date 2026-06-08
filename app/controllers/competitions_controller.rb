@@ -86,7 +86,7 @@ class CompetitionsController < ApplicationController
   # GET /competitions/new
   def new
     @competition = Competition.new
-    3.times { @competition.climbs.build }
+    2.times { @competition.climbs.build }
   end
 
   # GET /competitions/1/edit
@@ -171,7 +171,7 @@ class CompetitionsController < ApplicationController
     def combine_date_and_time(date, time)
       return nil if date.blank?
 
-      Time.zone.parse("#{date} #{time.presence || '00:00'}")
+      Time.zone.parse("#{date} #{time.presence || Competition::DEFAULT_TIME}")
     end
 
     def ensure_minimum_climb_fields(competition)
