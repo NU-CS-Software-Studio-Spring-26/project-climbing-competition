@@ -3,6 +3,7 @@ require "test_helper"
 class CompetitionsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @competition = competitions(:one)
+    @competition.update!(starts_at: 1.week.from_now, ends_at: 2.weeks.from_now)
     @user = users(:one)
   end
 
@@ -115,6 +116,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show competition" do
+    set_competition_schedule(@competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
     Attempt.create!(user: users(:one), climb: climbs(:one), attempt_count: 1)
     Attempt.create!(user: users(:two), climb: climbs(:one), attempt_count: 1)
     Attempt.create!(user: users(:two), climb: climbs(:one_two), attempt_count: 2, invalidated: true)
@@ -126,6 +128,38 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_match "Scoring Rules", response.body
     assert_match "Leaderboard", response.body
     assert_operator response.body.index(users(:one).username), :<, response.body.index(users(:two).username)
+  end
+
+  test "should hide climbs from enrolled climbers before competition starts" do
+    sign_in_as(users(:two))
+
+    get competition_url(@competition)
+
+    assert_response :success
+    assert_no_match climbs(:one).name, response.body
+    assert_no_match "OPEN ON KILTER", response.body
+    assert_match "Climbs will be revealed when the competition starts", response.body
+  end
+
+  test "should show climbs to owner before competition starts" do
+    sign_in_as(@user)
+
+    get competition_url(@competition)
+
+    assert_response :success
+    assert_match climbs(:one).name, response.body
+    assert_match "OPEN ON KILTER", response.body
+  end
+
+  test "should show climbs to enrolled climbers after competition starts" do
+    set_competition_schedule(@competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    sign_in_as(users(:two))
+
+    get competition_url(@competition)
+
+    assert_response :success
+    assert_match climbs(:one).name, response.body
+    assert_match "OPEN ON KILTER", response.body
   end
 
   test "should show join link to sign up for unauthenticated users on joinable competition" do
@@ -166,15 +200,132 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a.btn-competition-edit", text: "Edit competition"
   end
 
+  test "should not show edit link for owner after competition has started" do
+    set_competition_schedule(@competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    sign_in_as(@user)
+
+    get competition_url(@competition)
+
+    assert_response :success
+    assert_select "a.btn-competition-edit", count: 0
+  end
+
+  test "should redirect edit when competition has started" do
+    set_competition_schedule(@competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    sign_in_as(@user)
+
+    get edit_competition_url(@competition)
+
+    assert_redirected_to competition_url(@competition)
+    follow_redirect!
+    assert_match(/cannot be edited after they have started/i, flash[:alert].to_s)
+  end
+
+  test "should redirect update when competition has started" do
+    set_competition_schedule(@competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    sign_in_as(@user)
+
+    patch competition_url(@competition), params: {
+      competition: { name: "Updated After Start" }
+    }
+
+    assert_redirected_to competition_url(@competition)
+    assert_equal "Spring Boulder Bash", @competition.reload.name
+  end
+
+  test "should reject create with start date before today" do
+    sign_in_as(@user)
+
+    assert_no_difference("Competition.count") do
+      post competitions_url, params: {
+        competition: {
+          name: "Past Start Event",
+          starts_at_date: 1.day.ago.to_date.to_s,
+          starts_at_time: "12:00",
+          ends_at_date: 1.week.from_now.to_date.to_s,
+          ends_at_time: "12:00",
+          flash_points: 30,
+          attempt_deduction: 5,
+          climbs_attributes: {
+            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1", grading: "V4" },
+            "1" => { name: "Climb 2", url: "https://kilterboard.com/climb/2", grading: "V6" }
+          }
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_match "cannot be before today", response.body
+  end
+
+  test "should reject update with start date before today" do
+    sign_in_as(@user)
+
+    patch competition_url(@competition), params: {
+      competition: {
+        name: @competition.name,
+        starts_at_date: 1.day.ago.to_date.to_s,
+        starts_at_time: "12:00",
+        ends_at_date: @competition.ends_at.to_date.to_s,
+        ends_at_time: @competition.ends_at.strftime("%H:%M")
+      }
+    }
+
+    assert_response :unprocessable_entity
+    assert_match "cannot be before today", response.body
+  end
+
+  test "should reject create with end date before today" do
+    sign_in_as(@user)
+
+    assert_no_difference("Competition.count") do
+      post competitions_url, params: {
+        competition: {
+          name: "Past End Event",
+          starts_at_date: 1.week.from_now.to_date.to_s,
+          starts_at_time: "12:00",
+          ends_at_date: 1.day.ago.to_date.to_s,
+          ends_at_time: "12:00",
+          flash_points: 30,
+          attempt_deduction: 5,
+          climbs_attributes: {
+            "0" => { name: "Climb 1", url: "https://kilterboard.com/climb/1", grading: "V4" },
+            "1" => { name: "Climb 2", url: "https://kilterboard.com/climb/2", grading: "V6" }
+          }
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_match "Ends at cannot be before today", response.body
+  end
+
+  test "should reject update with end date before today" do
+    sign_in_as(@user)
+
+    patch competition_url(@competition), params: {
+      competition: {
+        name: @competition.name,
+        starts_at_date: @competition.starts_at.to_date.to_s,
+        starts_at_time: @competition.starts_at.strftime("%H:%M"),
+        ends_at_date: 1.day.ago.to_date.to_s,
+        ends_at_time: "12:00"
+      }
+    }
+
+    assert_response :unprocessable_entity
+    assert_match "Ends at cannot be before today", response.body
+  end
+
   test "should update competition when signed in as owner" do
     sign_in_as(@user)
 
     patch competition_url(@competition), params: {
       competition: {
         name: "Updated Spring Bash",
-        starts_at_date: "2026-05-16",
+        starts_at_date: @competition.starts_at.to_date.to_s,
         starts_at_time: "10:00",
-        ends_at_date: "2026-05-16",
+        ends_at_date: @competition.ends_at.to_date.to_s,
         ends_at_time: "18:00"
       }
     }

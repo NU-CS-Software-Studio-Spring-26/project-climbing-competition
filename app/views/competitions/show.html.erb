@@ -1,4 +1,5 @@
 <% content_for :title, @competition.name %>
+<% climbs_visible = @competition.climbs_visible_to?(authenticated? ? current_user : nil) %>
 
 <div class="competition-show-shell">
   <div class="action-row mb-4 d-flex gap-2 flex-wrap align-items-center">
@@ -30,7 +31,9 @@
         <div class="competition-hero-top-end">
           <% if authenticated? && current_user == @competition.owner && @competition.owner_id.present? %>
             <div class="competition-owner-actions">
-              <%= link_to "Edit competition", edit_competition_path(@competition), class: "btn-competition-edit" %>
+              <% if @competition.editable? %>
+                <%= link_to "Edit competition", edit_competition_path(@competition), class: "btn-competition-edit" %>
+              <% end %>
               <%= button_to "Delete competition",
                     competition_path(@competition),
                     method: :delete,
@@ -76,22 +79,22 @@
     <div class="detail-panel scoring-rules-panel">
       <ul class="scoring-rules-list mb-0">
         <li>
-          <span class="scoring-rules-label">Flash (1st attempt)</span>
-          <span class="scoring-rules-value"><%= @competition.flash_points %> pts</span>
+          <span class="scoring-rules-label">Flash (<span class="scoring-rules-number">1st</span> attempt)</span>
+          <span class="scoring-rules-value"><span class="scoring-rules-number scoring-rules-number--points"><%= @competition.flash_points %></span> pts</span>
         </li>
         <li>
           <span class="scoring-rules-label">Per extra attempt</span>
-          <span class="scoring-rules-value">&minus;<%= @competition.attempt_deduction %> pts</span>
+          <span class="scoring-rules-value scoring-rules-value--deduction">&minus;<span class="scoring-rules-number"><%= @competition.attempt_deduction %></span> pts</span>
         </li>
       </ul>
       <p class="scoring-rules-hint mb-0">
-        Example: sending a problem on your 3rd attempt earns
-        <%= [@competition.flash_points - 2 * @competition.attempt_deduction, 0].max %> pts.
+        Example: sending a problem on your <span class="scoring-rules-number">3rd</span> attempt earns
+        <span class="scoring-rules-number scoring-rules-number--points"><%= [@competition.flash_points - 2 * @competition.attempt_deduction, 0].max %></span> pts.
       </p>
     </div>
   </section>
 
-  <% if @competition.climbs.any? %>
+  <% if @competition.climbs.any? && climbs_visible %>
     <% climbs_with_visuals = @competition.climbs.select(&:visual?) %>
     <section class="competition-section competition-climbs-section"<% if climbs_with_visuals.any? %> data-controller="climb-visual-modal"<% end %>>
       <h2 class="competition-section-title text-center mb-3">Climbs</h2>
@@ -187,9 +190,19 @@
         <%= render "shared/climb_visual_view_modal" %>
       <% end %>
     </section>
+  <% elsif @competition.climbs.any? %>
+    <section class="competition-section competition-climbs-section">
+      <h2 class="competition-section-title text-center mb-3">Climbs</h2>
+      <div class="detail-panel scoring-rules-panel">
+        <p class="scoring-rules-hint mb-0">
+          Climbs will be revealed when the competition starts on
+          <%= competition_datetime_display(@competition.starts_at) %>.
+        </p>
+      </div>
+    </section>
   <% end %>
 
-  <% if authenticated? && current_user.competitions.include?(@competition) %>
+  <% if climbs_visible && authenticated? && current_user.competitions.include?(@competition) %>
     <div class="competition-section">
       <div class="competition-points-pill">
         YOUR TOTAL POINTS: <%= @competition.points_for(current_user) %>
@@ -237,21 +250,27 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <% @competition.climbs.each do |climb| %>
-                              <% attempt = @attempts_by_user_and_climb[entry.user.id]&.[](climb.id) %>
+                            <% if climbs_visible %>
+                              <% @competition.climbs.each do |climb| %>
+                                <% attempt = @attempts_by_user_and_climb[entry.user.id]&.[](climb.id) %>
+                                <tr>
+                                  <td><strong><%= climb.name %></strong></td>
+                                  <% if attempt %>
+                                    <td><%= attempt.attempt_count %></td>
+                                    <td>
+                                      <span class="<%= attempt.invalidated? ? 'text-danger' : 'text-success' %>">
+                                        <%= attempt.invalidated? ? '✗ Invalidated' : '✓ Sent' %>
+                                      </span>
+                                    </td>
+                                    <td><strong><%= attempt.points_awarded %> pts</strong></td>
+                                  <% else %>
+                                    <td colspan="3" class="text-muted">Not attempted</td>
+                                  <% end %>
+                                </tr>
+                              <% end %>
+                            <% else %>
                               <tr>
-                                <td><strong><%= climb.name %></strong></td>
-                                <% if attempt %>
-                                  <td><%= attempt.attempt_count %></td>
-                                  <td>
-                                    <span class="<%= attempt.invalidated? ? 'text-danger' : 'text-success' %>">
-                                      <%= attempt.invalidated? ? '✗ Invalidated' : '✓ Sent' %>
-                                    </span>
-                                  </td>
-                                  <td><strong><%= attempt.points_awarded %> pts</strong></td>
-                                <% else %>
-                                  <td colspan="3" class="text-muted">Not attempted</td>
-                                <% end %>
+                                <td colspan="4" class="text-muted">Climb details available when the competition starts.</td>
                               </tr>
                             <% end %>
                           </tbody>

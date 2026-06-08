@@ -87,7 +87,7 @@ class UserTest < ActiveSupport::TestCase
   test "average_placement uses past competitions only" do
     user = users(:one)
     competition = competitions(:one)
-    competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+    set_competition_schedule(competition, starts_at: 2.weeks.ago, ends_at: 1.week.ago)
 
     climb_one = climbs(:one)
     climb_two = climbs(:one_two)

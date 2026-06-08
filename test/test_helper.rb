@@ -13,6 +13,11 @@ module ActiveSupport
     fixtures :all
 
     # Add more helper methods to be used by all tests here...
+    def set_competition_schedule(competition, starts_at:, ends_at:)
+      competition.update_columns(starts_at: starts_at, ends_at: ends_at)
+      competition.reload
+    end
+
     def mock_omniauth(provider, **attributes)
       OmniAuth.config.test_mode = true
       OmniAuth.config.mock_auth[provider.to_sym] = OmniAuth::AuthHash.new(

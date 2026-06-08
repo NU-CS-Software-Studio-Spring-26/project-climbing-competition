@@ -22,10 +22,10 @@ RSpec.describe "Video submission review", type: :request do
   end
 
   def build_competition(owner)
-    Competition.create!(
+    competition = Competition.create!(
       name: "Video Review Comp #{SecureRandom.hex(3)}",
-      starts_at: 1.day.ago,
-      ends_at: 1.day.from_now,
+      starts_at: 1.week.from_now,
+      ends_at: 2.weeks.from_now,
       flash_points: 30,
       attempt_deduction: 5,
       owner: owner,
@@ -34,6 +34,8 @@ RSpec.describe "Video submission review", type: :request do
         "1" => { name: "Climb B", url: "https://example.com/b", grading: "V3" }
       }
     )
+    competition.update_columns(starts_at: 1.day.ago, ends_at: 1.day.from_now)
+    competition.reload
   end
 
   it "allows a host to review climb videos and mark a send invalid" do

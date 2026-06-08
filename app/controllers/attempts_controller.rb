@@ -3,6 +3,7 @@ class AttemptsController < ApplicationController
   before_action :set_competition
   before_action :set_climb
   before_action :ensure_enrolled, only: %i[ create update ]
+  before_action :ensure_competition_started, only: %i[ create update ]
   before_action :set_attempt, only: %i[ invalidate ]
   before_action :ensure_competition_owner, only: %i[ invalidate video_reviews ]
 
@@ -67,6 +68,12 @@ class AttemptsController < ApplicationController
     return if current_user.competitions.include?(@competition)
 
     redirect_to competition_path(@competition), alert: "Join the competition before logging attempts."
+  end
+
+  def ensure_competition_started
+    return if @competition.started?
+
+    redirect_to competition_path(@competition), alert: "Climbs are not available until the competition starts."
   end
 
   def set_attempt

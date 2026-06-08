@@ -505,8 +505,18 @@ body.app-shell.home-shell {
   color: #c8f0d8;
 }
 
-.scoring-rules-value--deduction {
-  color: #f08080;
+.scoring-rules-number {
+  font-family: "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-weight: 600;
+}
+
+.scoring-rules-number--points {
+  color: #c8f0d8;
+}
+
+.scoring-rules-value--deduction,
+.scoring-rules-value--deduction .scoring-rules-number {
+  color: #de7f7f;
 }
 
 .scoring-rules-list li:last-child {

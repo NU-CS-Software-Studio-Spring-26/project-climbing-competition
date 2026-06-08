@@ -15,7 +15,7 @@ class FriendActivityFeedTest < ActiveSupport::TestCase
 
   test "includes enrollment when friend joins competition" do
     competition = competitions(:two)
-    competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    set_competition_schedule(competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
     Enrollment.where(user: @friend, competition: competition).delete_all
     enrollment = Enrollment.create!(user: @friend, competition: competition)
 
@@ -28,7 +28,7 @@ class FriendActivityFeedTest < ActiveSupport::TestCase
 
   test "includes attempt when friend logs climb" do
     competition = competitions(:one)
-    competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    set_competition_schedule(competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
     climb = climbs(:one)
     attempt = Attempt.find_or_initialize_by(user: @friend, climb: climb)
     attempt.update!(attempt_count: 2, updated_at: Time.current)
@@ -42,7 +42,7 @@ class FriendActivityFeedTest < ActiveSupport::TestCase
 
   test "includes placement for friend in past competition" do
     competition = competitions(:one)
-    competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+    set_competition_schedule(competition, starts_at: 2.weeks.ago, ends_at: 1.week.ago)
     Enrollment.find_or_create_by!(user: @friend, competition: competition)
 
     activities = FriendActivityFeed.for(@viewer)
@@ -57,8 +57,8 @@ class FriendActivityFeedTest < ActiveSupport::TestCase
     20.times do |index|
       competition = Competition.create!(
         name: "Feed Comp #{index}",
-        starts_at: 1.day.ago,
-        ends_at: 1.week.from_now,
+        starts_at: 1.week.from_now,
+        ends_at: 2.weeks.from_now,
         flash_points: 30,
         attempt_deduction: 5,
         owner: @viewer,
@@ -69,6 +69,7 @@ class FriendActivityFeedTest < ActiveSupport::TestCase
           "1" => { name: "B", url: "https://example.com/b", grading: "V2" }
         }
       )
+      set_competition_schedule(competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
       Enrollment.create!(user: @friend, competition: competition)
     end
 
@@ -77,7 +78,7 @@ class FriendActivityFeedTest < ActiveSupport::TestCase
 
   test "sorts activities newest first" do
     competition = competitions(:two)
-    competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    set_competition_schedule(competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
     Enrollment.where(user: @friend, competition: competition).delete_all
     Enrollment.create!(user: @friend, competition: competition)
 
