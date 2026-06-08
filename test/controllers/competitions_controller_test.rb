@@ -17,6 +17,16 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_match competitions(:one).climb_grade_range_label, response.body
   end
 
+  test "index shows empty state when search has no matching results" do
+    get competitions_url, params: { q: "zzznomatchzzz" }
+
+    assert_response :success
+    assert_match "No matching results", response.body
+    assert_match "View all competitions", response.body
+    assert_no_match competitions(:one).name, response.body
+    assert_no_match competitions(:two).name, response.body
+  end
+
   test "index filters competitions by climb grade range on cards" do
     climbs(:one).update!(grading: "V1")
     climbs(:one_two).update!(grading: "V8")
