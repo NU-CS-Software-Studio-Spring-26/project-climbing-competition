@@ -394,8 +394,7 @@ body.app-shell.home-shell {
 .competition-section-title {
   font-size: clamp(1.6rem, 3vw, 2rem);
   font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 0.14em;
+  text-decoration: none;
   margin: 0;
 }
 
@@ -698,8 +697,7 @@ body.app-shell.home-shell {
   padding: 1rem 1rem 0.9rem;
   font-size: 0.82rem;
   text-transform: lowercase;
-  text-decoration: underline;
-  text-underline-offset: 0.14em;
+  text-decoration: none;
   border-bottom: 0;
   color: rgba(243, 241, 234, 0.9);
 }
@@ -861,24 +859,6 @@ body.app-shell.home-shell {
   text-transform: uppercase;
   letter-spacing: 0.085em;
   font-weight: 600;
-}
-
-.competition-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.66rem;
-}
-
-.competition-link {
-  color: var(--card-text);
-  font-size: 0.86rem;
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 0.16em;
-}
-
-.competition-link:hover {
-  color: #000000;
 }
 
 .competition-action-buttons {
@@ -1309,25 +1289,6 @@ body.app-shell.home-shell {
 .profile-user-row__username {
   font-size: 0.82rem;
   color: rgba(243, 241, 234, 0.62);
-}
-
-.profile-friends-feed-link-wrap {
-  margin: 0;
-}
-
-.profile-friends-feed-link {
-  font-size: 0.88rem;
-  font-weight: 600;
-  text-transform: lowercase;
-  color: rgba(243, 241, 234, 0.88);
-  text-decoration: underline;
-  text-underline-offset: 0.14em;
-  text-decoration-color: rgba(243, 241, 234, 0.35);
-}
-
-.profile-friends-feed-link:hover {
-  color: #ffffff;
-  text-decoration-color: rgba(243, 241, 234, 0.75);
 }
 
 .friends-shell {
@@ -2393,10 +2354,6 @@ body.app-shell:not(.home-shell) .competition-card-link-overlay {
 
 .competition-date:last-of-type {
   margin-bottom: 0;
-}
-
-.competition-links {
-  margin-top: 0.1rem;
 }
 
 .competition-action-buttons {
