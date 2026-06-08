@@ -36,3 +36,6 @@
 # Ignore all files in the .cursor directory.
 /.cursor/*
 !/cursor/.keep
+
+# Ignore env.local file.
+/env

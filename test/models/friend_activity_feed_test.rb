@@ -62,6 +62,7 @@ class FriendActivityFeedTest < ActiveSupport::TestCase
         send_points: 25,
         flash_points: 30,
         attempt_deduction: 5,
+        owner: @viewer,
         v_grade_min: 0,
         v_grade_max: 3,
         climbs_attributes: {

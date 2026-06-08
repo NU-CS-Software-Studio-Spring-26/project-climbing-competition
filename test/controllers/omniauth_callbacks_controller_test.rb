@@ -54,7 +54,7 @@ class OmniauthCallbacksControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to new_session_path
-    assert_equal "Google sign-in failed. Please try again.", flash[:alert]
+    assert_equal "Google account must include an email", flash[:alert]
   end
 
   test "failure redirects to sign in" do
