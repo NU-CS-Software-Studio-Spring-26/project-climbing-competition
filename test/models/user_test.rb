@@ -62,6 +62,13 @@ class UserTest < ActiveSupport::TestCase
     assert_includes user.errors[:name], "must include at least one letter"
   end
 
+  test "rejects email addresses without a valid domain" do
+    user = User.new(valid_user_attributes(email_address: "a@k"))
+
+    assert_not user.valid?
+    assert_includes user.errors[:email_address], "is invalid"
+  end
+
   test "rejects email addresses over 254 characters" do
     local_part = "a" * 245
     user = User.new(valid_user_attributes(email_address: "#{local_part}@example.com"))
