@@ -1,4 +1,6 @@
 class Climb < ApplicationRecord
+  include ProfanityFilterable
+
   GRADES = (0..16).map { |n| "V#{n}" }.freeze
   URL_MAX_LENGTH = 2000
   HOLD_COLORS = %w[purple green blue yellow].freeze
@@ -14,6 +16,8 @@ class Climb < ApplicationRecord
                   format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid URL" }
   validates :grading, presence: true, inclusion: { in: GRADES, message: "must be a V-grade (V0–V16)" }
   validate :hold_assignments_are_valid
+
+  filters_profanity_in :name
 
   before_validation :sanitize_fields
   before_validation :sanitize_hold_assignments

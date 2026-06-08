@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include ProfanityFilterable
+
   USERNAME_FORMAT = /\A[a-zA-Z0-9_.-]+\z/
   EMAIL_FORMAT = /\A[^\s@]+@(?:[^\s@]+\.)+[^\s@]{2,}\z/
   CONTROL_CHAR_PATTERN = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/
@@ -48,6 +50,9 @@ class User < ApplicationRecord
   validate :name_has_no_control_characters
   validate :name_contains_letter
   validate :bio_has_no_control_characters, if: -> { bio.present? }
+
+  filters_profanity_in :name, :username
+  filters_profanity_in :bio, allow_blank: true
 
   private
     def sanitize_profile_fields

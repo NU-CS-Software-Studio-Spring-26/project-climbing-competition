@@ -1,4 +1,6 @@
 class Competition < ApplicationRecord
+  include ProfanityFilterable
+
   SCORING_MAX = 10_000
   V_GRADES = (0..16).to_a
   LEVEL_GRADE_RANGES = {
@@ -117,6 +119,9 @@ class Competition < ApplicationRecord
   validate :grade_range_is_valid
   validate :new_climbs_within_locked_grade_range, on: :update
   validate :ends_at_after_starts_at
+
+  filters_profanity_in :name
+  filters_profanity_in :description, allow_blank: true
 
   def points_for(user)
     return 0 if user.nil?

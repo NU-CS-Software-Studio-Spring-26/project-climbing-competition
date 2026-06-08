@@ -202,6 +202,31 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_includes competition.errors[:ends_at], "must be after the start date and time"
   end
 
+  test "rejects profane competition names" do
+    competition = Competition.new(
+      name: "Hell Good Comp",
+      starts_at: 1.day.from_now,
+      ends_at: 2.days.from_now,
+      send_points: 25,
+      flash_points: 30,
+      attempt_deduction: 5,
+      owner: users(:one)
+    )
+    competition.climbs.build(name: "A", url: "https://example.com/a", grading: "V2")
+    competition.climbs.build(name: "B", url: "https://example.com/b", grading: "V3")
+
+    assert_not competition.valid?
+    assert_includes competition.errors[:name], "contains inappropriate language"
+  end
+
+  test "rejects profane competition descriptions" do
+    competition = competitions(:one)
+    competition.description = "This comp is shit hot"
+
+    assert_not competition.valid?
+    assert_includes competition.errors[:description], "contains inappropriate language"
+  end
+
   test "rejects new climbs outside locked grade range on update" do
     competition = competitions(:one)
 

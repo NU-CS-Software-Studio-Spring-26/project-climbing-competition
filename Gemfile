@@ -79,3 +79,5 @@ end
 
 # to make db work on heroku
 gem "pg"
+
+gem "obscenity", "~> 1.0"

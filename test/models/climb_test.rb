@@ -1,6 +1,18 @@
 require "test_helper"
 
 class ClimbTest < ActiveSupport::TestCase
+  test "rejects profane climb names" do
+    climb = Climb.new(
+      competition: competitions(:one),
+      name: "Hell Hard Problem",
+      url: "https://example.com/route",
+      grading: "V4"
+    )
+
+    assert_not climb.valid?
+    assert_includes climb.errors[:name], "contains inappropriate language"
+  end
+
   test "rejects climb urls longer than the allowed length" do
     climb = Climb.new(
       competition: competitions(:one),
