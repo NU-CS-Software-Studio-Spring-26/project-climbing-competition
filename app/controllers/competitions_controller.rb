@@ -7,6 +7,14 @@ class CompetitionsController < ApplicationController
   def index
     @competitions = Competition.includes(:owner, :users, :climbs)
 
+    @search_query = params[:q].to_s.strip
+    if @search_query.present?
+      @competitions = @competitions.where(
+        "LOWER(competitions.name) LIKE ?",
+        "%#{@search_query.downcase}%"
+      )
+    end
+
     @sort_by = params[:sort_by].presence_in(%w[ starts_at ends_at ])
     @sort_direction = if @sort_by
       params[:sort_direction].presence_in(%w[ asc desc ]) || "asc"
@@ -52,6 +60,7 @@ class CompetitionsController < ApplicationController
     }.compact
     @filter_params[:grade_min] = @grade_range_min if @grade_range_min > 0
     @filter_params[:grade_max] = @grade_range_max if @grade_range_max < 16
+    @filter_params[:q] = @search_query if @search_query.present?
 
     # Apply pagination
     @competitions = @competitions.page(params[:page]).per(9)
@@ -139,10 +148,8 @@ class CompetitionsController < ApplicationController
     def ensure_competition_owner
       return if @competition.owner_id.present? && current_user == @competition.owner
 
-      message = action_name == "destroy" ? "You can only delete competitions you created." : "You can only edit competitions you created."
-
       respond_to do |format|
-        format.html { redirect_to competitions_path, alert: message, status: :see_other }
+        format.html { redirect_to @competition, alert: "You can only edit competitions you created.", status: :see_other }
         format.json { head :forbidden }
       end
     end
