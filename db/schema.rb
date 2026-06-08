@@ -47,8 +47,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_07_000001) do
     t.string "level"
     t.string "name", null: false
     t.integer "owner_id", null: false
-    t.boolean "recap_summary_email_enabled", default: false, null: false
-    t.datetime "recap_summary_email_sent_at"
     t.integer "send_points", default: 25, null: false
     t.datetime "starts_at", null: false
     t.datetime "updated_at", null: false
