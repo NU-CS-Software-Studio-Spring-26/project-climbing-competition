@@ -2,8 +2,8 @@ class CapScoringSettingsOnCompetitions < ActiveRecord::Migration[8.1]
   def up
     execute <<~SQL.squish
       UPDATE competitions
-      SET flash_points = MIN(flash_points, 50),
-          attempt_deduction = MIN(attempt_deduction, 10)
+      SET flash_points = CASE WHEN flash_points > 50 THEN 50 ELSE flash_points END,
+          attempt_deduction = CASE WHEN attempt_deduction > 10 THEN 10 ELSE attempt_deduction END
     SQL
 
     remove_check_constraint :competitions, name: "flash_points_range"
