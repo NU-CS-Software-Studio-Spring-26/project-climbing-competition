@@ -1,18 +1,18 @@
 class Climb < ApplicationRecord
-  GRADES = (0..17).map { |n| "V#{n}" }.freeze
+  GRADES = (0..16).map { |n| "V#{n}" }.freeze
   URL_MAX_LENGTH = 2000
   HOLD_COLORS = %w[purple green blue yellow].freeze
   HOLD_ID_PATTERN = /\Ar\d+c\d+\z/
   MAX_HOLD_ASSIGNMENTS = 1200
 
-  belongs_to :competition, optional: true
+  belongs_to :competition
   has_many :attempts, dependent: :destroy
 
   validates :name, :url, presence: true
   validates :name, length: { maximum: 100 }
   validates :url, length: { maximum: URL_MAX_LENGTH },
                   format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid URL" }
-  validates :grading, allow_blank: true, inclusion: { in: GRADES, message: "must be a V-grade (V0–V17)" }
+  validates :grading, presence: true, inclusion: { in: GRADES, message: "must be a V-grade (V0–V16)" }
   validate :hold_assignments_are_valid
 
   before_validation :sanitize_fields

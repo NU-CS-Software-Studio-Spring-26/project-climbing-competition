@@ -1,4 +1,5 @@
 class Competition < ApplicationRecord
+  SCORING_MAX = 10_000
   V_GRADES = (0..16).to_a
   LEVEL_GRADE_RANGES = {
     "beginner" => [ 0, 3 ],
@@ -9,7 +10,7 @@ class Competition < ApplicationRecord
   LEVELS = LEVEL_GRADE_RANGES.keys.freeze
   LeaderboardEntry = Struct.new(:user, :points, :attempts_count, keyword_init: true)
 
-  belongs_to :owner, class_name: "User", optional: true
+  belongs_to :owner, class_name: "User"
 
   has_many :enrollments, dependent: :destroy
   has_many :users, through: :enrollments
@@ -95,9 +96,12 @@ class Competition < ApplicationRecord
   validates :name, :starts_at, :ends_at, presence: true
   validates :name, length: { maximum: 100 }
   validates :description, length: { maximum: 2000 }, allow_blank: true
-  validates :send_points, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validates :flash_points, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validates :attempt_deduction, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :send_points, presence: true,
+            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: SCORING_MAX }
+  validates :flash_points, presence: true,
+            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: SCORING_MAX }
+  validates :attempt_deduction, presence: true,
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: SCORING_MAX }
   validates :v_grade_min, :v_grade_max, presence: true,
             numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 16 }
   validate :minimum_climbs

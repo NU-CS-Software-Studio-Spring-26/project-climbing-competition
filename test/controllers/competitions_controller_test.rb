@@ -120,12 +120,28 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_operator response.body.index(users(:one).username), :<, response.body.index(users(:two).username)
   end
 
-  test "should get edit" do
+  test "should get edit when signed in as owner" do
+    sign_in_as(@user)
     get edit_competition_url(@competition)
     assert_response :success
   end
 
-  test "should update competition" do
+  test "should redirect edit when unauthenticated" do
+    get edit_competition_url(@competition)
+    assert_redirected_to new_session_url
+  end
+
+  test "should not get edit when signed in as non-owner" do
+    sign_in_as(users(:two))
+    get edit_competition_url(@competition)
+    assert_redirected_to competitions_url
+    follow_redirect!
+    assert_match(/only edit/i, flash[:alert].to_s)
+  end
+
+  test "should update competition when signed in as owner" do
+    sign_in_as(@user)
+
     patch competition_url(@competition), params: {
       competition: {
         starts_at: @competition.starts_at,
@@ -143,6 +159,39 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to competition_url(@competition)
     @competition.reload
     assert_equal "V2–V3", @competition.climb_grade_range_label
+  end
+
+  test "should redirect update when unauthenticated" do
+    patch competition_url(@competition), params: {
+      competition: { name: "Hijacked Event" }
+    }
+
+    assert_redirected_to new_session_url
+    @competition.reload
+    assert_not_equal "Hijacked Event", @competition.name
+  end
+
+  test "should not update competition when signed in as non-owner" do
+    sign_in_as(users(:two))
+
+    patch competition_url(@competition), params: {
+      competition: {
+        starts_at: @competition.starts_at,
+        ends_at: @competition.ends_at,
+        name: "Hijacked Event",
+        send_points: @competition.send_points,
+        flash_points: @competition.flash_points,
+        attempt_deduction: @competition.attempt_deduction,
+        climbs_attributes: {
+          @competition.climbs.first.id.to_s => { name: "Updated Climb", url: "https://kilterboard.com/climb/updated", grading: "V2" },
+          @competition.climbs.last.id.to_s => { name: "Second Climb", url: "https://kilterboard.com/climb/second", grading: "V3" }
+        }
+      }
+    }
+
+    assert_redirected_to competitions_url
+    @competition.reload
+    assert_not_equal "Hijacked Event", @competition.name
   end
 
   test "should destroy competition when signed in as owner" do
@@ -185,16 +234,4 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/only delete/i, flash[:alert].to_s)
   end
 
-  test "should not destroy competition when owner_id is nil" do
-    @competition.update_column(:owner_id, nil)
-    sign_in_as(@user)
-
-    assert_no_difference("Competition.count") do
-      delete competition_url(@competition)
-    end
-
-    assert_redirected_to competitions_url
-    follow_redirect!
-    assert_match(/only delete/i, flash[:alert].to_s)
-  end
 end
