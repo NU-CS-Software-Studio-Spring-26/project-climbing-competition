@@ -133,10 +133,12 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_url
   end
 
-  test "should redirect edit when signed in as non-owner" do
+  test "should not get edit when signed in as non-owner" do
     sign_in_as(users(:two))
     get edit_competition_url(@competition)
-    assert_redirected_to competition_url(@competition)
+    assert_redirected_to competitions_url
+    follow_redirect!
+    assert_match(/only edit/i, flash[:alert].to_s)
   end
 
   test "should show edit link for owner on competition page" do
@@ -146,7 +148,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_select "a.btn-competition-edit", text: "Edit competition"
   end
 
-  test "should update competition name and dates" do
+  test "should update competition when signed in as owner" do
     sign_in_as(@user)
 
     patch competition_url(@competition), params: {
@@ -219,6 +221,39 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to competition_url(@competition)
     assert_equal "Spring Boulder Bash", @competition.reload.name
+  end
+
+  test "should redirect update when unauthenticated" do
+    patch competition_url(@competition), params: {
+      competition: { name: "Hijacked Event" }
+    }
+
+    assert_redirected_to new_session_url
+    @competition.reload
+    assert_not_equal "Hijacked Event", @competition.name
+  end
+
+  test "should not update competition when signed in as non-owner" do
+    sign_in_as(users(:two))
+
+    patch competition_url(@competition), params: {
+      competition: {
+        starts_at: @competition.starts_at,
+        ends_at: @competition.ends_at,
+        name: "Hijacked Event",
+        send_points: @competition.send_points,
+        flash_points: @competition.flash_points,
+        attempt_deduction: @competition.attempt_deduction,
+        climbs_attributes: {
+          @competition.climbs.first.id.to_s => { name: "Updated Climb", url: "https://kilterboard.com/climb/updated", grading: "V2" },
+          @competition.climbs.last.id.to_s => { name: "Second Climb", url: "https://kilterboard.com/climb/second", grading: "V3" }
+        }
+      }
+    }
+
+    assert_redirected_to competitions_url
+    @competition.reload
+    assert_not_equal "Hijacked Event", @competition.name
   end
 
   test "should destroy competition when signed in as owner" do
