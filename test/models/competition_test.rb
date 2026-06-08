@@ -207,7 +207,6 @@ class CompetitionTest < ActiveSupport::TestCase
       name: "Hell Good Comp",
       starts_at: 1.day.from_now,
       ends_at: 2.days.from_now,
-      send_points: 25,
       flash_points: 30,
       attempt_deduction: 5,
       owner: users(:one)
