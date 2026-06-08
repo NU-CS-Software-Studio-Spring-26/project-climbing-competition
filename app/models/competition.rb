@@ -2,6 +2,9 @@ class Competition < ApplicationRecord
   include ProfanityFilterable
 
   SCORING_MAX = 10_000
+  FLASH_POINTS_MAX = 50
+  ATTEMPT_DEDUCTION_MAX = 10
+  DEFAULT_TIME = "00:00"
   V_GRADES = (0..16).to_a
   LEVEL_GRADE_RANGES = {
     "beginner" => [ 0, 3 ],
@@ -63,6 +66,20 @@ class Competition < ApplicationRecord
     !past?
   end
 
+  def editable?
+    starts_at.nil? || starts_at > Time.current
+  end
+
+  def started?
+    starts_at.present? && starts_at <= Time.current
+  end
+
+  def climbs_visible_to?(user)
+    return true if user.present? && owner_id.present? && user.id == owner_id
+
+    started?
+  end
+
   def climb_grade_integers
     climbs.reject(&:marked_for_destruction?).filter_map { |climb| grading_to_int(climb.grading) }
   end
@@ -106,12 +123,10 @@ class Competition < ApplicationRecord
   validates :name, :starts_at, :ends_at, presence: true
   validates :name, length: { maximum: 100 }
   validates :description, length: { maximum: 2000 }, allow_blank: true
-  validates :send_points, presence: true,
-            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: SCORING_MAX }
   validates :flash_points, presence: true,
-            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: SCORING_MAX }
+            numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: FLASH_POINTS_MAX }
   validates :attempt_deduction, presence: true,
-            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: SCORING_MAX }
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: ATTEMPT_DEDUCTION_MAX }
   validates :v_grade_min, :v_grade_max, presence: true,
             numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 16 }
   validate :minimum_climbs
@@ -119,6 +134,8 @@ class Competition < ApplicationRecord
   validate :grade_range_is_valid
   validate :new_climbs_within_locked_grade_range, on: :update
   validate :ends_at_after_starts_at
+  validate :starts_at_not_before_today, if: :will_save_change_to_starts_at?
+  validate :ends_at_not_before_today, if: :will_save_change_to_ends_at?
 
   filters_profanity_in :name
   filters_profanity_in :description, allow_blank: true
@@ -130,9 +147,8 @@ class Competition < ApplicationRecord
 
   def score_for_climb(sent:, flashed:, attempts:)
     return 0 unless sent
-    base      = flashed ? flash_points : send_points
     deduction = flashed ? 0 : (attempts - 1) * attempt_deduction
-    [ base - deduction, 0 ].max
+    [ flash_points - deduction, 0 ].max
   end
 
   def leaderboard_entries
@@ -185,6 +201,20 @@ class Competition < ApplicationRecord
     return if ends_at > starts_at
 
     errors.add(:ends_at, "must be after the start date and time")
+  end
+
+  def starts_at_not_before_today
+    return if starts_at.blank?
+    return if starts_at.to_date >= Time.zone.today
+
+    errors.add(:starts_at, "cannot be before today's date")
+  end
+
+  def ends_at_not_before_today
+    return if ends_at.blank?
+    return if ends_at.to_date >= Time.zone.today
+
+    errors.add(:ends_at, "cannot be before today's date")
   end
 
   def derive_level_and_grades_from_climbs

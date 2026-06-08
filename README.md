@@ -23,6 +23,67 @@ See Heroku deployment here: https://climb-league-c5d605affe21.herokuapp.com/
 	- `bin/rails db:migrate`
 4. Start the app and use "Continue with Google" on the sign-in page.
 
+### Video storage on Heroku (Active Storage + Cloudinary)
+
+Heroku dyno disk is ephemeral, so uploaded videos must be stored in cloud object storage.
+This app is configured to use Cloudinary in production.
+
+#### 1) Create / connect Cloudinary
+
+Choose one of the two options:
+
+- Option A (simplest on Heroku):
+	1. Open your Heroku app dashboard.
+	2. Go to the Resources tab.
+	3. Search for the Cloudinary add-on and attach it.
+
+- Option B (manual Cloudinary account):
+	1. Create a Cloudinary account at cloudinary.com.
+	2. From the Cloudinary dashboard, copy your CLOUDINARY_URL.
+
+#### 2) Configure Heroku environment variables
+
+Set these config vars on your Heroku app:
+
+- ACTIVE_STORAGE_SERVICE=cloudinary
+- CLOUDINARY_URL=<your cloudinary url>
+
+If you used the Heroku add-on, CLOUDINARY_URL may be injected automatically, but verify it is present.
+
+Commands:
+
+- heroku config:set ACTIVE_STORAGE_SERVICE=cloudinary
+- heroku config:set CLOUDINARY_URL="cloudinary://<api_key>:<api_secret>@<cloud_name>"
+
+#### 3) Deploy code and migrate
+
+From your repo:
+
+1. bundle install
+2. git add Gemfile Gemfile.lock config/storage.yml config/environments/production.rb README.md
+3. git commit -m "Use Cloudinary for production Active Storage"
+4. git push heroku <your-branch>:main
+5. heroku run rails db:migrate
+
+#### 4) Verify uploads in production
+
+1. Open your Heroku app.
+2. Submit a send with a video attachment.
+3. Confirm no Active Storage errors in logs:
+	- heroku logs --tail
+4. In Cloudinary Media Library, verify the uploaded video appears.
+
+#### 5) Troubleshooting checklist
+
+- Error: "Missing CLOUDINARY_URL"
+	- Run `heroku config` and confirm CLOUDINARY_URL is set.
+- Upload succeeds locally but not on Heroku:
+	- Confirm ACTIVE_STORAGE_SERVICE=cloudinary on Heroku.
+	- Redeploy after setting config vars.
+- Large upload issues:
+	- Check Heroku router/app timeouts and Cloudinary plan upload limits.
+	- Prefer short video clips and compressed formats (mp4/h264) for submissions.
+
 ## Description: 
 A service for virtual climbing competitions, particularly bouldering.
 

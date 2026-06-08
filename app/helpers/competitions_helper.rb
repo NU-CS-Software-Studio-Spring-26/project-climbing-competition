@@ -1,4 +1,8 @@
 module CompetitionsHelper
+  def competition_time_field_value(datetime)
+    datetime&.strftime("%H:%M") || Competition::DEFAULT_TIME
+  end
+
   def v_grade_label(grade)
     grade >= 10 ? "V10+" : "V#{grade}"
   end

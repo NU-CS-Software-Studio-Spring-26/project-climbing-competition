@@ -3,7 +3,7 @@ require "test_helper"
 class EnrollmentTest < ActiveSupport::TestCase
   test "cannot enroll in a past competition" do
     competition = competitions(:two)
-    competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+    set_competition_schedule(competition, starts_at: 2.weeks.ago, ends_at: 1.week.ago)
 
     enrollment = Enrollment.new(user: users(:one), competition: competition)
 
@@ -13,7 +13,7 @@ class EnrollmentTest < ActiveSupport::TestCase
 
   test "can enroll in an active competition" do
     competition = competitions(:two)
-    competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    set_competition_schedule(competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
 
     enrollment = Enrollment.new(user: users(:one), competition: competition)
 
@@ -23,7 +23,7 @@ class EnrollmentTest < ActiveSupport::TestCase
   test "cannot leave enrollment when competition has ended" do
     competition = competitions(:one)
     enrollment = enrollments(:one_in_one)
-    competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+    set_competition_schedule(competition, starts_at: 2.weeks.ago, ends_at: 1.week.ago)
 
     assert_no_difference("Enrollment.count") do
       assert_not enrollment.destroy
@@ -34,7 +34,7 @@ class EnrollmentTest < ActiveSupport::TestCase
 
   test "can destroy past competition and its enrollments" do
     competition = competitions(:one)
-    competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+    set_competition_schedule(competition, starts_at: 2.weeks.ago, ends_at: 1.week.ago)
     enrollment_count = competition.enrollments.count
 
     assert enrollment_count.positive?
@@ -46,7 +46,7 @@ class EnrollmentTest < ActiveSupport::TestCase
 
   test "can leave enrollment while competition is active" do
     competition = competitions(:two)
-    competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    set_competition_schedule(competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
     enrollment = Enrollment.create!(user: users(:one), competition: competition)
 
     assert_difference("Enrollment.count", -1) do

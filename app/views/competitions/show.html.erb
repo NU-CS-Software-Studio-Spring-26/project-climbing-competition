@@ -1,4 +1,5 @@
 <% content_for :title, @competition.name %>
+<% climbs_visible = @competition.climbs_visible_to?(authenticated? ? current_user : nil) %>
 
 <div class="competition-show-shell">
   <div class="action-row mb-4 d-flex gap-2 flex-wrap align-items-center">
@@ -30,7 +31,9 @@
         <div class="competition-hero-top-end">
           <% if authenticated? && current_user == @competition.owner && @competition.owner_id.present? %>
             <div class="competition-owner-actions">
-              <%= link_to "Edit competition", edit_competition_path(@competition), class: "btn-competition-edit" %>
+              <% if @competition.editable? %>
+                <%= link_to "Edit competition", edit_competition_path(@competition), class: "btn-competition-edit" %>
+              <% end %>
               <%= button_to "Delete competition",
                     competition_path(@competition),
                     method: :delete,
@@ -76,26 +79,22 @@
     <div class="detail-panel scoring-rules-panel">
       <ul class="scoring-rules-list mb-0">
         <li>
-          <span class="scoring-rules-label">Flash (1st attempt)</span>
-          <span class="scoring-rules-value"><%= @competition.flash_points %> pts</span>
-        </li>
-        <li>
-          <span class="scoring-rules-label">Send</span>
-          <span class="scoring-rules-value"><%= @competition.send_points %> pts</span>
+          <span class="scoring-rules-label">Flash (<span class="scoring-rules-number">1st</span> attempt)</span>
+          <span class="scoring-rules-value"><span class="scoring-rules-number scoring-rules-number--points"><%= @competition.flash_points %></span> pts</span>
         </li>
         <li>
           <span class="scoring-rules-label">Per extra attempt</span>
-          <span class="scoring-rules-value">&minus;<%= @competition.attempt_deduction %> pts</span>
+          <span class="scoring-rules-value scoring-rules-value--deduction">&minus;<span class="scoring-rules-number"><%= @competition.attempt_deduction %></span> pts</span>
         </li>
       </ul>
       <p class="scoring-rules-hint mb-0">
-        Example: sending a problem on your 3rd attempt earns
-        <%= [@competition.send_points - 2 * @competition.attempt_deduction, 0].max %> pts.
+        Example: sending a problem on your <span class="scoring-rules-number">3rd</span> attempt earns
+        <span class="scoring-rules-number scoring-rules-number--points"><%= [@competition.flash_points - 2 * @competition.attempt_deduction, 0].max %></span> pts.
       </p>
     </div>
   </section>
 
-  <% if @competition.climbs.any? %>
+  <% if @competition.climbs.any? && climbs_visible %>
     <% climbs_with_visuals = @competition.climbs.select(&:visual?) %>
     <section class="competition-section competition-climbs-section"<% if climbs_with_visuals.any? %> data-controller="climb-visual-modal"<% end %>>
       <h2 class="competition-section-title text-center mb-3">Climbs</h2>
@@ -124,12 +123,66 @@
                         climb_visual_modal_climb_assignments_param: climb.hold_assignments
                       } %>
               <% end %>
+              <% if authenticated? && current_user == @competition.owner %>
+                <%= link_to "review video submissions", competition_climb_video_reviews_path(@competition, climb), class: "btn-climb-action btn-climb-action-secondary" %>
+              <% end %>
               <% if authenticated? && current_user.competitions.include?(@competition) %>
-                <%= link_to(attempt.present? ? "edit attempt" : "LOG ATTEMPT", competition_climb_path(@competition, climb), class: "btn-climb-action #{attempt.present? ? 'btn-climb-action-secondary' : 'btn-climb-action-primary'}") %>
+                <button type="button" class="btn-climb-action btn-climb-action-primary" data-bs-toggle="modal" data-bs-target="#logSendModal-<%= climb.id %>">
+                  <%= attempt.present? ? "UPDATE LOG SEND" : "LOG SEND" %>
+                </button>
               <% end %>
               </div>
             </div>
           </div>
+
+          <% if authenticated? && current_user.competitions.include?(@competition) %>
+            <div class="modal fade" id="logSendModal-<%= climb.id %>" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content log-send-modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">log send - <%= climb.name %></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <%= form_with url: competition_climb_attempt_path(@competition, climb), scope: :attempt, method: attempt&.persisted? ? :patch : :post, html: { class: "board-form" } do |form| %>
+                      <div class="mb-3">
+                        <%= form.label :attempt_count, "Attempts (Max 100)", class: "form-label" %>
+                        <%= form.number_field :attempt_count,
+                              value: attempt&.attempt_count,
+                              class: "form-control",
+                              min: 1,
+                              max: Attempt::MAX_ATTEMPT_COUNT,
+                              step: 1,
+                              inputmode: "numeric",
+                              required: true,
+                              data: {
+                                controller: "attempt-count-input",
+                                action: "keydown->attempt-count-input#blockInvalidKey paste->attempt-count-input#sanitizePaste"
+                              } %>
+                      </div>
+
+                      <div class="mb-3">
+                        <%= form.label :submission_video, "Submission Video", class: "form-label" %>
+                        <%= form.file_field :submission_video,
+                              class: "form-control",
+                              accept: "video/*",
+                              required: @competition.video_submissions_required? && !attempt&.submission_video&.attached? %>
+                      </div>
+
+                      <% if attempt&.submission_video&.attached? %>
+                        <p class="form-text mb-3">
+                          current upload:
+                          <%= link_to attempt.submission_video.filename.to_s, url_for(attempt.submission_video), target: "_blank", rel: "noopener noreferrer" %>
+                        </p>
+                      <% end %>
+
+                      <%= form.submit(attempt&.persisted? ? "Update log send" : "Save log send", class: "btn btn-board-primary w-100") %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
         <% end %>
       </div>
 
@@ -137,9 +190,19 @@
         <%= render "shared/climb_visual_view_modal" %>
       <% end %>
     </section>
+  <% elsif @competition.climbs.any? %>
+    <section class="competition-section competition-climbs-section">
+      <h2 class="competition-section-title text-center mb-3">Climbs</h2>
+      <div class="detail-panel scoring-rules-panel">
+        <p class="scoring-rules-hint mb-0">
+          Climbs will be revealed when the competition starts on
+          <%= competition_datetime_display(@competition.starts_at) %>.
+        </p>
+      </div>
+    </section>
   <% end %>
 
-  <% if authenticated? && current_user.competitions.include?(@competition) %>
+  <% if climbs_visible && authenticated? && current_user.competitions.include?(@competition) %>
     <div class="competition-section">
       <div class="competition-points-pill">
         YOUR TOTAL POINTS: <%= @competition.points_for(current_user) %>
@@ -148,7 +211,7 @@
   <% end %>
 
   <% if @leaderboard_entries.any? %>
-    <section id="leaderboard" class="competition-section competition-leaderboard-section">
+    <section class="competition-section competition-leaderboard-section">
       <h2 class="competition-section-title text-center mb-2">Leaderboard</h2>
       <p class="competition-section-caption text-center mb-4">click to see more details</p>
       <div class="detail-panel leaderboard-panel p-0">
@@ -182,26 +245,32 @@
                             <tr>
                               <th>Climb</th>
                               <th>Attempts</th>
-                              <th>Status</th>
+                              <th>Send Status</th>
                               <th>Points</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <% @competition.climbs.each do |climb| %>
-                              <% attempt = @attempts_by_user_and_climb[entry.user.id]&.[](climb.id) %>
+                            <% if climbs_visible %>
+                              <% @competition.climbs.each do |climb| %>
+                                <% attempt = @attempts_by_user_and_climb[entry.user.id]&.[](climb.id) %>
+                                <tr>
+                                  <td><strong><%= climb.name %></strong></td>
+                                  <% if attempt %>
+                                    <td><%= attempt.attempt_count %></td>
+                                    <td>
+                                      <span class="<%= attempt.invalidated? ? 'text-danger' : 'text-success' %>">
+                                        <%= attempt.invalidated? ? '✗ Invalidated' : '✓ Sent' %>
+                                      </span>
+                                    </td>
+                                    <td><strong><%= attempt.points_awarded %> pts</strong></td>
+                                  <% else %>
+                                    <td colspan="3" class="text-muted">Not attempted</td>
+                                  <% end %>
+                                </tr>
+                              <% end %>
+                            <% else %>
                               <tr>
-                                <td><strong><%= climb.name %></strong></td>
-                                <% if attempt %>
-                                  <td><%= attempt.attempt_count %></td>
-                                  <td>
-                                    <span class="<%= attempt.completed? ? 'text-success' : 'text-danger' %>">
-                                      <%= attempt.completed? ? '✓ Completed' : '✗ Not Completed' %>
-                                    </span>
-                                  </td>
-                                  <td><strong><%= attempt.points_awarded %> pts</strong></td>
-                                <% else %>
-                                  <td colspan="3" class="text-muted">Not attempted</td>
-                                <% end %>
+                                <td colspan="4" class="text-muted">Climb details available when the competition starts.</td>
                               </tr>
                             <% end %>
                           </tbody>
@@ -236,25 +305,5 @@
       }
     }
 
-    function revealLeaderboardFromHash() {
-      if (window.location.hash !== '#leaderboard') return;
-
-      const leaderboard = document.getElementById('leaderboard');
-      const currentUserRow = document.querySelector('.leaderboard-user-row.table-active');
-
-      if (currentUserRow) {
-        const detailRow = document.querySelector(`.leaderboard-detail-row[data-user-id="${currentUserRow.dataset.userId}"]`);
-        if (detailRow && detailRow.style.display === 'none') {
-          toggleLeaderboardDetails(currentUserRow);
-        }
-        currentUserRow.scrollIntoView({ block: 'start', behavior: 'smooth' });
-        return;
-      }
-
-      leaderboard?.scrollIntoView({ block: 'start', behavior: 'smooth' });
-    }
-
-    document.addEventListener('DOMContentLoaded', revealLeaderboardFromHash);
-    document.addEventListener('turbo:load', revealLeaderboardFromHash);
   </script>
 </div>
