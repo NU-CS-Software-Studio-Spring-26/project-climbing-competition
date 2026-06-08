@@ -30,11 +30,11 @@
       <div class="row g-3">
         <div class="col-sm-6">
           <%= form.label :starts_at_date, "Start Date", class: "form-label" %>
-          <%= form.date_field :starts_at_date, value: competition.starts_at&.to_date, class: input_class.call(:starts_at), required: true %>
+          <%= form.date_field :starts_at_date, value: competition.starts_at&.to_date, min: Date.current, class: input_class.call(:starts_at), required: true %>
         </div>
         <div class="col-sm-6">
           <%= form.label :starts_at_time, "Start Time", class: "form-label" %>
-          <%= form.time_field :starts_at_time, value: competition.starts_at&.strftime("%H:%M"), class: input_class.call(:starts_at), required: true %>
+          <%= form.time_field :starts_at_time, value: competition_time_field_value(competition.starts_at), class: input_class.call(:starts_at), required: true %>
         </div>
       </div>
       <% competition.errors.full_messages_for(:starts_at).each do |message| %>
@@ -46,11 +46,11 @@
       <div class="row g-3">
         <div class="col-sm-6">
           <%= form.label :ends_at_date, "End Date", class: "form-label" %>
-          <%= form.date_field :ends_at_date, value: competition.ends_at&.to_date, class: input_class.call(:ends_at), required: true %>
+          <%= form.date_field :ends_at_date, value: competition.ends_at&.to_date, min: Date.current, class: input_class.call(:ends_at), required: true %>
         </div>
         <div class="col-sm-6">
           <%= form.label :ends_at_time, "End Time", class: "form-label" %>
-          <%= form.time_field :ends_at_time, value: competition.ends_at&.strftime("%H:%M"), class: input_class.call(:ends_at), required: true %>
+          <%= form.time_field :ends_at_time, value: competition_time_field_value(competition.ends_at), class: input_class.call(:ends_at), required: true %>
         </div>
       </div>
       <% competition.errors.full_messages_for(:ends_at).each do |message| %>

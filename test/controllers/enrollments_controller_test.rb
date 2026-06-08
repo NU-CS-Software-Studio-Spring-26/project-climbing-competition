@@ -11,7 +11,7 @@ class EnrollmentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "cannot join a past competition" do
-    @competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+    set_competition_schedule(@competition, starts_at: 2.weeks.ago, ends_at: 1.week.ago)
     sign_in_as(@user)
 
     assert_no_difference("Enrollment.count") do
@@ -23,7 +23,7 @@ class EnrollmentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "can join an active competition" do
-    @competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    set_competition_schedule(@competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
     assert_not @user.competitions.include?(@competition)
     sign_in_as(@user)
 
@@ -36,10 +36,10 @@ class EnrollmentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "cannot leave a past competition" do
-    @competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    set_competition_schedule(@competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
     sign_in_as(@user)
     post competition_enrollments_url(@competition)
-    @competition.update!(starts_at: 2.weeks.ago, ends_at: 1.week.ago)
+    set_competition_schedule(@competition, starts_at: 2.weeks.ago, ends_at: 1.week.ago)
     enrollment = @competition.enrollments.find_by!(user: @user)
 
     assert_no_difference("Enrollment.count") do
@@ -51,7 +51,7 @@ class EnrollmentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "can leave an active competition" do
-    @competition.update!(starts_at: 1.day.ago, ends_at: 1.week.from_now)
+    set_competition_schedule(@competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)
     sign_in_as(@user)
     post competition_enrollments_url(@competition)
     enrollment = @competition.enrollments.find_by!(user: @user)

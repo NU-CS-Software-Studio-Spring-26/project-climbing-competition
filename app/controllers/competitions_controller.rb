@@ -2,6 +2,7 @@ class CompetitionsController < ApplicationController
   before_action :require_authentication, only: %i[ new create edit update destroy ]
   before_action :set_competition, only: %i[ show edit update destroy ]
   before_action :ensure_competition_owner, only: %i[ edit update destroy ]
+  before_action :ensure_competition_editable, only: %i[ edit update ]
 
   # GET /competitions or /competitions.json
   def index
@@ -9,7 +10,6 @@ class CompetitionsController < ApplicationController
 
     @search_query = params[:q].to_s.strip
     if @search_query.present?
-      # SQLite compatibility: use LOWER(...) + LIKE instead of ILIKE.
       @competitions = @competitions.where(
         "LOWER(competitions.name) LIKE ?",
         "%#{@search_query.downcase}%"
@@ -92,6 +92,8 @@ class CompetitionsController < ApplicationController
 
   # GET /competitions/1/edit
   def edit
+    # Ensure at least one blank climb field for adding
+    @competition.climbs.build if @competition.climbs.empty?
   end
 
   # POST /competitions or /competitions.json
@@ -114,14 +116,14 @@ class CompetitionsController < ApplicationController
 
   # PATCH/PUT /competitions/1 or /competitions/1.json
   def update
-    @competition.assign_attributes(competition_update_params)
+    @competition.assign_attributes(competition_params)
     assign_combined_datetimes(@competition)
-
     respond_to do |format|
       if @competition.save
         format.html { redirect_to @competition, notice: "Competition was successfully updated.", status: :see_other }
         format.json { render :show, status: :ok, location: @competition }
       else
+        ensure_minimum_climb_fields(@competition)
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @competition.errors, status: :unprocessable_entity }
       end
@@ -147,10 +149,17 @@ class CompetitionsController < ApplicationController
     def ensure_competition_owner
       return if @competition.owner_id.present? && current_user == @competition.owner
 
-      message = action_name == "destroy" ? "You can only delete competitions you created." : "You can only edit competitions you created."
+      respond_to do |format|
+        format.html { redirect_to @competition, alert: "You can only edit competitions you created.", status: :see_other }
+        format.json { head :forbidden }
+      end
+    end
+
+    def ensure_competition_editable
+      return if @competition.editable?
 
       respond_to do |format|
-        format.html { redirect_to competitions_path, alert: message, status: :see_other }
+        format.html { redirect_to @competition, alert: "Competitions cannot be edited after they have started.", status: :see_other }
         format.json { head :forbidden }
       end
     end
@@ -158,36 +167,10 @@ class CompetitionsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def competition_params
       params.require(:competition).permit(
-        :name, :starts_at, :ends_at, :description,
-        :send_points, :flash_points, :attempt_deduction,
+        :name, :starts_at, :ends_at, :description, :video_submissions_required,
+        :flash_points, :attempt_deduction,
         climbs_attributes: [ :id, :name, :url, :grading, :hold_assignments, :_destroy ]
       )
-    end
-
-    def competition_update_params
-      permitted = params.require(:competition).permit(
-        :name,
-        climbs_attributes: [ :name, :url, :grading, :hold_assignments ]
-      )
-
-      if permitted[:climbs_attributes].present?
-        permitted[:climbs_attributes] = permitted[:climbs_attributes].reject do |_, attrs|
-          attrs[:id].present? || attrs[:_destroy].present?
-        end
-      end
-
-      permitted
-    end
-
-    def ensure_competition_owner
-      return if @competition.owner_id.present? && current_user == @competition.owner
-
-      respond_to do |format|
-        format.html do
-          redirect_to @competition, alert: "You can only edit competitions you created.", status: :see_other
-        end
-        format.json { head :forbidden }
-      end
     end
     def assign_combined_datetimes(competition)
       raw = params.require(:competition).permit(:starts_at_date, :starts_at_time, :ends_at_date, :ends_at_time)
@@ -198,7 +181,7 @@ class CompetitionsController < ApplicationController
     def combine_date_and_time(date, time)
       return nil if date.blank?
 
-      Time.zone.parse("#{date} #{time.presence || '00:00'}")
+      Time.zone.parse("#{date} #{time.presence || Competition::DEFAULT_TIME}")
     end
 
     def ensure_minimum_climb_fields(competition)

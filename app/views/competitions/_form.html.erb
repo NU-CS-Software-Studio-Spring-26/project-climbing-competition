@@ -30,11 +30,11 @@
       <div class="row g-3">
         <div class="col-sm-6">
           <%= form.label :starts_at_date, "Start Date", class: "form-label" %>
-          <%= form.date_field :starts_at_date, value: competition.starts_at&.to_date, class: input_class.call(:starts_at), required: true %>
+          <%= form.date_field :starts_at_date, value: competition.starts_at&.to_date, min: Date.current, class: input_class.call(:starts_at), required: true %>
         </div>
         <div class="col-sm-6">
           <%= form.label :starts_at_time, "Start Time", class: "form-label" %>
-          <%= form.time_field :starts_at_time, value: competition.starts_at&.strftime("%H:%M") || "00:00", class: input_class.call(:starts_at), required: true %>
+          <%= form.time_field :starts_at_time, value: competition_time_field_value(competition.starts_at), class: input_class.call(:starts_at), required: true %>
         </div>
       </div>
       <% competition.errors.full_messages_for(:starts_at).each do |message| %>
@@ -46,11 +46,11 @@
       <div class="row g-3">
         <div class="col-sm-6">
           <%= form.label :ends_at_date, "End Date", class: "form-label" %>
-          <%= form.date_field :ends_at_date, value: competition.ends_at&.to_date, class: input_class.call(:ends_at), required: true %>
+          <%= form.date_field :ends_at_date, value: competition.ends_at&.to_date, min: Date.current, class: input_class.call(:ends_at), required: true %>
         </div>
         <div class="col-sm-6">
           <%= form.label :ends_at_time, "End Time", class: "form-label" %>
-          <%= form.time_field :ends_at_time, value: competition.ends_at&.strftime("%H:%M") || "00:00", class: input_class.call(:ends_at), required: true %>
+          <%= form.time_field :ends_at_time, value: competition_time_field_value(competition.ends_at), class: input_class.call(:ends_at), required: true %>
         </div>
       </div>
       <% competition.errors.full_messages_for(:ends_at).each do |message| %>
@@ -71,29 +71,22 @@
     <h2 class="board-form-block-title">Scoring Settings</h2>
 
     <div class="board-form-field">
-      <%= form.label :send_points, "Points for a Send", class: "form-label" %>
-      <div class="d-flex align-items-center gap-3">
-        <%= form.range_field :send_points, min: 1, max: Competition::SCORING_MAX, step: 1,
-              class: "form-range flex-grow-1",
-              data: { scoring_slider: "send_points" } %>
-        <%= form.number_field :send_points, min: 1, max: Competition::SCORING_MAX, step: 1,
-              class: [ "scoring-number", ("border border-danger" if competition.errors[:send_points].any?) ].compact.join(" "),
-              required: true,
-              data: { scoring_number: "send_points" } %>
+      <div class="form-check">
+        <%= form.check_box :video_submissions_required, class: "form-check-input", id: "competition_video_submissions_required" %>
+        <%= form.label :video_submissions_required, "Require video submissions", class: "form-check-label", for: "competition_video_submissions_required" %>
       </div>
-      <% competition.errors.full_messages_for(:send_points).each do |message| %>
-        <div class="text-danger small mt-1"><%= message %></div>
-      <% end %>
-      <div class="form-text">Base points for completing a problem (not on the first attempt).</div>
+      <div class="form-text">
+        When enabled, climbers must attach a video when they submit a send.
+      </div>
     </div>
 
     <div class="board-form-field">
-      <%= form.label :flash_points, "Points for a Flash", class: "form-label" %>
+      <%= form.label :flash_points, "Base points for a send", class: "form-label" %>
       <div class="d-flex align-items-center gap-3">
-        <%= form.range_field :flash_points, min: 1, max: Competition::SCORING_MAX, step: 1,
+        <%= form.range_field :flash_points, min: 1, max: Competition::FLASH_POINTS_MAX, step: 1,
               class: "form-range flex-grow-1",
               data: { scoring_slider: "flash_points" } %>
-        <%= form.number_field :flash_points, min: 1, max: Competition::SCORING_MAX, step: 1,
+        <%= form.number_field :flash_points, min: 1, max: Competition::FLASH_POINTS_MAX, step: 1,
               class: [ "scoring-number", ("border border-danger" if competition.errors[:flash_points].any?) ].compact.join(" "),
               required: true,
               data: { scoring_number: "flash_points" } %>
@@ -101,16 +94,16 @@
       <% competition.errors.full_messages_for(:flash_points).each do |message| %>
         <div class="text-danger small mt-1"><%= message %></div>
       <% end %>
-      <div class="form-text">Points for completing a problem on the very first attempt.</div>
+      <div class="form-text">Points awarded before attempt deductions are applied.</div>
     </div>
 
     <div class="board-form-field">
       <%= form.label :attempt_deduction, "Points Deducted per Extra Attempt", class: "form-label" %>
       <div class="d-flex align-items-center gap-3">
-        <%= form.range_field :attempt_deduction, min: 0, max: Competition::SCORING_MAX, step: 1,
+        <%= form.range_field :attempt_deduction, min: 0, max: Competition::ATTEMPT_DEDUCTION_MAX, step: 1,
               class: "form-range flex-grow-1",
               data: { scoring_slider: "attempt_deduction" } %>
-        <%= form.number_field :attempt_deduction, min: 0, max: Competition::SCORING_MAX, step: 1,
+        <%= form.number_field :attempt_deduction, min: 0, max: Competition::ATTEMPT_DEDUCTION_MAX, step: 1,
               class: [ "scoring-number", ("border border-danger" if competition.errors[:attempt_deduction].any?) ].compact.join(" "),
               required: true,
               data: { scoring_number: "attempt_deduction" } %>
@@ -169,7 +162,6 @@ function initializeCompetitionForm() {
   }
 
   function updateScoringPreview() {
-    const send   = parseInt(getNumber("send_points")?.value)       || 0;
     const flash  = parseInt(getNumber("flash_points")?.value)      || 0;
     const deduct = parseInt(getNumber("attempt_deduction")?.value) || 0;
 
@@ -178,8 +170,8 @@ function initializeCompetitionForm() {
     const previewSend3 = formEl.querySelector('[data-preview="send3"]');
 
     if (previewFlash) previewFlash.textContent = flash;
-    if (previewSend2) previewSend2.textContent = Math.max(send - deduct, 0);
-    if (previewSend3) previewSend3.textContent = Math.max(send - 2 * deduct, 0);
+    if (previewSend2) previewSend2.textContent = Math.max(flash - deduct, 0);
+    if (previewSend3) previewSend3.textContent = Math.max(flash - 2 * deduct, 0);
   }
 
   function syncPair(name) {
@@ -205,7 +197,6 @@ function initializeCompetitionForm() {
     });
   }
 
-  syncPair("send_points");
   syncPair("flash_points");
   syncPair("attempt_deduction");
   updateScoringPreview();

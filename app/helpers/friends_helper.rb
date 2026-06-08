@@ -30,22 +30,8 @@ module FriendsHelper
       climb_name = activity.climb.name
       attempt = activity.attempt
 
-      if attempt.completed?
-        verb = attempt.attempt_count == 1 ? "flashed" : "sent"
-        safe_join([ verb, " ", content_tag(:span, climb_name, class: "friends-activity-emphasis"), " in ", competition_link ])
-      else
-        attempts_word = attempt.attempt_count == 1 ? "attempt" : "attempts"
-        safe_join([
-          "logged ",
-          attempt.attempt_count.to_s,
-          " ",
-          attempts_word,
-          " on ",
-          content_tag(:span, climb_name, class: "friends-activity-emphasis"),
-          " in ",
-          competition_link
-        ])
-      end
+      verb = attempt.attempt_count == 1 ? "flashed" : "sent"
+      safe_join([ verb, " ", content_tag(:span, climb_name, class: "friends-activity-emphasis"), " in ", competition_link ])
     when :placed
       safe_join([ "placed ", placement_label(activity.placement), " in ", competition_link ])
     else
