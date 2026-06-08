@@ -76,17 +76,17 @@
     <div class="detail-panel scoring-rules-panel">
       <ul class="scoring-rules-list mb-0">
         <li>
-          <span class="scoring-rules-label">Flash (1st attempt)</span>
-          <span class="scoring-rules-value"><%= @competition.flash_points %> pts</span>
+          <span class="scoring-rules-label">Flash (<span class="scoring-rules-number">1st</span> attempt)</span>
+          <span class="scoring-rules-value"><span class="scoring-rules-number scoring-rules-number--points"><%= @competition.flash_points %></span> pts</span>
         </li>
         <li>
           <span class="scoring-rules-label">Per extra attempt</span>
-          <span class="scoring-rules-value">&minus;<%= @competition.attempt_deduction %> pts</span>
+          <span class="scoring-rules-value scoring-rules-value--deduction">&minus;<span class="scoring-rules-number"><%= @competition.attempt_deduction %></span> pts</span>
         </li>
       </ul>
       <p class="scoring-rules-hint mb-0">
-        Example: sending a problem on your 3rd attempt earns
-        <%= [@competition.flash_points - 2 * @competition.attempt_deduction, 0].max %> pts.
+        Example: sending a problem on your <span class="scoring-rules-number">3rd</span> attempt earns
+        <span class="scoring-rules-number scoring-rules-number--points"><%= [@competition.flash_points - 2 * @competition.attempt_deduction, 0].max %></span> pts.
       </p>
     </div>
   </section>
