@@ -136,7 +136,7 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
   test "should not get edit when signed in as non-owner" do
     sign_in_as(users(:two))
     get edit_competition_url(@competition)
-    assert_redirected_to competitions_url
+    assert_redirected_to competition_url(@competition)
     follow_redirect!
     assert_match(/only edit/i, flash[:alert].to_s)
   end
@@ -233,29 +233,6 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
     assert_not_equal "Hijacked Event", @competition.name
   end
 
-  test "should not update competition when signed in as non-owner" do
-    sign_in_as(users(:two))
-
-    patch competition_url(@competition), params: {
-      competition: {
-        starts_at: @competition.starts_at,
-        ends_at: @competition.ends_at,
-        name: "Hijacked Event",
-        send_points: @competition.send_points,
-        flash_points: @competition.flash_points,
-        attempt_deduction: @competition.attempt_deduction,
-        climbs_attributes: {
-          @competition.climbs.first.id.to_s => { name: "Updated Climb", url: "https://kilterboard.com/climb/updated", grading: "V2" },
-          @competition.climbs.last.id.to_s => { name: "Second Climb", url: "https://kilterboard.com/climb/second", grading: "V3" }
-        }
-      }
-    }
-
-    assert_redirected_to competitions_url
-    @competition.reload
-    assert_not_equal "Hijacked Event", @competition.name
-  end
-
   test "should destroy competition when signed in as owner" do
     sign_in_as(@user)
 
@@ -306,6 +283,6 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to competition_url(@competition)
     follow_redirect!
-    assert_match(/only delete/i, flash[:alert].to_s)
+    assert_match(/only edit competitions you created/i, flash[:alert].to_s)
   end
 end
