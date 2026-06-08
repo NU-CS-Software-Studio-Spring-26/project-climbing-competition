@@ -48,6 +48,7 @@ gem "thruster", require: false
 gem "image_processing", "~> 2.0"
 gem "aws-sdk-s3", require: false
 gem "activestorage-cloudinary-service"
+gem "cloudinary"
 
 group :development, :test do
   gem "dotenv-rails"
