@@ -1,4 +1,18 @@
 module CompetitionsHelper
+  def competition_time_remaining_label(competition)
+    return "ended" if competition.past?
+    return "—" unless competition.ends_at.present? && competition.started?
+
+    distance_of_time_in_words(Time.current, competition.ends_at, include_seconds: true)
+  end
+
+  def competition_time_until_start_label(competition)
+    return "started" if competition.started?
+    return "—" unless competition.starts_at.present?
+
+    distance_of_time_in_words(Time.current, competition.starts_at, include_seconds: true)
+  end
+
   def competition_time_field_value(datetime)
     datetime&.strftime("%H:%M") || Competition::DEFAULT_TIME
   end

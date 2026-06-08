@@ -96,6 +96,26 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_equal [ 1, 4 ], leaderboard.map(&:attempts_count)
   end
 
+  test "leaderboard_csv includes summary and per-climb stats" do
+    competition = competitions(:one)
+    user_one = users(:one)
+    user_two = users(:two)
+    climb_one = climbs(:one)
+    climb_two = climbs(:one_two)
+
+    Attempt.create!(user: user_one, climb: climb_one, attempt_count: 1)
+    Attempt.create!(user: user_two, climb: climb_one, attempt_count: 1)
+    Attempt.create!(user: user_two, climb: climb_two, attempt_count: 3, invalidated: true)
+
+    csv = CSV.parse(competition.leaderboard_csv, headers: true)
+
+    assert_equal [ "1", "2" ], csv["Rank"]
+    assert_equal [ user_one.email_address, user_two.email_address ], csv["Email"]
+    assert_includes csv.headers, "#{climb_one.name} (Points)"
+    assert_equal "Sent", csv[0]["#{climb_one.name} (Status)"]
+    assert_equal "Invalidated", csv[1]["#{climb_two.name} (Status)"]
+  end
+
   test "within_grade_range uses climb grades shown on competition cards" do
     beginner = competitions(:one)
     advanced = competitions(:two)

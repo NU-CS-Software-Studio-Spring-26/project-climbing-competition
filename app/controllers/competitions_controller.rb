@@ -1,7 +1,7 @@
 class CompetitionsController < ApplicationController
-  before_action :require_authentication, only: %i[ new create edit update destroy ]
-  before_action :set_competition, only: %i[ show edit update destroy ]
-  before_action :ensure_competition_owner, only: %i[ edit update destroy ]
+  before_action :require_authentication, only: %i[ new create edit update destroy leaderboard_export ]
+  before_action :set_competition, only: %i[ show edit update destroy leaderboard_export ]
+  before_action :ensure_competition_owner, only: %i[ edit update destroy leaderboard_export ]
   before_action :ensure_competition_editable, only: %i[ edit update ]
 
   # GET /competitions or /competitions.json
@@ -130,6 +130,13 @@ class CompetitionsController < ApplicationController
     end
   end
 
+  def leaderboard_export
+    send_data @competition.leaderboard_csv,
+              filename: @competition.leaderboard_csv_filename,
+              type: "text/csv; charset=utf-8",
+              disposition: "attachment"
+  end
+
   # DELETE /competitions/1 or /competitions/1.json
   def destroy
     @competition.destroy!
@@ -152,6 +159,7 @@ class CompetitionsController < ApplicationController
       respond_to do |format|
         format.html { redirect_to @competition, alert: "You can only edit competitions you created.", status: :see_other }
         format.json { head :forbidden }
+        format.csv { head :forbidden }
       end
     end
 

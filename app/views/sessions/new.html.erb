@@ -27,9 +27,6 @@
         <%= link_to "Need an account? Sign up", new_user_path, class: "btn btn-board-secondary" %>
       </div>
     <% end %>
-    <div class="action-row d-flex gap-2 flex-wrap">
-      <%= button_to "Continue with Google", "/auth/google_oauth2", method: :post, class: "btn btn-board-secondary",
-            form: { data: { turbo: false } } %>
-    </div>
+    <%= render "shared/google_oauth_button" %>
   </div>
 </section>
