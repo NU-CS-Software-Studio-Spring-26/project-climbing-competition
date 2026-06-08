@@ -115,9 +115,9 @@ class CompetitionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show competition" do
-    Attempt.create!(user: users(:one), climb: climbs(:one), attempt_count: 1, completed: true)
-    Attempt.create!(user: users(:two), climb: climbs(:one), attempt_count: 1, completed: true)
-    Attempt.create!(user: users(:two), climb: climbs(:one_two), attempt_count: 2, completed: false)
+    Attempt.create!(user: users(:one), climb: climbs(:one), attempt_count: 1)
+    Attempt.create!(user: users(:two), climb: climbs(:one), attempt_count: 1)
+    Attempt.create!(user: users(:two), climb: climbs(:one_two), attempt_count: 2, invalidated: true)
 
     get competition_url(@competition)
     assert_response :success

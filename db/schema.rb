@@ -10,12 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_08_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_08_130000) do
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
   create_table "attempts", force: :cascade do |t|
     t.integer "attempt_count", null: false
     t.integer "climb_id", null: false
-    t.boolean "completed", default: false, null: false
     t.datetime "created_at", null: false
+    t.boolean "invalidated", default: false, null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["climb_id"], name: "index_attempts_on_climb_id"
@@ -25,25 +53,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_000002) do
   end
 
   create_table "climbs", force: :cascade do |t|
-    t.integer "angle"
-    t.integer "ascents_count", default: 0
-    t.string "boardsesh_url"
     t.integer "competition_id", null: false
     t.datetime "created_at", null: false
-    t.decimal "difficulty_average", precision: 5, scale: 2
-    t.string "frames"
     t.string "grading", null: false
     t.json "hold_assignments", default: {}, null: false
-    t.string "kilter_uuid"
-    t.string "layout_slug", default: "original"
     t.string "name", null: false
-    t.decimal "quality_average", precision: 3, scale: 2
-    t.string "setter_username"
-    t.string "size_slug", default: "12x12-square"
     t.datetime "updated_at", null: false
     t.text "url", null: false
     t.index ["competition_id"], name: "index_climbs_on_competition_id"
-    t.index ["kilter_uuid"], name: "index_climbs_on_kilter_uuid", unique: true, where: "kilter_uuid IS NOT NULL"
   end
 
   create_table "competitions", force: :cascade do |t|
@@ -58,13 +75,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_000002) do
     t.string "level"
     t.string "name", null: false
     t.integer "owner_id", null: false
+    t.integer "send_points", default: 25, null: false
     t.datetime "starts_at", null: false
     t.datetime "updated_at", null: false
     t.integer "v_grade_max", null: false
     t.integer "v_grade_min", null: false
+    t.boolean "video_submissions_required", default: false, null: false
     t.index ["owner_id"], name: "index_competitions_on_owner_id"
-    t.check_constraint "attempt_deduction >= 0 AND attempt_deduction <= 10", name: "attempt_deduction_range"
-    t.check_constraint "flash_points > 0 AND flash_points <= 50", name: "flash_points_range"
+    t.check_constraint "attempt_deduction >= 0 AND attempt_deduction <= 10000", name: "attempt_deduction_range"
+    t.check_constraint "flash_points > 0 AND flash_points <= 10000", name: "flash_points_range"
+    t.check_constraint "send_points > 0 AND send_points <= 10000", name: "send_points_range"
     t.check_constraint "v_grade_max >= 0 AND v_grade_max <= 16", name: "v_grade_max_range"
     t.check_constraint "v_grade_max >= v_grade_min", name: "v_grade_max_gte_min"
     t.check_constraint "v_grade_min >= 0 AND v_grade_min <= 16", name: "v_grade_min_range"
@@ -100,26 +120,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_000002) do
     t.index ["user_id"], name: "index_identities_on_user_id"
   end
 
-  create_table "kilter_placement_roles", force: :cascade do |t|
-    t.string "color_hex", null: false
-    t.datetime "created_at", null: false
-    t.string "name", null: false
-    t.integer "role_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["role_id"], name: "index_kilter_placement_roles_on_role_id", unique: true
-  end
-
-  create_table "kilter_placements", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.integer "hole_id"
-    t.string "layout_slug", default: "original", null: false
-    t.integer "placement_id", null: false
-    t.datetime "updated_at", null: false
-    t.integer "x", null: false
-    t.integer "y", null: false
-    t.index ["layout_slug", "placement_id"], name: "index_kilter_placements_on_layout_slug_and_placement_id", unique: true
-  end
-
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address", limit: 45
@@ -145,6 +145,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_000002) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "attempts", "climbs"
   add_foreign_key "attempts", "users"
   add_foreign_key "climbs", "competitions"

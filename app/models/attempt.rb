@@ -3,6 +3,7 @@ class Attempt < ApplicationRecord
 
   belongs_to :user
   belongs_to :climb
+  has_one_attached :submission_video
 
   delegate :competition, to: :climb
 
@@ -10,7 +11,7 @@ class Attempt < ApplicationRecord
   validate :attempt_count_must_be_integer_within_bounds
 
   def points_awarded
-    return 0 unless completed?
+    return 0 if invalidated?
 
     competition.score_for_climb(
       sent:     true,
