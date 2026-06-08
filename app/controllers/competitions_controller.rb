@@ -72,15 +72,6 @@ class CompetitionsController < ApplicationController
       @attempts_by_user_and_climb[attempt.user_id] ||= {}
       @attempts_by_user_and_climb[attempt.user_id][attempt.climb_id] = attempt
     end
-
-    @video_attempts_by_climb = {}
-    if authenticated? && current_user == @competition.owner
-      attempts_with_videos = @competition.attempts
-        .includes(:user, :climb, submission_video_attachment: :blob)
-        .select { |attempt| attempt.completed? && attempt.submission_video.attached? }
-
-      @video_attempts_by_climb = attempts_with_videos.group_by(&:climb)
-    end
   end
 
   # GET /competitions/new

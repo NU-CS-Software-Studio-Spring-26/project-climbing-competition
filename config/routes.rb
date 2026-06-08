@@ -11,8 +11,9 @@ Rails.application.routes.draw do
     resources :enrollments, only: [ :create, :destroy ]
     resources :climbs, only: [ :show ] do
       resource :attempt, only: [ :create, :update ], controller: "attempts"
+      get :video_reviews, to: "attempts#video_reviews"
       resources :attempts, only: [] do
-        patch :review, on: :member
+        patch :invalidate, on: :member
       end
     end
   end

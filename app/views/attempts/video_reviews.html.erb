@@ -1,0 +1,59 @@
+<% content_for :title, "Review Video Submissions" %>
+
+<section class="page-header text-center">
+  <h1 class="page-title">review video submissions</h1>
+</section>
+
+<div class="action-row mb-3 d-flex gap-2 flex-wrap align-items-center">
+  <%= link_to competition_path(@competition), class: "back-arrow-text-link" do %>
+    <span aria-hidden="true">←</span>
+    back to competition details
+  <% end %>
+</div>
+
+<div class="detail-panel p-4 mb-3 video-review-page-panel">
+  <p class="detail-item mb-2"><span>Competition:</span> <%= @competition.name %></p>
+  <p class="detail-item mb-2"><span>Climb:</span> <%= @climb.name %></p>
+  <p class="detail-item mb-2"><span>Climber:</span> <%= link_to_user_profile(@attempt.user, label: @attempt.user.name, class_name: "profile-user-link") %></p>
+  <p class="detail-item mb-2"><span>Attempts:</span> <%= @attempt.attempt_count %></p>
+  <p class="detail-item mb-0"><span>Invalidated:</span> <%= @attempt.invalidated? ? "Yes" : "No" %></p>
+</div>
+
+<div class="detail-panel p-4 mb-3 video-review-page-panel">
+  <video class="video-review-single-player" controls preload="metadata" playsinline>
+    <source src="<%= url_for(@attempt.submission_video) %>">
+  </video>
+  <p class="video-review-fallback-text mt-2 mb-0">
+    If preview does not load in this browser,
+    <%= link_to "open video in new tab", url_for(@attempt.submission_video), target: "_blank", rel: "noopener noreferrer", class: "video-review-fallback-link" %>.
+  </p>
+</div>
+
+<div class="detail-panel p-4 mb-3 video-review-page-panel">
+  <h2 class="detail-heading mb-3">Moderation</h2>
+  <% if @attempt.invalidated? %>
+    <p class="mb-0">This send is already invalidated and awards 0 points.</p>
+  <% else %>
+    <%= button_to "Invalidate send (0 points)",
+          invalidate_competition_climb_attempt_path(@competition, @climb, @attempt, index: @current_index),
+          method: :patch,
+          class: "btn btn-outline-danger",
+          form: { data: { turbo_confirm: "Invalidate this send? This will set this climb's points to 0 for this climber." } } %>
+  <% end %>
+</div>
+
+<div class="video-review-nav-row d-flex justify-content-between align-items-center gap-2">
+  <div>
+    <% if @previous_index.present? %>
+      <%= link_to "← previous", competition_climb_video_reviews_path(@competition, @climb, index: @previous_index), class: "btn btn-board-secondary" %>
+    <% end %>
+  </div>
+
+  <p class="video-review-position mb-0"><%= @current_index + 1 %> / <%= @video_attempts.length %></p>
+
+  <div>
+    <% if @next_index.present? %>
+      <%= link_to "next →", competition_climb_video_reviews_path(@competition, @climb, index: @next_index), class: "btn btn-board-secondary" %>
+    <% end %>
+  </div>
+</div>

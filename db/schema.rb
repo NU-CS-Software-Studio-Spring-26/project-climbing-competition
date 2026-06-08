@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_08_093000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_08_123000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -44,14 +44,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_093000) do
     t.integer "climb_id", null: false
     t.boolean "completed", default: false, null: false
     t.datetime "created_at", null: false
-    t.integer "review_status", default: 0, null: false
+    t.boolean "invalidated", default: false, null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["climb_id"], name: "index_attempts_on_climb_id"
     t.index ["user_id", "climb_id"], name: "index_attempts_on_user_id_and_climb_id", unique: true
     t.index ["user_id"], name: "index_attempts_on_user_id"
     t.check_constraint "attempt_count >= 1 AND attempt_count <= 100", name: "attempt_count_between_1_and_100"
-    t.check_constraint "review_status IN (0, 1, 2)", name: "attempt_review_status_range"
   end
 
   create_table "climbs", force: :cascade do |t|

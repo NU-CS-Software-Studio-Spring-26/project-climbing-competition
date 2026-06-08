@@ -3,8 +3,8 @@ class AttemptsController < ApplicationController
   before_action :set_competition
   before_action :set_climb
   before_action :ensure_enrolled, only: %i[ create update ]
-  before_action :set_attempt, only: %i[ review ]
-  before_action :ensure_competition_owner, only: %i[ review ]
+  before_action :set_attempt, only: %i[ invalidate ]
+  before_action :ensure_competition_owner, only: %i[ invalidate video_reviews ]
 
   def create
     save_attempt
@@ -14,14 +14,31 @@ class AttemptsController < ApplicationController
     save_attempt
   end
 
-  def review
-    @attempt.assign_attributes(review_params)
-
-    if @attempt.save
-      redirect_to competition_path(@competition), notice: "Submission review was updated."
+  def invalidate
+    if @attempt.update(invalidated: true)
+      redirect_to competition_climb_video_reviews_path(@competition, @climb, index: params[:index]), notice: "Send invalidated. Points are now 0 for this climb."
     else
-      redirect_to competition_path(@competition), alert: @attempt.errors.full_messages.to_sentence
+      redirect_to competition_climb_video_reviews_path(@competition, @climb, index: params[:index]), alert: @attempt.errors.full_messages.to_sentence
     end
+  end
+
+  def video_reviews
+    @video_attempts = @climb.attempts
+      .includes(:user, submission_video_attachment: :blob)
+      .select { |attempt| attempt.submission_video.attached? }
+
+    if @video_attempts.empty?
+      redirect_to competition_path(@competition), alert: "No video submissions for this climb yet."
+      return
+    end
+
+    @current_index = params[:index].to_i
+    @current_index = 0 if @current_index.negative?
+    @current_index = @video_attempts.length - 1 if @current_index >= @video_attempts.length
+
+    @attempt = @video_attempts[@current_index]
+    @previous_index = @current_index.positive? ? @current_index - 1 : nil
+    @next_index = @current_index < (@video_attempts.length - 1) ? @current_index + 1 : nil
   end
 
   private
@@ -29,6 +46,7 @@ class AttemptsController < ApplicationController
   def save_attempt
     @attempt = current_user.attempts.find_or_initialize_by(climb: @climb)
     @attempt.assign_attributes(attempt_params)
+    attach_uploaded_video
 
     if @attempt.save
       redirect_to competition_climb_path(@competition, @climb), notice: "Your attempt was saved."
@@ -62,11 +80,13 @@ class AttemptsController < ApplicationController
   end
 
   def attempt_params
-    params.expect(attempt: [ :attempt_count, :completed, :submission_video ])
+    params.expect(attempt: [ :attempt_count, :completed ])
   end
 
-  def review_params
-    status = params.expect(attempt: [ :review_status ])[:review_status]
-    { review_status: status }
+  def attach_uploaded_video
+    uploaded_video = params.dig(:attempt, :submission_video)
+    return if uploaded_video.blank?
+
+    @attempt.submission_video.attach(uploaded_video)
   end
 end

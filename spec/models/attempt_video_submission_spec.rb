@@ -56,13 +56,12 @@ RSpec.describe Attempt, type: :model do
       user: user,
       climb: climbs.first,
       attempt_count: 2,
-      completed: true,
-      review_status: :unreviewed
+      completed: true
     )
 
     expect(attempt.points_awarded).to be > 0
 
-    attempt.update!(review_status: :invalidated)
+    attempt.update!(invalidated: true)
 
     expect(attempt.points_awarded).to eq(0)
   end

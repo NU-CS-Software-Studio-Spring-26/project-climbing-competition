@@ -51,7 +51,7 @@
     <% end %>
 
     <% if @competition.video_submissions_required? %>
-      <p class="form-text mb-3">This competition requires a video when submitting a completed send.</p>
+      <p class="form-text mb-3 attempt-video-requirement-note">This competition requires a video when submitting a completed send.</p>
     <% end %>
 
     <%= form_with url: competition_climb_attempt_path(@competition, @climb), scope: :attempt, method: @attempt&.persisted? ? :patch : :post, html: { class: "board-form" } do |form| %>

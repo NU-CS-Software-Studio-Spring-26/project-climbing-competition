@@ -107,6 +107,9 @@
               <span class="climb-card-title"><%= climb.name %></span>
               <div class="climb-card-actions">
               <a href="<%= climb.url %>" target="_blank" rel="noopener noreferrer" class="btn-climb-action">OPEN ON KILTER</a>
+              <% if authenticated? && current_user == @competition.owner %>
+                <%= link_to "review video submissions", competition_climb_video_reviews_path(@competition, climb), class: "btn-climb-action btn-climb-action-secondary" %>
+              <% end %>
               <% if climb.visual? %>
                 <%= tag.button "VIEW CLIMB",
                       type: "button",
@@ -138,55 +141,6 @@
         YOUR TOTAL POINTS: <%= @competition.points_for(current_user) %>
       </div>
     </div>
-  <% end %>
-
-  <% if authenticated? && current_user == @competition.owner %>
-    <section class="competition-section competition-video-review-section">
-      <h2 class="competition-section-title text-center mb-3">Video Review</h2>
-      <div class="detail-panel p-3 p-md-4">
-        <% if @video_attempts_by_climb.any? %>
-          <% @competition.climbs.each do |climb| %>
-            <% climb_attempts = @video_attempts_by_climb[climb] || [] %>
-            <% next if climb_attempts.empty? %>
-
-            <div class="video-review-climb-group mb-4">
-              <h3 class="video-review-climb-title"><%= climb.name %></h3>
-              <div class="video-review-grid">
-                <% climb_attempts.each do |attempt| %>
-                  <article class="video-review-card">
-                    <p class="video-review-meta mb-2">
-                      <strong>Climber:</strong>
-                      <%= link_to_user_profile(attempt.user, label: attempt.user.name, class_name: "profile-user-link") %>
-                    </p>
-                    <p class="video-review-meta mb-2"><strong>Attempts:</strong> <%= attempt.attempt_count %></p>
-                    <p class="video-review-meta mb-3"><strong>Status:</strong> <%= attempt.review_status.humanize %></p>
-
-                    <video class="video-review-player" controls preload="metadata">
-                      <source src="<%= url_for(attempt.submission_video) %>" type="<%= attempt.submission_video.blob.content_type %>">
-                    </video>
-
-                    <div class="video-review-actions mt-3">
-                      <%= button_to "Approve",
-                          review_competition_climb_attempt_path(@competition, climb, attempt),
-                          method: :patch,
-                          params: { attempt: { review_status: :approved } },
-                          class: "btn btn-sm btn-success" %>
-                      <%= button_to "Invalidate",
-                          review_competition_climb_attempt_path(@competition, climb, attempt),
-                          method: :patch,
-                          params: { attempt: { review_status: :invalidated } },
-                          class: "btn btn-sm btn-outline-danger" %>
-                    </div>
-                  </article>
-                <% end %>
-              </div>
-            </div>
-          <% end %>
-        <% else %>
-          <p class="mb-0">No completed video submissions yet.</p>
-        <% end %>
-      </div>
-    </section>
   <% end %>
 
   <% if @leaderboard_entries.any? %>
@@ -277,5 +231,6 @@
         detailRow.style.display = 'none';
       }
     }
+
   </script>
 </div>
