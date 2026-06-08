@@ -1,34 +1,50 @@
+<% climb = form.object %>
+<% input_class = ->(field_name, base = "form-control") { [ base, ("border border-danger" if climb.errors[field_name].any?) ].compact.join(" ") } %>
+
 <div class="climb-field" data-climb-field>
   <div class="climb-field-header">
     <h3 class="climb-field-title mb-0">Climb</h3>
-    <button type="button" class="btn btn-sm btn-outline-danger delete-climb-btn" data-climb-id="<%= form.object.id %>">
+    <button type="button" class="btn btn-sm btn-outline-danger delete-climb-btn" data-climb-id="<%= climb.id %>">
       <span aria-hidden="true">×</span> Remove
     </button>
   </div>
 
   <div class="board-form-field" data-controller="char-counter" data-char-counter-max-value="100">
     <%= form.label :name, "Climb Name", class: "form-label" %>
-    <%= form.text_field :name, class: "form-control", placeholder: "e.g., The Crimper",
+    <%= form.text_field :name, class: input_class.call(:name), placeholder: "e.g., The Crimper",
           maxlength: 100,
           data: { char_counter_target: "input", action: "input->char-counter#update" } %>
+    <% climb.errors.full_messages_for(:name).each do |message| %>
+      <div class="text-danger small mt-1"><%= message %></div>
+    <% end %>
     <span class="char-counter" data-char-counter-target="count"></span>
   </div>
 
   <div class="board-form-field">
     <%= form.label :grading, "V-Grade", class: "form-label" %>
     <%= form.select :grading,
-        options_for_select(Climb::GRADES.map { |g| [ g, g ] }, form.object.grading),
+        options_for_select(Climb::GRADES.map { |g| [ g, g ] }, climb.grading),
         { prompt: "Select grade" },
-        class: "form-select",
+        class: [ "form-select", ("border border-danger" if climb.errors[:grading].any?) ].compact.join(" "),
         required: true %>
+    <% climb.errors.full_messages_for(:grading).each do |message| %>
+      <div class="text-danger small mt-1"><%= message %></div>
+    <% end %>
   </div>
 
   <div class="board-form-field" data-controller="char-counter" data-char-counter-max-value="<%= Climb::URL_MAX_LENGTH %>">
     <%= form.label :url, "Climb Link (URL)", class: "form-label" %>
-    <%= form.text_field :url, class: "form-control", placeholder: "https://...", maxlength: Climb::URL_MAX_LENGTH,
+    <%= form.text_field :url, class: input_class.call(:url), placeholder: "https://...", maxlength: Climb::URL_MAX_LENGTH,
           data: { char_counter_target: "input", action: "input->char-counter#update" } %>
+    <% climb.errors.full_messages_for(:url).each do |message| %>
+      <div class="text-danger small mt-1"><%= message %></div>
+    <% end %>
     <span class="char-counter" data-char-counter-target="count"></span>
   </div>
+
+  <% climb.errors.full_messages_for(:hold_assignments).each do |message| %>
+    <div class="text-danger small mb-2"><%= message %></div>
+  <% end %>
 
   <% kilter_field_id = "kilter-board-field-#{form.index}" %>
   <div class="kilter-board-field" id="<%= kilter_field_id %>" data-controller="kilter-board" data-kilter-board-editable-value="true" data-kilter-board-default-color-value="purple">

@@ -11,12 +11,16 @@
     <%= form_with url: session_path, scope: :session, class: "board-form" do |form| %>
       <div class="mb-3">
         <%= form.label :email_address, "Email address", class: "form-label" %>
-        <%= form.email_field :email_address, class: "form-control", autocomplete: "email", placeholder: "name@example.com" %>
+        <%= form.email_field :email_address, class: ["form-control", ("border border-danger" if @login_email_error)].compact.join(" "),
+              autocomplete: "email", placeholder: "name@example.com", maxlength: User::EMAIL_MAX_LENGTH %>
+        <% if @login_email_error %>
+          <div class="text-danger small mt-1"><%= @login_email_error %></div>
+        <% end %>
       </div>
 
       <div class="mb-3">
         <%= form.label :password, class: "form-label" %>
-        <%= form.password_field :password, class: "form-control", autocomplete: "current-password" %>
+        <%= form.password_field :password, class: "form-control", autocomplete: "current-password", maxlength: User::PASSWORD_MAX_LENGTH %>
       </div>
 
       <div class="action-row d-flex gap-2 flex-wrap">

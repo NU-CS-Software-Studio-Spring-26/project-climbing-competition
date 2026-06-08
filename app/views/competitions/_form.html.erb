@@ -73,10 +73,10 @@
     <div class="board-form-field">
       <%= form.label :send_points, "Points for a Send", class: "form-label" %>
       <div class="d-flex align-items-center gap-3">
-        <%= form.range_field :send_points, min: 0, max: 50, step: 1,
+        <%= form.range_field :send_points, min: 1, max: Competition::SCORING_MAX, step: 1,
               class: "form-range flex-grow-1",
               data: { scoring_slider: "send_points" } %>
-        <%= form.number_field :send_points, min: 0, max: 50, step: 1,
+        <%= form.number_field :send_points, min: 1, max: Competition::SCORING_MAX, step: 1,
               class: [ "scoring-number", ("border border-danger" if competition.errors[:send_points].any?) ].compact.join(" "),
               required: true,
               data: { scoring_number: "send_points" } %>
@@ -90,10 +90,10 @@
     <div class="board-form-field">
       <%= form.label :flash_points, "Points for a Flash", class: "form-label" %>
       <div class="d-flex align-items-center gap-3">
-        <%= form.range_field :flash_points, min: 0, max: 50, step: 1,
+        <%= form.range_field :flash_points, min: 1, max: Competition::SCORING_MAX, step: 1,
               class: "form-range flex-grow-1",
               data: { scoring_slider: "flash_points" } %>
-        <%= form.number_field :flash_points, min: 0, max: 50, step: 1,
+        <%= form.number_field :flash_points, min: 1, max: Competition::SCORING_MAX, step: 1,
               class: [ "scoring-number", ("border border-danger" if competition.errors[:flash_points].any?) ].compact.join(" "),
               required: true,
               data: { scoring_number: "flash_points" } %>
@@ -107,10 +107,10 @@
     <div class="board-form-field">
       <%= form.label :attempt_deduction, "Points Deducted per Extra Attempt", class: "form-label" %>
       <div class="d-flex align-items-center gap-3">
-        <%= form.range_field :attempt_deduction, min: 0, max: 10, step: 1,
+        <%= form.range_field :attempt_deduction, min: 0, max: Competition::SCORING_MAX, step: 1,
               class: "form-range flex-grow-1",
               data: { scoring_slider: "attempt_deduction" } %>
-        <%= form.number_field :attempt_deduction, min: 0, max: 10, step: 1,
+        <%= form.number_field :attempt_deduction, min: 0, max: Competition::SCORING_MAX, step: 1,
               class: [ "scoring-number", ("border border-danger" if competition.errors[:attempt_deduction].any?) ].compact.join(" "),
               required: true,
               data: { scoring_number: "attempt_deduction" } %>

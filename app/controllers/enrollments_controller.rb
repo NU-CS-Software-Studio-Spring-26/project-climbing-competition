@@ -35,6 +35,6 @@ class EnrollmentsController < ApplicationController
   private
 
   def set_competition
-    @competition = Competition.find(params[:competition_id])
+    @competition = Competition.find(params.expect(:competition_id))
   end
 end

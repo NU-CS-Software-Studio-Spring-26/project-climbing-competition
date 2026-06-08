@@ -40,6 +40,20 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
+  test "should reject malformed email on sign in" do
+    post session_url, params: { session: { email_address: "not-an-email", password: "password123" } }
+
+    assert_response :unprocessable_entity
+    assert_match "valid email address", response.body
+  end
+
+  test "should reject excessively long password on sign in" do
+    post session_url, params: { session: { email_address: @user.email_address, password: "a" * (User::PASSWORD_MAX_LENGTH + 1) } }
+
+    assert_response :unprocessable_entity
+    assert_match "incorrect", response.body
+  end
+
   test "should sign out user" do
     post session_url, params: { session: { email_address: @user.email_address, password: "password123" } }
     delete session_url
