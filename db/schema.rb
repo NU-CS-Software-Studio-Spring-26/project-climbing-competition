@@ -75,16 +75,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_130000) do
     t.string "level"
     t.string "name", null: false
     t.integer "owner_id", null: false
-    t.integer "send_points", default: 25, null: false
     t.datetime "starts_at", null: false
     t.datetime "updated_at", null: false
     t.integer "v_grade_max", null: false
     t.integer "v_grade_min", null: false
     t.boolean "video_submissions_required", default: false, null: false
     t.index ["owner_id"], name: "index_competitions_on_owner_id"
-    t.check_constraint "attempt_deduction >= 0 AND attempt_deduction <= 10000", name: "attempt_deduction_range"
-    t.check_constraint "flash_points > 0 AND flash_points <= 10000", name: "flash_points_range"
-    t.check_constraint "send_points > 0 AND send_points <= 10000", name: "send_points_range"
+    t.check_constraint "attempt_deduction >= 0 AND attempt_deduction <= 10", name: "attempt_deduction_range"
+    t.check_constraint "flash_points > 0 AND flash_points <= 50", name: "flash_points_range"
     t.check_constraint "v_grade_max >= 0 AND v_grade_max <= 16", name: "v_grade_max_range"
     t.check_constraint "v_grade_max >= v_grade_min", name: "v_grade_max_gte_min"
     t.check_constraint "v_grade_min >= 0 AND v_grade_min <= 16", name: "v_grade_min_range"
