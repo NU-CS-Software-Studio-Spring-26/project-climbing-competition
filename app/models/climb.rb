@@ -3,7 +3,7 @@ class Climb < ApplicationRecord
 
   GRADES = (0..16).map { |n| "V#{n}" }.freeze
   URL_MAX_LENGTH = 2000
-  ALLOWED_URL_HOSTS = %w[www.boardsesh.com app.kiltergrips.com].freeze
+  ALLOWED_URL_HOSTS = %w[www.boardsesh.com portal.kiltergrips.com].freeze
   HOLD_COLORS = %w[purple green blue yellow].freeze
   HOLD_ID_PATTERN = /\Ar\d+c\d+\z/
   MAX_HOLD_ASSIGNMENTS = 1200
@@ -30,7 +30,7 @@ class Climb < ApplicationRecord
     host = URI.parse(url).host&.downcase
     return if host.present? && ALLOWED_URL_HOSTS.include?(host)
 
-    errors.add(:url, "must be a link from www.boardsesh.com or app.kiltergrips.com")
+    errors.add(:url, "must be a link from www.boardsesh.com or portal.kiltergrips.com")
   rescue URI::InvalidURIError
     # The URL format validation will provide the error message.
   end

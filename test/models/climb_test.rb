@@ -33,21 +33,21 @@ class ClimbTest < ActiveSupport::TestCase
     )
 
     assert_not climb.valid?
-    assert_includes climb.errors[:url], "must be a link from www.boardsesh.com or app.kiltergrips.com"
+    assert_includes climb.errors[:url], "must be a link from www.boardsesh.com or portal.kiltergrips.com"
   end
 
-  test "accepts a kiltergrips URL with app subdomain" do
+  test "accepts a kiltergrips URL with portal subdomain" do
     climb = Climb.new(
       competition: competitions(:one),
       name: "Kilter Route",
-      url: "https://app.kiltergrips.com/beta/route/123",
+      url: "https://portal.kiltergrips.com/search/climbs?angle=40&climbUuid=123",
       grading: "V4"
     )
 
     assert climb.valid?
   end
 
-  test "rejects a kiltergrips URL without app subdomain" do
+  test "rejects a kiltergrips URL without portal subdomain" do
     climb = Climb.new(
       competition: competitions(:one),
       name: "Kilter Route",
@@ -56,7 +56,7 @@ class ClimbTest < ActiveSupport::TestCase
     )
 
     assert_not climb.valid?
-    assert_includes climb.errors[:url], "must be a link from www.boardsesh.com or app.kiltergrips.com"
+    assert_includes climb.errors[:url], "must be a link from www.boardsesh.com or portal.kiltergrips.com"
   end
 
   test "rejects climb urls longer than the allowed length" do
