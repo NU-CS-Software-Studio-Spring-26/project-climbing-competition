@@ -1,4 +1,7 @@
 class Competition < ApplicationRecord
+  include ProfanityFilterable
+
+  SCORING_MAX = 10_000
   FLASH_POINTS_MAX = 50
   ATTEMPT_DEDUCTION_MAX = 10
   DEFAULT_TIME = "00:00"
@@ -133,6 +136,9 @@ class Competition < ApplicationRecord
   validate :ends_at_after_starts_at
   validate :starts_at_not_before_today, if: :will_save_change_to_starts_at?
   validate :ends_at_not_before_today, if: :will_save_change_to_ends_at?
+
+  filters_profanity_in :name
+  filters_profanity_in :description, allow_blank: true
 
   def points_for(user)
     return 0 if user.nil?

@@ -1,5 +1,8 @@
 class User < ApplicationRecord
+  include ProfanityFilterable
+
   USERNAME_FORMAT = /\A[a-zA-Z0-9_.-]+\z/
+  EMAIL_FORMAT = /\A[^\s@]+@(?:[^\s@]+\.)+[^\s@]{2,}\z/
   CONTROL_CHAR_PATTERN = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/
   UNICODE_LETTER_PATTERN = /\p{L}/
 
@@ -38,7 +41,7 @@ class User < ApplicationRecord
   validates :username, length: { minimum: 1, maximum: USERNAME_MAX_LENGTH }, format: { with: USERNAME_FORMAT }
   validates :email_address, uniqueness: { case_sensitive: false }
   validates :email_address, length: { maximum: EMAIL_MAX_LENGTH }
-  validates :email_address, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :email_address, format: { with: EMAIL_FORMAT }
   validates :google_uid, uniqueness: true, allow_blank: true
   validates :password, length: { minimum: PASSWORD_MIN_LENGTH, maximum: PASSWORD_MAX_LENGTH }, allow_blank: true
   validates :password, confirmation: true, if: -> { password.present? }
@@ -47,6 +50,9 @@ class User < ApplicationRecord
   validate :name_has_no_control_characters
   validate :name_contains_letter
   validate :bio_has_no_control_characters, if: -> { bio.present? }
+
+  filters_profanity_in :name, :username
+  filters_profanity_in :bio, allow_blank: true
 
   private
     def sanitize_profile_fields

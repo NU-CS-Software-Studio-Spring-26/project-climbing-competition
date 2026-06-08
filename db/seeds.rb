@@ -428,8 +428,7 @@ competitions.each do |comp|
     Attempt.create!(
       user: user,
       climb: climbs.first,
-      attempt_count: primary_attempt_counts[index % primary_attempt_counts.length],
-      completed: true
+      attempt_count: primary_attempt_counts[index % primary_attempt_counts.length]
     )
 
     next unless climbs.second.present? && index.even?
@@ -438,7 +437,7 @@ competitions.each do |comp|
       user: user,
       climb: climbs.second,
       attempt_count: 3,
-      completed: false
+      invalidated: true
     )
   end
 end

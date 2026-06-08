@@ -62,6 +62,34 @@ class UserTest < ActiveSupport::TestCase
     assert_includes user.errors[:name], "must include at least one letter"
   end
 
+  test "rejects profane display names" do
+    user = User.new(valid_user_attributes(name: "Hell Climber"))
+
+    assert_not user.valid?
+    assert_includes user.errors[:name], "contains inappropriate language"
+  end
+
+  test "rejects profane usernames" do
+    user = User.new(valid_user_attributes(username: "shithead"))
+
+    assert_not user.valid?
+    assert_includes user.errors[:username], "contains inappropriate language"
+  end
+
+  test "rejects profane bios" do
+    user = User.new(valid_user_attributes(bio: "I love to shit talk"))
+
+    assert_not user.valid?
+    assert_includes user.errors[:bio], "contains inappropriate language"
+  end
+
+  test "rejects email addresses without a valid domain" do
+    user = User.new(valid_user_attributes(email_address: "a@k"))
+
+    assert_not user.valid?
+    assert_includes user.errors[:email_address], "is invalid"
+  end
+
   test "rejects email addresses over 254 characters" do
     local_part = "a" * 245
     user = User.new(valid_user_attributes(email_address: "#{local_part}@example.com"))

@@ -100,7 +100,7 @@ class SessionsController < ApplicationController
   end
 
   def invalid_login_email?(email)
-    email.blank? || email.length > User::EMAIL_MAX_LENGTH || !email.match?(URI::MailTo::EMAIL_REGEXP)
+    email.blank? || email.length > User::EMAIL_MAX_LENGTH || !email.match?(User::EMAIL_FORMAT)
   end
 
   def build_unique_username(email)

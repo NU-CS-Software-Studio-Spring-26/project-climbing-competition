@@ -65,8 +65,8 @@ class FriendActivityFeedTest < ActiveSupport::TestCase
         v_grade_min: 0,
         v_grade_max: 3,
         climbs_attributes: {
-          "0" => { name: "A", url: "https://example.com/a", grading: "V1" },
-          "1" => { name: "B", url: "https://example.com/b", grading: "V2" }
+          "0" => { name: "A", url: "https://www.boardsesh.com/a", grading: "V1" },
+          "1" => { name: "B", url: "https://www.boardsesh.com/b", grading: "V2" }
         }
       )
       set_competition_schedule(competition, starts_at: 1.day.ago, ends_at: 1.week.from_now)

@@ -1,6 +1,9 @@
 class Climb < ApplicationRecord
+  include ProfanityFilterable
+
   GRADES = (0..16).map { |n| "V#{n}" }.freeze
   URL_MAX_LENGTH = 2000
+  ALLOWED_URL_HOSTS = %w[www.boardsesh.com portal.kiltergrips.com].freeze
   HOLD_COLORS = %w[purple green blue yellow].freeze
   HOLD_ID_PATTERN = /\Ar\d+c\d+\z/
   MAX_HOLD_ASSIGNMENTS = 1200
@@ -14,9 +17,23 @@ class Climb < ApplicationRecord
                   format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid URL" }
   validates :grading, presence: true, inclusion: { in: GRADES, message: "must be a V-grade (V0–V16)" }
   validate :hold_assignments_are_valid
+  validate :url_must_be_from_allowed_hosts
+
+  filters_profanity_in :name
 
   before_validation :sanitize_fields
   before_validation :sanitize_hold_assignments
+
+  def url_must_be_from_allowed_hosts
+    return if url.blank?
+
+    host = URI.parse(url).host&.downcase
+    return if host.present? && ALLOWED_URL_HOSTS.include?(host)
+
+    errors.add(:url, "must be a link from www.boardsesh.com or portal.kiltergrips.com")
+  rescue URI::InvalidURIError
+    # The URL format validation will provide the error message.
+  end
 
   def visual?
     hold_assignments.is_a?(Hash) && hold_assignments.any?
