@@ -9,6 +9,10 @@ Rails.application.routes.draw do
     resource :follow, only: [ :create, :destroy ]
   end
   resources :competitions do
+    member do
+      get :leaderboard_export
+    end
+
     resources :enrollments, only: [ :create, :destroy ]
     resources :climbs, only: [ :show ] do
       resource :attempt, only: [ :create, :update ], controller: "attempts"

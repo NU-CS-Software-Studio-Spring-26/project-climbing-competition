@@ -168,6 +168,59 @@ class Competition < ApplicationRecord
     nil
   end
 
+  def leaderboard_csv_filename
+    "#{name.to_s.parameterize}-leaderboard.csv"
+  end
+
+  def leaderboard_csv
+    require "csv"
+
+    ordered_climbs = climbs.order(:id).to_a
+    attempts_by_user_and_climb = attempts.includes(:user, :climb).each_with_object({}) do |attempt, index|
+      index[attempt.user_id] ||= {}
+      index[attempt.user_id][attempt.climb_id] = attempt
+    end
+
+    CSV.generate do |csv|
+      headers = [ "Rank", "Name", "Username", "Email", "Points", "Total Attempts" ]
+      ordered_climbs.each do |climb|
+        headers << "#{climb.name} (Grade)"
+        headers << "#{climb.name} (Attempts)"
+        headers << "#{climb.name} (Points)"
+        headers << "#{climb.name} (Status)"
+      end
+      csv << headers
+
+      leaderboard_entries.each_with_index do |entry, index|
+        row = [
+          index + 1,
+          entry.user.name,
+          entry.user.username,
+          entry.user.email_address,
+          entry.points,
+          entry.attempts_count
+        ]
+
+        ordered_climbs.each do |climb|
+          attempt = attempts_by_user_and_climb.dig(entry.user.id, climb.id)
+          if attempt
+            row << climb.grading
+            row << attempt.attempt_count
+            row << attempt.points_awarded
+            row << (attempt.invalidated? ? "Invalidated" : "Sent")
+          else
+            row << climb.grading
+            row << ""
+            row << ""
+            row << "Not attempted"
+          end
+        end
+
+        csv << row
+      end
+    end
+  end
+
   private
 
   def sanitize_text_fields

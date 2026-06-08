@@ -231,6 +231,11 @@
     <section class="competition-section competition-leaderboard-section">
       <h2 class="competition-section-title text-center mb-2">Leaderboard</h2>
       <p class="competition-section-caption text-center mb-4">click to see more details</p>
+      <% if authenticated? && current_user == @competition.owner %>
+        <div class="competition-leaderboard-export text-center mb-4">
+          <%= link_to "Export leaderboard CSV", leaderboard_export_competition_path(@competition, format: :csv), class: "btn-board-secondary" %>
+        </div>
+      <% end %>
       <div class="detail-panel leaderboard-panel p-0">
         <div class="table-responsive">
           <table class="table table-borderless align-middle mb-0 leaderboard-table">
